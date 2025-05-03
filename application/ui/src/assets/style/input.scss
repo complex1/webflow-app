@@ -1,0 +1,89 @@
+.wfa-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-small);
+  font-family: var(--font-family-system);
+}
+
+.wfa-input label {
+  font-size: var(--font-size-medium);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-small);
+  display: flex;
+}
+
+.wfa-input input,
+.wfa-input select,
+.wfa-input textarea {
+  font-size: var(--font-size-medium);
+  padding: var(--spacing-medium);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.wfa-input input:focus,
+.wfa-input select:focus,
+.wfa-input textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.wfa-input input::placeholder,
+.wfa-input textarea::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.wfa-input input[type="checkbox"] {
+  appearance: none;
+  width: 40px;
+  height: 20px;
+  background-color: var(--color-border);
+  border-radius: 10px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.wfa-input input[type="checkbox"]:checked {
+  background-color: var(--color-primary);
+}
+
+.wfa-input input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: var(--color-background);
+  border-radius: 50%;
+  transition: transform 0.2s ease-in-out;
+}
+
+.wfa-input input[type="checkbox"]:checked::before {
+  transform: translateX(20px);
+}
+
+.wfa-input.checkbox-inline {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-medium);
+}
+
+.wfa-input.checkbox-inline-reverse {
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: var(--spacing-medium); // Uncommented the gap property
+    justify-content: flex-end;
+  }
+
+.wfa-input.checkbox-inline-reverse label {
+  margin-bottom: 0;
+}
+.wfa-input.checkbox-inline label {
+  margin-bottom: 0;
+}

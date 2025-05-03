@@ -1,0 +1,59 @@
+import { generateUUID } from "../utils/uuid";
+
+export enum NodeType {
+    FUNCTIONAL = 'FUNCTIONAL',
+    HTTP = 'HTTP',
+}
+
+export enum NodeStatus {
+    PENDING = 'PENDING',
+    IN_PROGRESS = 'IN_PROGRESS',
+    SUCCESS = 'SUCCESS',
+    FAILURE = 'FAILURE',
+    INACTIVE = 'INACTIVE',
+    SKIPPED = 'SKIPPED',
+}
+
+export default class Node {
+    id: string;
+    name: string | null = null; // added name property
+    description: string | null = null; // added description property
+    type: NodeType;
+    nodeStatus: NodeStatus; // updated type to NodeStatus
+    nodeData: any;
+    executing: boolean;
+    hasError: boolean; // change to private
+    errorMessage: string | null; // change to private
+    private order: number = 0; // added order property
+
+    constructor(type: NodeType) {
+        this.id = generateUUID();
+        this.type = type;
+        this.name = null; // initialize name
+        this.description = null; // initialize description
+
+        this.nodeStatus = NodeStatus.INACTIVE; // updated to use NodeStatus enum
+        this.nodeData = null;
+        this.executing = false; // initialize executing
+        this.hasError = false; // initialize hasError
+        this.errorMessage = null; // initialize errorMessage
+    }
+
+    setOrder(order: number): void {
+        this.order = order;
+    }
+    getOrder(): number {
+        return this.order;
+    }
+
+    updateStatus(newStatus: NodeStatus): void {
+        this.nodeStatus = newStatus;
+    }
+
+    setData(data: any): void {
+        this.nodeData = data;
+    }
+    getData(): any {
+        return this.nodeData;
+    }
+}

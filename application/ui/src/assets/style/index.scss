@@ -1,0 +1,72 @@
+@use "./spacing.scss";
+@use "./typography.scss";
+@use "./background.scss";
+@use "./input.scss";
+@use "./button.scss";
+
+:root {
+  --root-font-size: 14px;
+  /* Typography */
+  --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-size-small: 0.75rem; /* 12px */
+  --font-size-medium: 1rem; /* 16px */
+  --font-size-large: 1.25rem; /* 20px */
+  --font-size-xlarge: 1.5rem; /* 24px */
+  --line-height-small: 1.4;
+  --line-height-medium: 1.5;
+  --line-height-large: 1.6;
+
+  /* Colors */
+  --color-primary: #007aff; /* iOS blue */
+  --color-secondary: #5856d6; /* iOS purple */
+  --color-background: #f2f2f7; /* iOS light gray */
+  --color-text-primary: #000000; /* Black */
+  --color-text-secondary: #3c3c4399; /* Secondary text */
+  --color-border: #c6c6c8; /* Border gray */
+
+  --color-success: #28cd41; /* Success green */
+  --color-warning: #ffcc00; /* Warning yellow */
+  --color-danger: #ff3b30; /* Danger red */
+  --color-info: #007aff; /* Info blue */
+  --color-light: #f2f2f7; /* Light gray */
+  --color-dark: #000000; /* Dark black */
+  --color-white: #ffffff; /* White */
+  --color-black: #000000; /* Black */
+
+  /* Spacing */
+  --spacing-small: 0.25rem; /* 4px */
+  --spacing-medium: 0.5rem; /* 8px */
+  --spacing-large: 1rem; /* 16px */
+  --spacing-xlarge: 1.5rem; /* 24px */
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-system);
+  font-family: "Manrope", sans-serif;
+  font-optical-sizing: auto;
+    font-size: var(--root-font-size);
+}
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6, p {
+  margin: 0;
+  padding: 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 0;
+}

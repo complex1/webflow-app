@@ -1,0 +1,114 @@
+.text-s {
+  font-size: var(--font-size-small);
+}
+.text-m {
+  font-size: var(--font-size-medium);
+}
+.text-l {
+  font-size: var(--font-size-large);
+}
+.text-xl {
+  font-size: var(--font-size-xlarge);
+}
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+.text-primary-bg {
+  color: var(--color-primary);
+}
+.text-secondary-bg {
+  color: var(--color-secondary);
+}
+.text-light {
+  color: var(--color-light);
+}
+.text-dark {
+  color: var(--color-dark);
+}
+.text-white {
+  color: var(--color-white);
+}
+.text-black {
+  color: var(--color-black);
+}
+.text-success {
+  color: var(--color-success);
+}
+.text-warning {
+  color: var(--color-warning);
+}
+.text-danger {
+  color: var(--color-danger);
+}
+.text-info {
+  color: var(--color-info);
+}
+
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.text-justify {
+  text-align: justify;
+}
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+.text-lowercase {
+  text-transform: lowercase;
+}
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.text-break {
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+.text-normal {
+  font-weight: normal;
+}
+.text-light {
+  font-weight: 300;
+}
+
+.text-muted {
+  color: var(--color-text-secondary);
+}
+.text-highlight {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+.text-underline {
+  text-decoration: underline;
+}
