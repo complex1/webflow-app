@@ -72,6 +72,12 @@
         </div>
       </template>
     </expension-panel>
+    <validation-errors
+      v-if="errors.length > 0"
+      :errors="errors"
+      class="mt-m"
+      style="max-height: 20rem; overflow-y: auto"
+    ></validation-errors>
     <div class="flex-end mt-m">
       <button
         class="btn btn-primary btn-outline mx-m"
@@ -93,8 +99,10 @@ import Variable from "../../classes/Variable";
 import FunctionalNode from "../../classes/FunctionalNode";
 import expensionPanel from "../common/expensionPanel.vue";
 import VariableForm from "./variableForm.vue";
+import ErrorMessage from "../../classes/ErrorMessage";
+import ValidationErrors from "../common/validationError.vue";
 export default {
-  components: { expensionPanel, VariableForm },
+  components: { expensionPanel, VariableForm, ValidationErrors },
   name: "FunctionalNodeForm",
   props: {
     node: {
@@ -133,11 +141,16 @@ export default {
     validate() {
       this.errors = [];
       if (this.name === "") {
-        this.errors.push("Name is required.");
+        this.errors.push(new ErrorMessage("Name is required.", "ERROR"));
       }
       if (this.transform === "") {
-        this.errors.push("Transform function is required.");
+        this.errors.push(
+          new ErrorMessage("Transform function is required.", "ERROR")
+        );
       }
+      this.parameters.forEach((param, index) => {
+        this.errors = this.errors.concat(param.validation("Parameter", index + 1));
+      });
     },
     save() {
       this.validate();

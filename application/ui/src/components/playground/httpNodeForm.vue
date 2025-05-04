@@ -158,6 +158,12 @@
         </div>
       </template>
     </expension-panel>
+    <validation-errors
+      v-if="errors.length > 0"
+      :errors="errors"
+      class="mt-m"
+      style="max-height: 20rem; overflow-y: auto"
+    ></validation-errors>
     <div class="flex-end mt-m">
       <button
         class="btn btn-primary btn-outline mx-m"
@@ -179,6 +185,8 @@ import Variable from "../../classes/Variable";
 import ExpensionPanel from "../common/expensionPanel.vue";
 import variableForm from "./variableForm.vue";
 import HttpNode from "../../classes/HttpNode";
+import ErrorMessage from "../../classes/ErrorMessage";
+import validationErrors from '../common/validationError.vue';
 
 export default {
   name: "HttpNodeForm",
@@ -188,7 +196,7 @@ export default {
       required: true,
     },
   },
-  components: { variableForm, ExpensionPanel },
+  components: { variableForm, ExpensionPanel, validationErrors },
   data: function () {
     return {
       name: "",
@@ -272,13 +280,13 @@ export default {
     validation() {
       this.errors = [];
       if (!this.name) {
-        this.errors.push("Name is required");
+        this.errors.push(new ErrorMessage("Name is required", "ERROR"));
       }
       if (!this.baseUrl) {
-        this.errors.push("Base URL is required");
+        this.errors.push(new ErrorMessage("Base URL is required", "ERROR"));
       }
       if (!this.url) {
-        this.errors.push("URL is required");
+        this.errors.push(new ErrorMessage("URL is required", "ERROR"));
       }
       if (
         this.method === "POST" ||
@@ -286,9 +294,18 @@ export default {
         this.method === "PATCH"
       ) {
         if (!this.body) {
-          this.errors.push("Body is required");
+          this.errors = this.errors.concat(this.body.validation('Body') || []);
         }
       }
+      this.pathParams.forEach((item, index) => {
+        this.errors = this.errors.concat(item.validation('Path Parameter', index + 1) || []);
+      });
+      this.queryParams.forEach((item, index) => {
+        this.errors = this.errors.concat(item.validation('Query Parameter', index + 1) || []);
+      });
+      this.headers.forEach((item, index) => {
+        this.errors = this.errors.concat(item.validation('Header', index + 1) || []);
+      });
     },
     save() {
       this.validation();

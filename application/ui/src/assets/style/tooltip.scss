@@ -1,0 +1,122 @@
+/* Tooltip Styles */
+
+[data-tooltip] {
+  position: relative;
+  cursor: pointer;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-dark, #333);
+  color: var(--color-white, #fff);
+  text-align: center;
+  border-radius: var(--round-1, 4px);
+  padding: var(--spacing-small, 8px);
+  z-index: var(--z-100, 100);
+  transition: opacity 0.3s;
+  font-size: var(--font-size-small, 12px);
+  line-height: var(--line-height-small, 1.4);
+  max-width: 200px;
+  height: fit-content;
+}
+
+[data-tooltip]:hover::after {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Positioning based on data-tooltip-position */
+[data-tooltip][data-tooltip-position="top"]::after {
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+[data-tooltip][data-tooltip-position="bottom"]::after {
+  top: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+[data-tooltip][data-tooltip-position="left"]::after {
+  top: 50%;
+  right: 125%;
+  transform: translateY(-50%);
+}
+
+[data-tooltip][data-tooltip-position="right"]::after {
+  top: 50%;
+  left: 125%;
+  transform: translateY(-50%);
+}
+
+/* Variants based on data-tooltip-type */
+[data-tooltip][data-tooltip-type="success"]::after {
+  background-color: var(--color-success, #28a745);
+}
+
+[data-tooltip][data-tooltip-type="warning"]::after {
+  background-color: var(--color-warning, #ffc107);
+}
+
+[data-tooltip][data-tooltip-type="danger"]::after {
+  background-color: var(--color-danger, #dc3545);
+}
+
+[data-tooltip][data-tooltip-type="info"]::after {
+  background-color: var(--color-info, #17a2b8);
+}
+
+/* Arrow styles */
+[data-tooltip]::before {
+  content: '';
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  border-style: solid;
+  z-index: var(--z-100, 100);
+  transition: opacity 0.3s;
+}
+
+[data-tooltip]:hover::before {
+  visibility: visible;
+  opacity: 1;
+}
+
+[data-tooltip][data-tooltip-position="top"]::before {
+  border-width: 6px 6px 0 6px;
+  border-color: var(--color-dark, #333) transparent transparent transparent;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+[data-tooltip][data-tooltip-position="bottom"]::before {
+  border-width: 0 6px 6px 6px;
+  border-color: transparent transparent var(--color-dark, #333) transparent;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+[data-tooltip][data-tooltip-position="left"]::before {
+  border-width: 6px 0 6px 6px;
+  border-color: transparent transparent transparent var(--color-dark, #333);
+  top: 50%;
+  right: 100%;
+  transform: translateY(-50%);
+}
+
+[data-tooltip][data-tooltip-position="right"]::before {
+  border-width: 6px 6px 6px 0;
+  border-color: transparent var(--color-dark, #333) transparent transparent;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+}

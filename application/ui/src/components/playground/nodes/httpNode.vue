@@ -1,35 +1,7 @@
 <template>
-  <div class="http-node bg-white shadow-1 round-1">
+  <div class="http-node bg-white round-1">
     <connection-handel :id="nodeData.id"></connection-handel>
-    <div class="http-node-header p-s gap-4 flex-space-between flex-v-center">
-      <div>
-        <h3 class="text-dark text-m">{{ nodeData.name }}</h3>
-        <p v-if="nodeData.description" class="text-secondry text-s">
-          {{ nodeData.description }}
-        </p>
-      </div>
-      <div class="flex-v-center" >
-        <status-chip :status="nodeData.nodeStatus"></status-chip>
-        <popover>
-          <template #target>
-            <button class="btn btn-icon ml-m">
-              <i class="pi pi-ellipsis-v cursor-pointer"></i>
-            </button>
-          </template>
-          <template #content>
-            <div class="text-s">
-              <strong>Status:</strong> {{ nodeData.nodeStatus }}
-              <br />
-              <strong>Executing:</strong> {{ nodeData.executing }}
-              <br />
-              <strong>Error:</strong> {{ nodeData.hasError }}
-              <br />
-              <strong>Error Message:</strong> {{ nodeData.errorMessage }}
-            </div>
-          </template>
-        </popover>
-      </div>
-    </div>
+    <node-header :nodeData="nodeData" />
     <hr />
     <div class="http-node-content p-m">
       <div class="http-node-api">
@@ -96,15 +68,15 @@
 
 <script lang="ts">
 import { mapState } from "vuex";
-import HttpNode from "../../../classes/HttpNode";
 import { Workflow } from "../../../classes/Workflow";
 import Popover from "../../common/popover.vue";
 import statusChip from "../../common/statusChip.vue";
+import NodeHeader from './nodeHeader.vue';
 import ConnectionHandel from "./connectionHandel.vue";
 import NodeState from './nodeState.vue';
 import VariableNode from "./variableNode.vue";
 export default {
-  components: { statusChip, VariableNode, Popover, ConnectionHandel, NodeState },
+  components: { statusChip, VariableNode, Popover, ConnectionHandel, NodeState, NodeHeader },
   name: "HttpNode",
   props: {
     id: {
@@ -117,7 +89,7 @@ export default {
       nodeData: {
         id: "4",
         name: "shuabhm",
-        description: "",
+        description: "e rwf wer f wer fw ",
         type: "HTTP",
         nodeStatus: "INACTIVE",
         nodeData: {
@@ -184,6 +156,7 @@ export default {
 <style scoped lang="scss">
 .http-node {
   min-width: 200px;
+  filter: drop-shadow(var(--shadow-drop));
 
   &-url {
     max-width: 300px;

@@ -53,7 +53,10 @@ export default {
       if (this.isOpen) return;
       this.isOpen = true;
       this.updatePosition();
-      !this.tooltip && window.addEventListener("click", this.checkOutsideClick);
+      setTimeout(() => {
+        !this.tooltip && window.addEventListener("click", this.checkOutsideClick);
+      }, 100);
+      
     },
     close() {
       this.isOpen = false;
@@ -121,11 +124,9 @@ export default {
 .popover-content {
   position: fixed;
   z-index: 1000;
-  background-color: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  padding: var(--spacing-medium);
 }
 
 .popover-content::after {

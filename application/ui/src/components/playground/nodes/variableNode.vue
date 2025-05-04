@@ -7,28 +7,26 @@
       :position="Position.Left"
       :id="variable.id"
       :style="{
-        top: '10px',
+        top: '8px',
         transform: 'translateY(-50%)',
         left: '-10px',
+        height: '10px',
+        width: '2px',
+        background: 'var(--color-success)',
+        borderRadius: '0px',
       }"
     />
     <span class="text-s text-secondary flex-v-center">
       <span class="px-s">
         {{ variable.name }}
       </span>
-      <popover :tooltip="true">
+      <popover>
         <template #target>
           <small class="pi pi-info-circle cursor-pointer"></small>
         </template>
         <template #content>
-          <div class="text-s">
-            <strong>Description:</strong> {{ variable.description }}
-            <br />
-            <strong>Type:</strong> {{ variable.type }}
-            <br />
-            <strong>Default Value:</strong> {{ variable.defaultValue }}
-            <br />
-            <strong>Required:</strong> {{ variable.required ? "Yes" : "No" }}
+          <div class="text-m bg-white p-s round-1">
+            {{ variable.defaultValue ? variable.defaultValue : 'This variable has no value assigned.' }}
           </div>
         </template>
       </popover>

@@ -1,0 +1,82 @@
+/* Alert Popup Styles */
+
+.alert-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--color-white);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--round-1, 4px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-large);
+  z-index: var(--z-100, 100);
+  width: 90%;
+  max-width: 400px;
+}
+
+.alert-popup h2 {
+  font-size: var(--font-size-large);
+  margin-bottom: var(--spacing-medium);
+}
+
+.alert-popup p {
+  font-size: var(--font-size-medium);
+  margin-bottom: var(--spacing-large);
+}
+
+.alert-popup-icon {
+  font-size: var(--font-size-xlarge);
+  margin-right: var(--spacing-medium);
+  vertical-align: middle;
+}
+
+.alert-popup-icon.left {
+  float: left;
+}
+
+.alert-popup-icon.right {
+  float: right;
+}
+
+.alert-popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-small);
+}
+
+.alert-popup-button {
+  padding: var(--spacing-small) var(--spacing-medium);
+  font-size: var(--font-size-medium);
+  border: none;
+  border-radius: var(--round-1, 4px);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.alert-popup-button.info {
+  background-color: var(--color-info);
+  color: var(--color-white);
+}
+
+.alert-popup-button.warning {
+  background-color: var(--color-light);
+  color: var(--color-black);
+}
+
+.alert-popup-button.error {
+  background-color: var(--color-danger);
+  color: var(--color-white);
+}
+
+.alert-popup-button.success {
+  background-color: var(--color-success);
+  color: var(--color-white);
+}
+
+.alert-popup-button:disabled {
+  background-color: var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+}

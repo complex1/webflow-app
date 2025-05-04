@@ -6,11 +6,16 @@ export interface WorkflowState {
   workflow: Workflow;
   viewNodes: INode[];
   viewEdges: IEdge[];
-  
+  workflowId: string;
+  workflowName: string;
+  workflowDescription: string;
 }
 export default {
   namespaced: true,
   state: {
+    workflowId: "111",
+    workflowName: "Untitled",
+    workflowDescription: "lorem ipsum",
     workflow: new Workflow(),
     viewNodes: [] as INode[], // initialized viewNodes with an empty array
     viewEdges: [] as IEdge[], // initialized viewEdges with an empty array
@@ -18,6 +23,15 @@ export default {
   getters: {
   },
   mutations: {
+    setWorkflowId(state: WorkflowState, id: string) {
+      state.workflowId = id;
+    },
+    setWorkflowName(state: WorkflowState, name: string) {
+      state.workflowName = name;
+    },
+    setWorkflowDescription(state: WorkflowState, description: string) {
+      state.workflowDescription = description;
+    },
     addFunctionalNode(state: WorkflowState, node: FunctionalNode) {
       const viewNodes: INode = {
         id: node.id,

@@ -1,7 +1,7 @@
 <template>
   <div class="node-card">
     <div class="node-header">
-      <h2 class="node-title">{{ node.nodeData.name || "Untitled Node" }}</h2>
+      <h2 class="node-title">{{ "Untitled Node" }}</h2>
       <span
         class="node-status"
         :class="getStatusClass(node.nodeStatus)"
