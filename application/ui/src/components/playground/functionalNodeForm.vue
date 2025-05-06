@@ -18,8 +18,7 @@
         <div class="flex-v-center flex-space-between pr-l">
           <span
             >Parameters
-            <small v-if="parameters.length > 0"
-              >({{ parameters.length }})</small
+            <small v-if="parameters.length > 0">({{ parameters.length }})</small
             ></span
           >
           <button
@@ -58,17 +57,10 @@
         </div>
       </template>
       <template #content>
-        <div class="wfa-input">
-          <textarea
-            class="wfa-textarea"
-            placeholder="Transform function"
-            rows="5"
-            cols="50"
-            type="text"
-            id="transform"
+        <div class="wfa-input" style="height: 200px;" >
+          <js-editor
             v-model="transform"
-            @change="update"
-          />
+          ></js-editor>
         </div>
       </template>
     </expension-panel>
@@ -101,8 +93,9 @@ import expensionPanel from "../common/expensionPanel.vue";
 import VariableForm from "./variableForm.vue";
 import ErrorMessage from "../../classes/ErrorMessage";
 import ValidationErrors from "../common/validationError.vue";
+import JsEditor from '../common/code/jsEditor.vue';
 export default {
-  components: { expensionPanel, VariableForm, ValidationErrors },
+  components: { expensionPanel, VariableForm, ValidationErrors, JsEditor },
   name: "FunctionalNodeForm",
   props: {
     node: {

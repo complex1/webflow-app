@@ -73,6 +73,7 @@
           id="defaultValue"
           v-model="defaultValue"
           @change="update"
+          :height="'200px'"
         ></json-editor>
       </div>
     </div>
@@ -81,7 +82,7 @@
 
 <script>
 import Variable from "../../classes/Variable";
-import jsonEditor from "../common/jsonEditor.vue";
+import jsonEditor from "../common/code/jsonEditor.vue";
 export default {
   components: { jsonEditor },
   name: "VariableForm",

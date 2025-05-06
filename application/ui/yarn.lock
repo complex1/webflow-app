@@ -597,7 +597,7 @@
 
 "@vue-flow/controls@^1.1.2":
   version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@vue-flow/controls/-/controls-1.1.2.tgz#d71899ed793f741400d043efdd49765a3a94c75f"
+  resolved "https://registry.npmjs.org/@vue-flow/controls/-/controls-1.1.2.tgz"
   integrity sha512-6dtl/JnwDBNau5h3pDBdOCK6tdxiVAOL3cyruRL61gItwq5E97Hmjmj2BIIqX2p7gU1ENg3z80Z4zlu58fGlsg==
 
 "@vue-flow/core@^1.43.1":
@@ -1234,6 +1234,11 @@ mitt@^3.0.1:
   resolved "https://registry.npmjs.org/mitt/-/mitt-3.0.1.tgz"
   integrity sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==
 
+monaco-editor@^0.52.2:
+  version "0.52.2"
+  resolved "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.52.2.tgz"
+  integrity sha512-GEQWEZmfkOGLdd3XK8ryrfWz3AIP8YymVXiPHEdewrUq7mh0qrKrfHLNCXcbB6sTnMLnOZ3ztSiKcciFUkIJwQ==
+
 mrmime@^2.0.0:
   version "2.0.1"
   resolved "https://registry.npmjs.org/mrmime/-/mrmime-2.0.1.tgz"
@@ -1666,6 +1671,11 @@ vite-plugin-inspect@0.8.9:
     perfect-debounce "^1.0.0"
     picocolors "^1.1.1"
     sirv "^3.0.0"
+
+vite-plugin-monaco-editor@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-monaco-editor/-/vite-plugin-monaco-editor-1.1.0.tgz#a6238c2e13d5e98dd54a1bc51f6f189325219de3"
+  integrity sha512-IvtUqZotrRoVqwT0PBBDIZPNraya3BxN/bfcNfnxZ5rkJiGcNtO5eAOWWSgT7zullIAEqQwxMU83yL9J5k7gww==
 
 vite-plugin-vue-devtools@^7.7.6:
   version "7.7.6"
