@@ -25,6 +25,10 @@ export default {
       type: String,
       default: "100%",
     },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {

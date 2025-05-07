@@ -7,6 +7,7 @@
     theme="vs-dark"
     :options="{ automaticLayout: true }"
     :height="height"
+    :readOnly="readOnly"
   ></monaco-editor>
 </template>
 
@@ -24,6 +25,10 @@ export default {
     height: {
       type: String,
       default: "100%",
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

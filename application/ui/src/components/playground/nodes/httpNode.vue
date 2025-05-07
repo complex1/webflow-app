@@ -102,14 +102,14 @@ export default {
         hasError: false,
         errorMessage: null,
         order: 0,
-        baseUrl: "http://loclahost:4000",
+        baseUrl: "http://localhost:4000",
         url: "/guest/api/:pathParam",
         pathParams: [
           {
             id: "1",
             name: "pathParam",
             description: " wfcwer fqw er",
-            defaultValue: null,
+            defaultValue: {'ss': 33},
             type: "string",
             formStore: true,
             required: false,

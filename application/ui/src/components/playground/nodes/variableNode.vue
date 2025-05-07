@@ -26,7 +26,13 @@
         </template>
         <template #content>
           <div class="text-m bg-white p-s round-1">
-            {{ variable.defaultValue ? variable.defaultValue : 'This variable has no value assigned.' }}
+            <span v-if="noValue" class="text-danger">No value</span>
+            <span v-else-if="dataType !== 'object'">
+              {{ getValue }}
+            </span>
+            <div v-else style="width: 400px; height: 200px">
+              <json-editor :modelValue="getValue" :readOnly="true" />
+            </div>
           </div>
         </template>
       </popover>
@@ -37,7 +43,8 @@
 <script>
 import Variable from "../../../classes/Variable";
 import { Position, Handle } from "@vue-flow/core";
-import Popover from '../../common/popover.vue';
+import Popover from "../../common/popover.vue";
+import JsonEditor from "../../common/code/jsonEditor.vue";
 export default {
   props: {
     variable: {
@@ -48,11 +55,26 @@ export default {
   components: {
     Handle,
     Popover,
+    JsonEditor,
   },
   data() {
     return {
       Position: Position,
     };
+  },
+  computed: {
+    noValue() {
+      return (
+        this.variable.defaultValue === undefined ||
+        this.variable.defaultValue === null
+      );
+    },
+    getValue() {
+      return this.variable.defaultValue || "";
+    },
+    dataType() {
+      return typeof this.getValue;
+    },
   },
   methods: {},
 };
