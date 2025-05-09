@@ -15,6 +15,7 @@
       <span v-else>{{ workflowName }}</span>
     </div>
     <div class="workflow-actions">
+      <theme-toggle></theme-toggle>
       <button
         data-tooltip="Run Pipeline"
         data-tooltip-position="bottom"
@@ -44,7 +45,9 @@
 </template>
 <script>
 import { mapMutations, mapState } from "vuex";
+import themeToggle from '../common/themeToggle.vue';
 export default {
+  components: { themeToggle },
   name: "workflowHeaderComponent",
   data() {
     return {
@@ -100,13 +103,13 @@ export default {
   align-items: center;
   height: 60px;
   padding: 0 var(--spacing-large);
-  background-color: var(--color-black);
+  background-color: var(--color-white);
   border-bottom: 1px solid var(--color-border);
 }
 
 .workflow-title {
   flex: 1;
-  color: var(--color-white);
+  color: var(--color-black);
   font-size: var(--font-size-large);
   font-weight: bold;
   cursor: pointer;
@@ -114,7 +117,7 @@ export default {
 
 .workflow-title input {
   font-size: var(--font-size-large);
-  color: var(--color-white);
+  color: var(--color-black); // Change color to var(--color-black)
   font-weight: bold;
   width: 100%;
   max-width: 300px;
@@ -122,7 +125,7 @@ export default {
   outline: none;
   background: transparent;
   &:focus {
-    border-bottom: 1px solid var(--color-white);
+    border-bottom: 1px solid var(--color-black); // Change focus border color to var(--color-black)
   }
   &.input-error {
     border-bottom: 1px solid var(--color-danger);

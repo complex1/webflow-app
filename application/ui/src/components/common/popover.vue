@@ -124,9 +124,11 @@ export default {
 .popover-content {
   position: fixed;
   z-index: 1000;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: var(--color-background);
+  border: 1pt solid var(--color-border);
+  border-radius: 3pt;
+  box-shadow: 0 1.5pt 6pt rgba(0, 0, 0, 0.15);
+  padding: var(--spacing-medium);
 }
 
 .popover-content::after {
@@ -138,50 +140,50 @@ export default {
 }
 
 .popover-content.bottom::after {
-  top: -8px;
+  top: -6pt;
   left: 50%;
   transform: translateX(-50%);
-  border-width: 0 8px 8px 8px;
+  border-width: 0 6pt 6pt 6pt;
   border-color: transparent transparent var(--color-border) transparent;
 }
 
 .popover-content.top::after {
-  bottom: -8px;
+  bottom: -6pt;
   left: 50%;
   transform: translateX(-50%);
-  border-width: 8px 8px 0 8px;
+  border-width: 6pt 6pt 0 6pt;
   border-color: var(--color-border) transparent transparent transparent;
 }
 
 .popover-content.left::after {
   top: 50%;
-  right: -8px;
+  right: -6pt;
   transform: translateY(-50%);
-  border-width: 8px 8px 8px 0;
+  border-width: 6pt 6pt 6pt 0;
   border-color: transparent var(--color-border) transparent transparent;
 }
 
 .popover-content.right::after {
   top: 50%;
-  left: -8px;
+  left: -6pt;
   transform: translateY(-50%);
-  border-width: 8px 0 8px 8px;
+  border-width: 6pt 0 6pt 6pt;
   border-color: transparent transparent transparent var(--color-border);
 }
 
 .popover-content.bottom {
-  transform: translateY(8px);
+  transform: translateY(6pt);
 }
 
 .popover-content.top {
-  transform: translateY(-8px);
+  transform: translateY(-6pt);
 }
 
 .popover-content.left {
-  transform: translateX(-8px);
+  transform: translateX(-6pt);
 }
 
 .popover-content.right {
-  transform: translateX(8px);
+  transform: translateX(6pt);
 }
 </style>

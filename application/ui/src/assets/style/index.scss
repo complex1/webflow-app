@@ -5,15 +5,16 @@
 @use "./button.scss";
 @use "./tooltip.scss";
 
+/* Light Theme (Default) */
 :root {
-  --root-font-size: 14px;
+  --root-font-size: 12pt; /* 14px */
   /* Typography */
   --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
-  --font-size-small: 0.75rem; /* 12px */
-  --font-size-medium: 1rem; /* 16px */
-  --font-size-large: 1.25rem; /* 20px */
-  --font-size-xlarge: 1.5rem; /* 24px */
+  --font-size-small: 9pt; /* 12px */
+  --font-size-medium: 12pt; /* 16px */
+  --font-size-large: 15pt; /* 20px */
+  --font-size-xlarge: 18pt; /* 24px */
   --line-height-small: 1.4;
   --line-height-medium: 1.5;
   --line-height-large: 1.6;
@@ -36,14 +37,38 @@
   --color-black: #000000; /* Black */
 
   /* Spacing */
-  --spacing-small: 0.25rem; /* 4px */
-  --spacing-medium: 0.5rem; /* 8px */
-  --spacing-large: 1rem; /* 16px */
-  --spacing-xlarge: 1.5rem; /* 24px */
+  --spacing-small: 3pt; /* 4px */
+  --spacing-medium: 6pt; /* 8px */
+  --spacing-large: 12pt; /* 16px */
+  --spacing-xlarge: 18pt; /* 24px */
 
   /* Mask */
   --mask-color: rgba(0, 0, 0, 0.2); /* Semi-transparent black */
-  --shadow-drop: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Drop shadow */
+  --shadow-drop: 0px 1.5pt 3pt rgba(0, 0, 0, 0.1); /* Drop shadow */
+}
+
+/* Dark Theme */
+.dark-theme {
+  /* Colors */
+  --color-primary: #0a84ff;
+  --color-secondary: #5e5ce6;
+  --color-background: #1c1c1e;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #ebebf599;
+  --color-border: #38383a;
+
+  --color-success: #32d74b;
+  --color-warning: #ffd60a;
+  --color-danger: #ff453a;
+  --color-info: #0a84ff;
+  --color-light: #2c2c2e;
+  --color-dark: #ffffff;
+  --color-white: #000000;
+  --color-black: #ffffff; /* Set color-black to white */
+
+  /* Mask */
+  --mask-color: rgba(0, 0, 0, 0.4);
+  --shadow-drop: 0px 1.5pt 3pt rgba(0, 0, 0, 0.2);
 }
 
 html,
@@ -53,7 +78,7 @@ body {
   font-family: var(--font-family-system);
   font-family: "Manrope", sans-serif;
   font-optical-sizing: auto;
-    font-size: var(--root-font-size);
+  font-size: var(--root-font-size);
 }
 body {
   background-color: var(--color-background);
@@ -73,7 +98,7 @@ h6, p {
 
 hr {
   border: none;
-  border-top: 1px solid var(--color-border);
+  border-top: 0.75pt solid var(--color-border);
   margin: 0;
 }
 

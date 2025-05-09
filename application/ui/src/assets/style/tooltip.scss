@@ -16,13 +16,13 @@
   background-color: var(--color-dark, #333);
   color: var(--color-white, #fff);
   text-align: center;
-  border-radius: var(--round-1, 4px);
-  padding: var(--spacing-small, 8px);
+  border-radius: var(--round-1, 3pt);
+  padding: var(--spacing-small, 6pt);
   z-index: var(--z-100, 100);
   transition: opacity 0.3s;
-  font-size: var(--font-size-small, 12px);
+  font-size: var(--font-size-small, 9pt);
   line-height: var(--line-height-small, 1.4);
-  max-width: 200px;
+  max-width: 150pt;
   height: fit-content;
 }
 
@@ -90,7 +90,7 @@
 }
 
 [data-tooltip][data-tooltip-position="top"]::before {
-  border-width: 6px 6px 0 6px;
+  border-width: 4.5pt 4.5pt 0 4.5pt;
   border-color: var(--color-dark, #333) transparent transparent transparent;
   bottom: 100%;
   left: 50%;
@@ -98,7 +98,7 @@
 }
 
 [data-tooltip][data-tooltip-position="bottom"]::before {
-  border-width: 0 6px 6px 6px;
+  border-width: 0 4.5pt 4.5pt 4.5pt;
   border-color: transparent transparent var(--color-dark, #333) transparent;
   top: 100%;
   left: 50%;
@@ -106,7 +106,7 @@
 }
 
 [data-tooltip][data-tooltip-position="left"]::before {
-  border-width: 6px 0 6px 6px;
+  border-width: 4.5pt 0 4.5pt 4.5pt;
   border-color: transparent transparent transparent var(--color-dark, #333);
   top: 50%;
   right: 100%;
@@ -114,7 +114,7 @@
 }
 
 [data-tooltip][data-tooltip-position="right"]::before {
-  border-width: 6px 6px 6px 0;
+  border-width: 4.5pt 4.5pt 4.5pt 0;
   border-color: transparent var(--color-dark, #333) transparent transparent;
   top: 50%;
   left: 100%;

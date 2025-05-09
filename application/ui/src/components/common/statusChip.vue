@@ -64,6 +64,15 @@ export default {
 .status-chip {
   display: inline-flex;
   align-items: center;
-    gap: 4px;
+  gap: 6pt;
+  padding: 3pt 6pt;
+  border-radius: 12pt;
+  font-size: 10.5pt;
+  font-weight: bold;
+  color: #fff;
+}
+
+.status-chip i {
+  font-size: 12pt;
 }
 </style>

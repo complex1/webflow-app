@@ -59,27 +59,27 @@ export default {
 .json-editor {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6pt;
 }
 
 .json-editor textarea {
   width: 100%;
-  height: 200px;
-  padding: 8px;
+  height: 150pt;
+  padding: 6pt;
   font-family: monospace;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  font-size: 10.5pt;
+  border: 0.75pt solid var(--color-border);
+  border-radius: 3pt;
   outline: none;
   resize: vertical;
 }
 
 .json-editor textarea:focus {
-  border-color: #007aff;
+  border-color: var(--color-primary);
 }
 
 .error {
-  color: #d9534f;
-  font-size: 12px;
+  color: var(--color-danger);
+  font-size: 9pt;
 }
 </style>

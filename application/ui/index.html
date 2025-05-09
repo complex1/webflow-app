@@ -11,14 +11,20 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
     rel="stylesheet">
-    <script src="/monaco/min/vs/loader.js"></script>
-    <script>
-      const monacoBaseUrl = `${window.location.origin}/monaco/min/vs`;
-      require.config({ paths: { 'vs': monacoBaseUrl } });
-      require(['vs/editor/editor.main'], function () {
-        window.monaco = monaco;
-      });
-    </script>
+  <script src="/monaco/min/vs/loader.js"></script>
+  <script>
+    const monacoBaseUrl = `${window.location.origin}/monaco/min/vs`;
+    require.config({ paths: { 'vs': monacoBaseUrl } });
+    require(['vs/editor/editor.main'], function () {
+      window.monaco = monaco;
+      document.dispatchEvent(new Event('monacoLoaded'));
+    });
+  </script>
+  <script>
+    document.addEventListener('monacoLoaded', function () {
+      // Code to execute after Monaco is loaded
+    });
+  </script>
 </head>
 
 <body>
