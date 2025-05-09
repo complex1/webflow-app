@@ -7,17 +7,17 @@
       :position="Position.Left"
       :id="variable.id"
       :style="{
-        top: '8px',
+        top: '9px',
         transform: 'translateY(-50%)',
-        left: '-10px',
-        height: '10px',
-        width: '2px',
-        background: 'var(--color-success)',
-        borderRadius: '0px',
+        left: '0px',
+        height: '5px',
+        width: '5px',
+        background: 'var(--color-text-secondary)',
+        borderRadius: '50%',
       }"
     />
-    <span class="text-s text-secondary flex-v-center">
-      <span class="px-s">
+    <span class="text-s opacity-50 gap-s text-600 flex-v-center">
+      <span class="pl-m">
         {{ variable.name }}
       </span>
       <popover>

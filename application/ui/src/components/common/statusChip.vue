@@ -1,5 +1,5 @@
 <template>
-  <div class="status-chip text-s px-m py-s round-2 text-bold" :class="statusClass">
+  <div class="status-chip text-bold" :class="statusClass">
     <i :class="iconClass"></i>
     <span>{{ status }}</span>
   </div>
@@ -18,25 +18,55 @@ export default {
         return Object.values(NodeStatus).includes(value);
       },
     },
+    size: {
+      type: String,
+      default: "medium",
+      validator(value) {
+        return ["small", "medium", "large"].includes(value);
+      },
+    },
   },
   computed: {
     statusClass() {
+      let sizeClass = "";
+      let statusClass = "";
+      switch (this.size) {
+        case "small":
+          sizeClass = "text-xs";
+          break;
+        case "medium":
+          sizeClass = "text-s";
+          break;
+        case "large":
+          sizeClass = "text-l";
+          break;
+        default:
+          sizeClass = "";
+      }
       switch (this.status) {
         case NodeStatus.PENDING:
-          return 'bg-yellow text-white';
+          statusClass = "bg-warning text-white";
+          break;
         case NodeStatus.IN_PROGRESS:
-          return 'bg-primary text-white';
+          statusClass = "bg-primary text-white";
+          break;
         case NodeStatus.SUCCESS:
-          return 'bg-success text-white';
+          statusClass = "bg-success text-white";
+          break;
         case NodeStatus.FAILURE:
-          return 'bg-danger text-white';
+          statusClass = "bg-danger text-white";
+          break;
         case NodeStatus.INACTIVE:
-          return 'bg-light text-dark';
+          statusClass = "bg-secondary text-white";
+          break;
         case NodeStatus.SKIPPED:
-          return 'bg-secondary text-white';
+          statusClass = "bg-info text-white";
+          break;
         default:
-          return "";
+          statusClass = "bg-default text-white";
+          break;
       }
+      return `${sizeClass} ${statusClass}`;
     },
     iconClass() {
       switch (this.status) {
@@ -64,15 +94,11 @@ export default {
 .status-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6pt;
-  padding: 3pt 6pt;
-  border-radius: 12pt;
-  font-size: 10.5pt;
+  gap: 0.5em;
   font-weight: bold;
-  color: #fff;
+  font-size: 0.6em;
+  padding: 0.2em 0.5em;
+  border-radius: 1em;
 }
 
-.status-chip i {
-  font-size: 12pt;
-}
 </style>

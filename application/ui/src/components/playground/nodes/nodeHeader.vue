@@ -1,16 +1,29 @@
 <template>
-  <div class="node-header p-s gap-4 flex-space-between flex-v-center">
-    <div>
-      <h3 class="text-dark text-m">{{ nodeData.name }}</h3>
-      <p v-if="nodeData.description" class="text-secondry text-s">
-        {{ nodeData.description }}
-      </p>
+  <div class="node-header p-s gap-m flex-space-between flex-v-center">
+    <div class="flex-grow" >
+      <div class="text-dark text-m text-500 flex-v-center gap-s">
+        <div class="text-truncate" style="max-width: 200px">
+          {{ nodeData.name }}
+        </div>
+        <popover v-if="nodeData.description || nodeData.description === ''" :tooltip="true">
+          <template #target>
+            <small class="pi pi-info-circle cursor-pointer opacity-50 text-s"></small>
+          </template>
+          <template #content>
+            <div class="text-m bg-white p-m round-1" style="max-width: 200px" >
+              <span class="text-secondary">
+                <strong>Description:</strong> {{ nodeData.description }}
+              </span>
+            </div>
+          </template>
+        </popover>
+      </div>
     </div>
     <div class="flex-v-center">
-      <status-chip :status="nodeData.nodeStatus"></status-chip>
+      <status-chip :status="nodeData.nodeStatus" size="small"></status-chip>
       <popover ref="popover">
         <template #target>
-          <button class="btn btn-icon ml-m" data-tooltip="Node Options">
+          <button class="btn btn-icon" data-tooltip="Node Options">
             <i class="pi pi-ellipsis-v cursor-pointer"></i>
           </button>
         </template>
@@ -63,5 +76,4 @@ export default {
   mounted() {},
 };
 </script>
-<style lang='scss' scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -24,6 +24,8 @@ export default class Node {
     executing: boolean;
     hasError: boolean; // change to private
     errorMessage: string | null; // change to private
+    executionTime: number | null = null; // added executionTime property
+    executionDone: boolean = false; // added executionDone property
     private order: number = 0; // added order property
 
     constructor(type: NodeType) {

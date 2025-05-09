@@ -3,28 +3,34 @@
     <connection-handel :id="nodeData.id"></connection-handel>
     <node-header :nodeData="nodeData" />
     <hr />
-    <div class="http-node-content p-m">
+    <div class="http-node-content px-m py-s">
       <div class="http-node-api">
         <span
-          :class="`http-methods px-m py-s text-s round-1 http-node-methods-${nodeData.method}`"
-          >{{ nodeData.method }}</span
+          :class="`http-methods v-center px-s text-s round-1 http-node-methods-${nodeData.method}`"
         >
+          <small>
+            {{ nodeData.method }}
+          </small>
+        </span>
         <span class="http-node-url text-s text-primary-bg pl-m">
           {{ nodeData.baseUrl }}{{ nodeData.url }}
         </span>
       </div>
-      <hr class="mt-m" />
+
       <div class="grid-2">
         <div>
+          <hr class="mt-s" />
+          <div class="text-s text-primary text-600 my-s">Request:</div>
+          <hr />
           <div class="mt-m" v-if="nodeData.body">
-            <h4 class="text-s">Request Body</h4>
+            <div class="text-s text-500 text-secondary">Request Body</div>
             <variable-node
               v-if="nodeData.body"
               :variable="nodeData.body"
             ></variable-node>
           </div>
           <div class="mt-m" v-if="nodeData.pathParams.length">
-            <h4 class="text-s">Path Param</h4>
+            <div class="text-s text-500 text-secondary">Path Param</div>
             <variable-node
               v-for="(param, index) in nodeData.pathParams"
               :key="index"
@@ -32,7 +38,7 @@
             ></variable-node>
           </div>
           <div class="mt-m" v-if="nodeData.queryParams.length">
-            <h4 class="text-s">Query Param</h4>
+            <div class="text-s text-500 text-secondary">Query Param</div>
             <variable-node
               v-for="(param, index) in nodeData.queryParams"
               :key="index"
@@ -40,7 +46,7 @@
             ></variable-node>
           </div>
           <div class="mt-m" v-if="nodeData.headers.length">
-            <h4 class="text-s">Headers</h4>
+            <div class="text-s text-500 text-secondary">Headers</div>
             <variable-node
               v-for="(param, index) in nodeData.headers"
               :key="index"
@@ -48,19 +54,7 @@
             ></variable-node>
           </div>
         </div>
-        <div class="http-node-res mt-m">
-          <popover :tooltip="false">
-            <template #target>
-              <span class="text-s text-secondary flex-v-center">
-                <span class="px-s">Response</span>
-                <small class="pi pi-info-circle cursor-pointer"></small>
-              </span>
-            </template>
-            <template #content>
-              <node-state :node="nodeData" />
-            </template>
-          </popover>
-        </div>
+        <node-response :nodeData="nodeData"></node-response>
       </div>
     </div>
   </div>
@@ -71,13 +65,22 @@ import { mapState } from "vuex";
 import { Workflow } from "../../../classes/Workflow";
 import Popover from "../../common/popover.vue";
 import statusChip from "../../common/statusChip.vue";
-import NodeHeader from './nodeHeader.vue';
+import NodeHeader from "./nodeHeader.vue";
 import ConnectionHandel from "./connectionHandel.vue";
-import NodeState from './nodeState.vue';
+import NodeState from "./nodeState.vue";
 import VariableNode from "./variableNode.vue";
-import HttpNode from '../../../classes/HttpNode';
+import HttpNode from "../../../classes/HttpNode";
+import NodeResponse from "./nodeResponse.vue";
 export default {
-  components: { statusChip, VariableNode, Popover, ConnectionHandel, NodeState, NodeHeader },
+  components: {
+    statusChip,
+    VariableNode,
+    Popover,
+    ConnectionHandel,
+    NodeState,
+    NodeHeader,
+    NodeResponse,
+  },
   name: "HttpNode",
   props: {
     id: {
@@ -86,15 +89,14 @@ export default {
     },
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     ...mapState({
-        workflow: (state):Workflow => state.workflowModule.workflow,
+      workflow: (state): Workflow => state.workflowModule.workflow,
     }),
-    nodeData (): HttpNode {
-        return this.workflow.getNode(this.id);
+    nodeData(): HttpNode {
+      return this.workflow.getNode(this.id);
     },
   },
 };

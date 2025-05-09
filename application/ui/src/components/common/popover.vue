@@ -124,11 +124,9 @@ export default {
 .popover-content {
   position: fixed;
   z-index: 1000;
-  background-color: var(--color-background);
   border: 1pt solid var(--color-border);
   border-radius: 3pt;
   box-shadow: 0 1.5pt 6pt rgba(0, 0, 0, 0.15);
-  padding: var(--spacing-medium);
 }
 
 .popover-content::after {

@@ -7,6 +7,7 @@
       :zoomOnScroll="true"
       :zoomOnPinch="true"
       :panOnScroll="true"
+      :zoom="1"
     >
       <Background />
       <MiniMap pannable zoomable />

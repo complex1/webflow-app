@@ -85,7 +85,8 @@ export default class HttpNode extends Node {
             options.body = null;
             options.headers['Content-Type'] = 'application/json';
         }
-
+        const executionStartTime = Date.now();
+        this.executionDone = false;
         return new Promise((resolve, reject) => {
             fetch(url, options)
             .then(response => {
@@ -107,6 +108,10 @@ export default class HttpNode extends Node {
                 this.nodeStatus = NodeStatus.FAILURE;
                 this.nodeData = null;
                 resolve(undefined);
+            })
+            .finally(() => {
+                this.executionTime = Date.now() - executionStartTime;
+                this.executionDone = true;
             });
         });
     }

@@ -195,3 +195,16 @@
 .mb-xl {
   margin-bottom: var(--spacing-xlarge);
 }
+
+.gap-s {
+  gap: var(--spacing-small);
+}
+.gap-m {
+  gap: var(--spacing-medium);
+}
+.gap-l {
+  gap: var(--spacing-large);
+}
+.gap-xl {
+  gap: var(--spacing-xlarge);
+}

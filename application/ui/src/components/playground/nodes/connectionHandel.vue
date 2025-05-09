@@ -6,13 +6,13 @@
       :position="Position.Left"
       :id="id"
       :style="{
-        top: '10px',
+        top: '15px',
         transform: 'translateY(-50%)',
-        left: '-3px',
-        height: '10px',
-        width: '2px',
+        left: '-5px',
+        height: '5px',
+        width: '5px',
         background: 'var(--color-success)',
-        borderRadius: '0px',
+        borderRadius: '50%',
       }"
     />
     <Handle
@@ -21,13 +21,13 @@
       :position="Position.Right"
       :id="id"
       :style="{
-        top: '10px',
+        top: '15px',
         transform: 'translateY(-50%)',
-        right: '-3px',
-        height: '10px',
-        width: '2px',
+        right: '-5px',
+        height: '5px',
+        width: '5px',
         background: 'var(--color-primary)',
-        borderRadius: '0px',
+        borderRadius: '50%',
       }"
     />
   </div>
