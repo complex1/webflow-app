@@ -26,14 +26,14 @@
       @close="toggleHttpModal"
       title="Create API Node"
     >
-      <http-node-form @close="toggleHttpModal"></http-node-form>
+      <http-node-form v-if="addHttpModal" @close="toggleHttpModal"></http-node-form>
     </drawer>
     <drawer
       :isOpen="addFunctionalModal"
       @close="toggleFunctionalModal"
       title="Create Functional Node"
     >
-      <functional-node-form @close="toggleFunctionalModal"></functional-node-form>
+      <functional-node-form v-if="addFunctionalModal" @close="toggleFunctionalModal"></functional-node-form>
     </drawer>
   </div>
 </template>

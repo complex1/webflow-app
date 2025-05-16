@@ -8,6 +8,7 @@
       :zoomOnPinch="true"
       :panOnScroll="true"
       :zoom="1"
+      @connect="onConnect"
     >
       <Background />
       <MiniMap pannable zoomable />
@@ -29,7 +30,7 @@ import { MiniMap } from "@vue-flow/minimap";
 import { Background } from "@vue-flow/background";
 import { Controls, ControlButton } from "@vue-flow/controls";
 import AddNode from "../playground/addNode.vue";
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import HttpNode from '../playground/nodes/httpNode.vue';
 import FunctionalNode from '../playground/nodes/functionalNode.vue';
 export default {
@@ -55,7 +56,19 @@ export default {
     }),
   },
   watch: {},
-  methods: {},
+  methods: {
+    ...mapMutations({
+      addEdge: "workflowModule/addEdge",
+    }),
+    onConnect(params) {
+      this.addEdge({
+        source: params.source,
+        target: params.target,
+        sourceHandle: params.sourceHandle,
+        targetHandle: params.targetHandle,
+      });
+    },
+  },
   created() {},
   mounted() {},
 };

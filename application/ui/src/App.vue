@@ -1,12 +1,10 @@
 <template>
-  <playground></playground>
+  <router-view></router-view>
 </template>
 
 <script>
-import playground from './pages/playground.vue'
 export default {
-  components: { playground },
-
+  name: 'App'
 }
 </script>
 

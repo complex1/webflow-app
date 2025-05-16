@@ -1,12 +1,35 @@
 <template>
   <div>
     <hr class="mt-s" />
-    <div class="flex-v-center gap-s">
-      <div class="text-s text-primary text-600 my-s">Response:</div>
+    <div class="flex-v-center gap-s position-relative">
+      <div class="text-s text-primary text-600 my-s">
+        Response:
+      </div>
+      <Handle
+        :key="id"
+        type="source"
+        :position="Position.Right"
+        :id="id"
+        :style="{
+          top: '12px',
+          transform: 'translateY(-50%)',
+          right: '-13px',
+          height: '5px',
+          width: '5px',
+          background: nodeData.executionDone
+            ? nodeData.hasError
+              ? 'var(--color-danger)'
+              : 'var(--color-success)'
+            : 'var(--color-primary)',
+          borderRadius: '50%',
+        }"
+      />
     </div>
     <hr />
     <div class="http-node-res mt-m">
-      <div v-if="!nodeData.executionDone">Node is not executed yet.</div>
+      <div v-if="!nodeData.executionDone" class="text-s font-400 opacity-50">
+        Node is not executed yet.
+      </div>
       <div v-else>
         <div>
           <strong class="text-s font-400 opacity-50">Execution Status:</strong>
@@ -54,8 +77,10 @@
 <script>
 import popover from "../../common/popover.vue";
 import NodeState from "./nodeState.vue";
+import { Position, Handle } from "@vue-flow/core";
+
 export default {
-  components: { popover, NodeState },
+  components: { popover, NodeState, Handle },
   name: "NodeResponse",
   props: {
     nodeData: {
@@ -64,9 +89,15 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      Position,
+    };
   },
-  computed: {},
+  computed: {
+    id () {
+      return this.nodeData.id;
+    },
+  },
   watch: {},
   methods: {},
 };
