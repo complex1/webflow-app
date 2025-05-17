@@ -1,81 +1,86 @@
 <template>
-  <div class="flex-center fh fw bg-light">
-    <div
-      class="bg-white round-2 shadow-3 p-xl"
-      style="max-width: 450px; width: 100%"
-    >
-      <h1 class="text-xl text-center mb-l">Register</h1>
-      <form @submit.prevent="registerUser">
-        <div class="mb-m wfa-input">
-          <label for="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            v-model="user.name"
-            placeholder="Enter your name"
-            required
-          />
-          <span class="text-danger text-s" v-if="errors.name">{{
-            errors.name
-          }}</span>
-        </div>
+  <div class="flex-center fh fw bg-light register-page">
+    <div class="p-l flex-center" >
+      <img width="100%" class="round-3" src="../assets/background.svg" alt="">
+    </div>
+    <div class="flex-center">
+      <div
+        class="bg-white round-2 shadow-3 p-xl"
+        style="max-width: 450px; width: 100%"
+      >
+        <h1 class="text-xl text-center mb-l">Register</h1>
+        <form @submit.prevent="registerUser">
+          <div class="mb-m wfa-input">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              v-model="user.name"
+              placeholder="Enter your name"
+              required
+            />
+            <span class="text-danger text-s" v-if="errors.name">{{
+              errors.name
+            }}</span>
+          </div>
 
-        <div class="mb-m wfa-input">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="user.email"
-            placeholder="Enter your email"
-            required
-          />
-          <span class="text-danger text-s" v-if="errors.email">{{
-            errors.email
-          }}</span>
-        </div>
+          <div class="mb-m wfa-input">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              v-model="user.email"
+              placeholder="Enter your email"
+              required
+            />
+            <span class="text-danger text-s" v-if="errors.email">{{
+              errors.email
+            }}</span>
+          </div>
 
-        <div class="mb-m wfa-input">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            v-model="user.password"
-            placeholder="Enter your password"
-            required
-          />
-          <span class="text-danger text-s" v-if="errors.password">{{
-            errors.password
-          }}</span>
-        </div>
+          <div class="mb-m wfa-input">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              v-model="user.password"
+              placeholder="Enter your password"
+              required
+            />
+            <span class="text-danger text-s" v-if="errors.password">{{
+              errors.password
+            }}</span>
+          </div>
 
-        <div class="mb-m wfa-input">
-          <label for="confirmPassword">Confirm Password</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            v-model="user.confirmPassword"
-            placeholder="Confirm your password"
-            required
-          />
-          <span class="text-danger text-s" v-if="errors.confirmPassword">{{
-            errors.confirmPassword
-          }}</span>
-        </div>
+          <div class="mb-m wfa-input">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              v-model="user.confirmPassword"
+              placeholder="Confirm your password"
+              required
+            />
+            <span class="text-danger text-s" v-if="errors.confirmPassword">{{
+              errors.confirmPassword
+            }}</span>
+          </div>
 
-        <button
-          type="submit"
-          class="btn btn-primary fw mt-m mb-m p-m"
-          :class="isSubmitting ? 'opacity-70 cursor-not-allowed' : ''"
-          :disabled="isSubmitting"
-        >
-          {{ isSubmitting ? "Registering..." : "Register" }}
-        </button>
+          <button
+            type="submit"
+            class="btn btn-primary fw mt-m mb-m p-m"
+            :class="isSubmitting ? 'opacity-70 cursor-not-allowed' : ''"
+            :disabled="isSubmitting"
+          >
+            {{ isSubmitting ? "Registering..." : "Register" }}
+          </button>
 
-        <div class="text-center text-m mt-m">
-          Already have an account?
-          <router-link to="/login" class="text-primary-bg">Login</router-link>
-        </div>
-      </form>
+          <div class="text-center text-m mt-m">
+            Already have an account?
+            <router-link to="/login" class="text-primary-bg">Login</router-link>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -171,3 +176,16 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+.register-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  background: linear-gradient(to right, #ffcece, #e0e7ff);
+
+  & img {
+    box-shadow: 0px 0px 12px #e7e7e7;
+  }
+}
+</style>
