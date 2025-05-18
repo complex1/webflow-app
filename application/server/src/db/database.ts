@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import path from 'path';
 import { UserEntity } from '../entities/user.entity';
+import { Webflow } from '../entities/webflow.entity';
 
 // Create data directory if it doesn't exist
 const DATA_DIR = path.join(process.cwd(), 'data');
@@ -10,7 +11,7 @@ const DB_PATH = path.join(DATA_DIR, 'database.sqlite');
 export const AppDataSource = new DataSource({
   type: 'sqlite',
   database: DB_PATH,
-  entities: [UserEntity],
+  entities: [UserEntity, Webflow],
   synchronize: true, // Automatically creates database schema (use only in development)
   logging: process.env.NODE_ENV === 'development',
 });

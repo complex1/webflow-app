@@ -1,9 +1,5 @@
 <template>
-  <div class="flex-center fh fw bg-light register-page">
-    <div class="p-l flex-center" >
-      <img width="100%" class="round-3" src="../assets/background.svg" alt="">
-    </div>
-    <div class="flex-center">
+  <auth-layout>
       <div
         class="bg-white round-2 shadow-3 p-xl"
         style="max-width: 450px; width: 100%"
@@ -81,14 +77,15 @@
           </div>
         </form>
       </div>
-    </div>
-  </div>
+  </auth-layout>
 </template>
 
 <script>
+import authLayout from '../components/common/authLayout.vue';
 import { UserService } from "../services/user.service.ts";
 
 export default {
+  components: { authLayout },
   name: "RegisterPage",
   data() {
     return {
@@ -178,14 +175,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.register-page {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: 100vh;
-  background: linear-gradient(to right, #ffcece, #e0e7ff);
 
-  & img {
-    box-shadow: 0px 0px 12px #e7e7e7;
-  }
-}
 </style>

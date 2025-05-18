@@ -4,13 +4,19 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Playground from '../pages/playground.vue';
 import Register from '../pages/register.vue';
 import Login from '../pages/login.vue';
+import Dashboard from '../pages/dashboard.vue';
 
 // Define your routes
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: Playground
+    component: Dashboard
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard
   },
   {
     path: '/playground',

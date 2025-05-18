@@ -15,3 +15,12 @@ export interface IEdge {
     label?: string;
     data?: any;
 }
+
+export interface WebflowDto {
+  name: string;
+  description?: string;
+  createdBy: string;
+  tags?: string[];
+  icon?: string;
+  data?: any;
+}

@@ -1,18 +1,28 @@
 <template>
   <div class="workflow-header">
-    <div class="workflow-title" @click="editWorkflowName">
-      <input
-        v-if="isEditing"
-        v-model="_workflowName"
-        @blur="saveWorkflowName"
-        @keyup.enter="saveWorkflowName"
-        @keyup.esc="isEditing = false"
-        placeholder="Enter workflow name"
-        :class="{ 'input-error': _workflowName.length < 3 }"
-        :style="{ width: _workflowName.length * 10 + 'px' }"
-        ref="workflowNameInput"
-      />
-      <span v-else>{{ workflowName }}</span>
+    <div class="workflow-title-container">
+      <button 
+        data-tooltip="Back to Dashboard" 
+        data-tooltip-position="bottom" 
+        class="btn btn-icon back-button"
+        @click="goToDashboard"
+      >
+        <i class="pi pi-arrow-left"></i>
+      </button>
+      <div class="workflow-title" @click="editWorkflowName">
+        <input
+          v-if="isEditing"
+          v-model="_workflowName"
+          @blur="saveWorkflowName"
+          @keyup.enter="saveWorkflowName"
+          @keyup.esc="isEditing = false"
+          placeholder="Enter workflow name"
+          :class="{ 'input-error': _workflowName.length < 3 }"
+          :style="{ width: _workflowName.length * 10 + 'px' }"
+          ref="workflowNameInput"
+        />
+        <span v-else>{{ workflowName }}</span>
+      </div>
     </div>
     <div class="workflow-actions">
       <theme-toggle></theme-toggle>
@@ -46,6 +56,7 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import themeToggle from '../common/themeToggle.vue';
+import { WebflowService } from '../../services/webflow.service';
 export default {
   components: { themeToggle },
   name: "workflowHeaderComponent",
@@ -90,9 +101,58 @@ export default {
     exportWorkflow() {
       console.log("Export workflow");
     },
-    saveWorkflow() {
-      console.log("Save workflow");
+    async saveWorkflow() {
+      try {
+        const webflowService = new WebflowService();
+        const workflow = this.$store.state.workflowModule.workflow;
+        
+        // Convert workflow to serializable format if needed
+        const workflowData = {
+          nodes: Array.from(workflow.nodes.entries()).map(([id, node]) => ({
+            id,
+            type: node.type,
+            data: node.nodeData
+          })),
+          edges: workflow.edges.map(edge => ({
+            id: edge.id,
+            from: edge.from,
+            to: edge.to,
+            type: edge.type
+          }))
+        };
+        
+        if (this.workflowId && this.workflowId !== "111") { // Default ID is "111"
+          // Update existing webflow
+          await webflowService.updateWebflow(this.workflowId, {
+            name: this.workflowName,
+            description: this.workflowDescription,
+            data: workflowData
+          });
+        } else {
+          // Create new webflow
+          const newWebflow = await webflowService.createWebflow({
+            name: this.workflowName,
+            description: this.workflowDescription,
+            data: workflowData,
+            tags: ['workflow']
+          });
+          
+          // Update workflow ID in store
+          if (newWebflow && newWebflow.id) {
+            this.setWorkflowId(newWebflow.id);
+          }
+        }
+        
+        // Show success message or notification
+        alert('Workflow saved successfully!');
+      } catch (error) {
+        console.error('Error saving workflow:', error);
+        alert('Error saving workflow. Please try again.');
+      }
     },
+    goToDashboard() {
+      this.$router.push('/dashboard');
+    }
   },
 };
 </script>
@@ -107,8 +167,17 @@ export default {
   border-bottom: 1px solid var(--color-border);
 }
 
-.workflow-title {
+.workflow-title-container {
+  display: flex;
+  align-items: center;
   flex: 1;
+}
+
+.back-button {
+  margin-right: var(--spacing-medium);
+}
+
+.workflow-title {
   color: var(--color-black);
   font-size: var(--font-size-large);
   font-weight: bold;

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-center fh fw bg-light">
+ <auth-layout>
     <div
       class="bg-white round-2 shadow-3 p-xl"
       style="max-width: 450px; width: 100%"
@@ -55,12 +55,14 @@
         </div>
       </form>
     </div>
-  </div>
+  </auth-layout>
 </template>
 
 <script>
+import authLayout from '../components/common/authLayout.vue';
 import { UserService } from "../services/user.service.ts";
 export default {
+  components: { authLayout },
   name: "LoginPage",
   data() {
     return {
