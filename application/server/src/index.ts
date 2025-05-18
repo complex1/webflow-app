@@ -37,6 +37,12 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Server is running' });
 });
 
+// Debug middleware - log all incoming requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 // Proxy middleware for non-API requests
 app.use('/', (req, res, next) => {
   if (req.url.startsWith('/api')) {

@@ -1,34 +1,54 @@
 <template>
   <div>
     <div class="grid-2">
-      <div class="wfa-input">
-        <label for="name">Name</label>
-        <input type="text" id="name" v-model="name" />
-      </div>
-      <div class="wfa-input">
-        <label for="description">Description</label>
-        <input type="text" id="description" v-model="description" />
-      </div>
+      <wfa-input
+        id="name"
+        label="Name"
+        v-model="name"
+        @update:modelValue="update"
+        :error="nameError"
+        required
+      />
+      <wfa-input
+        id="description"
+        label="Description"
+        v-model="description"
+        @update:modelValue="update"
+        placeholder="Optional description"
+      />
     </div>
     <div class="grid-3 mt-m">
-      <div class="wfa-input">
-        <label for="baseUrl">Base URL</label>
-        <input type="text" id="baseUrl" v-model="baseUrl" />
-      </div>
-      <div class="wfa-input">
-        <label for="url">URL</label>
-        <input type="text" id="url" v-model="url" />
-      </div>
-      <div class="wfa-input">
-        <label for="pathParams">Methods</label>
-        <select id="method" v-model="method" @change="onChangeMethod">
-          <option value="GET">GET</option>
-          <option value="POST">POST</option>
-          <option value="PUT">PUT</option>
-          <option value="DELETE">DELETE</option>
-          <option value="PATCH">PATCH</option>
-        </select>
-      </div>
+      <wfa-input
+        id="baseUrl"
+        label="Base URL"
+        v-model="baseUrl"
+        @update:modelValue="update"
+        :error="baseUrlError"
+        placeholder="https://api.example.com"
+        required
+      />
+      <wfa-input
+        id="url"
+        label="URL"
+        v-model="url"
+        @update:modelValue="update"
+        :error="urlError"
+        placeholder="/endpoint"
+        required
+      />
+      <wfa-input
+        id="method"
+        label="Methods"
+        type="select"
+        v-model="method"
+        @update:modelValue="onChangeMethod"
+      >
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="DELETE">DELETE</option>
+        <option value="PATCH">PATCH</option>
+      </wfa-input>
     </div>
     <expension-panel v-if="body" class="mt-m">
       <template #header>
@@ -186,7 +206,8 @@ import ExpensionPanel from "../common/expensionPanel.vue";
 import variableForm from "./variableForm.vue";
 import HttpNode from "../../classes/HttpNode";
 import ErrorMessage from "../../classes/ErrorMessage";
-import validationErrors from '../common/validationError.vue';
+import validationErrors from "../common/validationError.vue";
+import wfaInput from "../common/wfa-input.vue";
 
 export default {
   name: "HttpNodeForm",
@@ -196,7 +217,12 @@ export default {
       required: true,
     },
   },
-  components: { variableForm, ExpensionPanel, validationErrors },
+  components: {
+    variableForm,
+    ExpensionPanel,
+    validationErrors,
+    wfaInput,
+  },
   data: function () {
     return {
       name: "",
@@ -209,12 +235,36 @@ export default {
       body: null,
       method: "GET",
       errors: [],
+      nameError: "",
+      baseUrlError: "",
+      urlError: "",
     };
   },
   methods: {
     ...mapMutations({
       addHttpNode: "workflowModule/addHttpNode",
     }),
+    update() {
+      this.validateFields();
+    },
+    validateFields() {
+      this.nameError = this.name ? "" : "Name is required";
+      this.baseUrlError = this.baseUrl ? "" : "Base URL is required";
+      this.urlError = this.url ? "" : "URL is required";
+
+      // Validate URL format
+      if (this.baseUrl && !this.isValidUrl(this.baseUrl)) {
+        this.baseUrlError = "Invalid URL format";
+      }
+    },
+    isValidUrl(url) {
+      try {
+        // Check if it's a valid URL (supports http/https protocols)
+        return url.startsWith("http://") || url.startsWith("https://");
+      } catch (e) {
+        return false;
+      }
+    },
     onChangeMethod() {
       if (this.method === "GET" || this.method === "DELETE") {
         this.body = null;
@@ -279,6 +329,8 @@ export default {
     },
     validation() {
       this.errors = [];
+      this.validateFields();
+
       if (!this.name) {
         this.errors.push(new ErrorMessage("Name is required", "ERROR"));
       }
@@ -288,46 +340,76 @@ export default {
       if (!this.url) {
         this.errors.push(new ErrorMessage("URL is required", "ERROR"));
       }
+      if (this.baseUrl && !this.isValidUrl(this.baseUrl)) {
+        this.errors.push(new ErrorMessage("Invalid Base URL format", "ERROR"));
+      }
+
       if (
         this.method === "POST" ||
         this.method === "PUT" ||
         this.method === "PATCH"
       ) {
-        if (!this.body) {
-          this.errors = this.errors.concat(this.body.validation('Body') || []);
+        if (this.body) {
+          this.errors = this.errors.concat(this.body.validation("Body") || []);
         }
       }
       this.pathParams.forEach((item, index) => {
-        this.errors = this.errors.concat(item.validation('Path Parameter', index + 1) || []);
+        this.errors = this.errors.concat(
+          item.validation("Path Parameter", index + 1) || []
+        );
       });
       this.queryParams.forEach((item, index) => {
-        this.errors = this.errors.concat(item.validation('Query Parameter', index + 1) || []);
+        this.errors = this.errors.concat(
+          item.validation("Query Parameter", index + 1) || []
+        );
       });
       this.headers.forEach((item, index) => {
-        this.errors = this.errors.concat(item.validation('Header', index + 1) || []);
+        this.errors = this.errors.concat(
+          item.validation("Header", index + 1) || []
+        );
       });
+
+      return this.errors.length === 0;
     },
-    save() {
-      this.validation();
-      if (this.errors.length > 0) {
-        return;
-      }
-      const httpNode = new HttpNode();
-      httpNode.name = this.name;
-      httpNode.description = this.description;
-      httpNode.baseUrl = this.baseUrl;
-      httpNode.url = this.url;
-      httpNode.method = this.method;
-      httpNode.pathParams = this.pathParams;
-      httpNode.queryParams = this.queryParams;
-      httpNode.headers = this.headers;
-      httpNode.body = this.body;
-      this.addHttpNode(httpNode);
-      this.$emit("close");
-    },
-    cancel() {
-      this.$emit("close");
-    },
+  },
+  save() {
+    if (!this.validation()) {
+      return;
+    }
+
+    const httpNode = new HttpNode();
+    httpNode.name = this.name;
+    httpNode.description = this.description;
+    httpNode.baseUrl = this.baseUrl;
+    httpNode.url = this.url;
+    httpNode.method = this.method;
+    httpNode.pathParams = this.pathParams;
+    httpNode.queryParams = this.queryParams;
+    httpNode.headers = this.headers;
+    httpNode.body = this.body;
+    this.addHttpNode(httpNode);
+
+    this.resetForm();
+    this.$emit("close");
+  },
+  cancel() {
+    this.resetForm();
+    this.$emit("close");
+  },
+  resetForm() {
+    this.name = "";
+    this.description = "";
+    this.baseUrl = "";
+    this.url = "";
+    this.method = "GET";
+    this.pathParams = [];
+    this.queryParams = [];
+    this.headers = [];
+    this.body = null;
+    this.errors = [];
+    this.nameError = "";
+    this.baseUrlError = "";
+    this.urlError = "";
   },
 };
 </script>

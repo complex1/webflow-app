@@ -1,18 +1,21 @@
 <template>
   <div>
-    <div class="wfa-input">
-      <label for="name">Name</label>
-      <input type="text" id="name" v-model="name" @change="update" />
-    </div>
-    <div class="wfa-input mt-m">
-      <label for="description">Description</label>
-      <input
-        type="text"
-        id="description"
-        v-model="description"
-        @change="update"
-      />
-    </div>
+    <wfa-input
+      id="name"
+      label="Name"
+      v-model="name"
+      @update:modelValue="update"
+      :error="nameError"
+      required
+    />
+    <wfa-input
+      id="description"
+      label="Description"
+      v-model="description"
+      @update:modelValue="update"
+      placeholder="Optional description"
+      class="mt-m"
+    />
     <expension-panel class="mt-m">
       <template #header>
         <div class="flex-v-center flex-space-between pr-l">
@@ -57,7 +60,7 @@
         </div>
       </template>
       <template #content>
-        <div class="wfa-input" style="height: 200px;" >
+        <div style="height: 200px;">
           <js-editor
             v-model="transform"
           ></js-editor>
@@ -94,8 +97,16 @@ import VariableForm from "./variableForm.vue";
 import ErrorMessage from "../../classes/ErrorMessage";
 import ValidationErrors from "../common/validationError.vue";
 import JsEditor from '../common/code/jsEditor.vue';
+import wfaInput from "../common/wfa-input.vue";
+
 export default {
-  components: { expensionPanel, VariableForm, ValidationErrors, JsEditor },
+  components: { 
+    expensionPanel, 
+    VariableForm, 
+    ValidationErrors, 
+    JsEditor,
+    wfaInput
+  },
   name: "FunctionalNodeForm",
   props: {
     node: {
@@ -110,12 +121,19 @@ export default {
       parameters: [],
       transform: "",
       errors: [],
+      nameError: "",
     };
   },
   methods: {
     ...mapMutations({
       addHttpNode: "workflowModule/addFunctionalNode",
     }),
+    update() {
+      this.validateName();
+    },
+    validateName() {
+      this.nameError = this.name ? "" : "Name is required";
+    },
     AddParameter() {
       const variable = new Variable();
       this.parameters.push(variable);
@@ -133,6 +151,8 @@ export default {
     },
     validate() {
       this.errors = [];
+      this.validateName();
+      
       if (this.name === "") {
         this.errors.push(new ErrorMessage("Name is required.", "ERROR"));
       }
@@ -144,12 +164,14 @@ export default {
       this.parameters.forEach((param, index) => {
         this.errors = this.errors.concat(param.validation("Parameter", index + 1));
       });
+      
+      return this.errors.length === 0;
     },
     save() {
-      this.validate();
-      if (this.errors.length > 0) {
+      if (!this.validate()) {
         return;
       }
+      
       const functionalNode = new FunctionalNode();
       functionalNode.name = this.name;
       functionalNode.description = this.description;
@@ -161,6 +183,7 @@ export default {
       this.description = "";
       this.parameters = [];
       this.transform = "";
+      this.nameError = "";
       this.$emit("close");
     },
     cancel() {
@@ -168,6 +191,8 @@ export default {
       this.description = "";
       this.parameters = [];
       this.transform = "";
+      this.nameError = "";
+      this.errors = [];
       this.$emit("close");
     },
   },

@@ -12,18 +12,22 @@
       <div class="dashboard-filters">
         <div class="search-box">
           <i class="pi pi-search"></i>
-          <input 
-            type="text" 
-            v-model="searchQuery" 
-            placeholder="Search webflows..." 
-            @input="filterWebflows"
+          <wfa-input
+            v-model="searchQuery"
+            placeholder="Search webflows..."
+            @update:modelValue="filterWebflows"
           />
         </div>
         <div class="tag-filter">
-          <select v-model="selectedTag" @change="filterWebflows">
+          <wfa-input
+            type="select"
+            v-model="selectedTag"
+            placeholder="All Tags"
+            @update:modelValue="filterWebflows"
+          >
             <option value="">All Tags</option>
             <option v-for="tag in uniqueTags" :key="tag" :value="tag">{{ tag }}</option>
-          </select>
+          </wfa-input>
         </div>
       </div>
 
@@ -85,48 +89,46 @@
         @close="closeDrawer"
       >
         <form @submit.prevent="saveWebflow" class="webflow-form">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input 
-              id="name" 
-              type="text" 
-              v-model="webflowForm.name" 
-              required 
-              placeholder="Enter webflow name"
-            />
-          </div>
+          <wfa-input
+            id="name"
+            label="Name"
+            v-model="webflowForm.name"
+            required
+            placeholder="Enter webflow name"
+            :error="nameError"
+          />
 
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea 
-              id="description" 
-              v-model="webflowForm.description" 
-              placeholder="Enter webflow description"
-              rows="3"
-            ></textarea>
-          </div>
+          <wfa-input
+            id="description"
+            label="Description"
+            type="textarea"
+            rows="3"
+            v-model="webflowForm.description"
+            placeholder="Enter webflow description"
+          />
 
-          <div class="form-group">
-            <label for="icon">Icon</label>
-            <select id="icon" v-model="webflowForm.icon">
-              <option value="pi pi-sitemap">Sitemap</option>
-              <option value="pi pi-cog">Cog</option>
-              <option value="pi pi-bolt">Bolt</option>
-              <option value="pi pi-database">Database</option>
-              <option value="pi pi-server">Server</option>
-              <option value="pi pi-cloud">Cloud</option>
-            </select>
-          </div>
+          <wfa-input
+            id="icon"
+            label="Icon"
+            type="select"
+            v-model="webflowForm.icon"
+          >
+            <option value="pi pi-sitemap">Sitemap</option>
+            <option value="pi pi-cog">Cog</option>
+            <option value="pi pi-bolt">Bolt</option>
+            <option value="pi pi-database">Database</option>
+            <option value="pi pi-server">Server</option>
+            <option value="pi pi-cloud">Cloud</option>
+          </wfa-input>
 
           <div class="form-group">
             <label for="tags">Tags</label>
             <div class="tag-input">
-              <input 
-                id="tag-input" 
-                type="text" 
-                v-model="tagInput" 
-                @keyup.enter="addTag" 
+              <wfa-input
+                id="tag-input"
+                v-model="tagInput"
                 placeholder="Add a tag and press Enter"
+                @keyup.enter="addTag"
               />
               <div class="tag-chips">
                 <span v-for="(tag, index) in webflowForm.tags" :key="index" class="tag">
@@ -165,12 +167,14 @@
 import { WebflowService } from "../services/webflow.service";
 import drawer from "../components/common/drawer.vue";
 import navbar from "../components/common/navbar.vue";
+import wfaInput from "../components/common/wfa-input.vue";
 
 export default {
   name: "DashboardPage",
   components: {
     drawer,
     navbar,
+    wfaInput
   },
   data() {
     return {
@@ -187,6 +191,7 @@ export default {
         icon: "pi pi-sitemap",
         tags: [],
       },
+      nameError: "",
       tagInput: "",
       showDeleteConfirm: false,
       webflowToDelete: null,
@@ -285,8 +290,17 @@ export default {
     },
     async saveWebflow() {
       try {
-        if (!this.webflowForm.name || this.webflowForm.name.length < 3) {
-          alert("Webflow name must be at least 3 characters long");
+        // Reset error message
+        this.nameError = "";
+        
+        // Validate name
+        if (!this.webflowForm.name) {
+          this.nameError = "Name is required";
+          return;
+        }
+        
+        if (this.webflowForm.name.length < 3) {
+          this.nameError = "Name must be at least 3 characters long";
           return;
         }
 
@@ -405,51 +419,33 @@ export default {
 .dashboard-filters {
   display: flex;
   margin-bottom: var(--spacing-large);
-  gap: var(--spacing-medium);
-
-  .search-box {
+  gap: var(--spacing-medium);  .search-box {
     position: relative;
     flex: 1;
-
+    
     i {
       position: absolute;
       left: var(--spacing-medium);
       top: 50%;
       transform: translateY(-50%);
       color: var(--color-text-secondary);
+      z-index: 1;
     }
-
-    input {
-      width: 100%;
-      padding: var(--spacing-medium);
+    
+    .wfa-input-container {
+      margin-bottom: 0;
+    }
+    
+    .wfa-input {
       padding-left: calc(var(--spacing-medium) * 2 + 16px);
-      border-radius: 6pt;
-      border: 1px solid var(--color-border);
-      background-color: var(--color-white);
-      color: var(--color-text-primary);
-
-      &:focus {
-        outline: none;
-        border-color: var(--color-primary);
-      }
     }
   }
-
+  
   .tag-filter {
     width: 200px;
-
-    select {
-      width: 100%;
-      padding: var(--spacing-medium);
-      border-radius: 6pt;
-      border: 1px solid var(--color-border);
-      background-color: var(--color-white);
-      color: var(--color-text-primary);
-
-      &:focus {
-        outline: none;
-        border-color: var(--color-primary);
-      }
+    
+    .wfa-input-container {
+      margin-bottom: 0;
     }
   }
 }
@@ -576,37 +572,6 @@ export default {
 .webflow-form {
   padding: var(--spacing-large);
 
-  .form-group {
-    margin-bottom: var(--spacing-large);
-
-    label {
-      display: block;
-      margin-bottom: var(--spacing-small);
-      color: var(--color-text-primary);
-      font-weight: bold;
-    }
-
-    input,
-    textarea,
-    select {
-      width: 100%;
-      padding: var(--spacing-medium);
-      border-radius: 6pt;
-      border: 1px solid var(--color-border);
-      background-color: var(--color-white);
-      color: var(--color-text-primary);
-
-      &:focus {
-        outline: none;
-        border-color: var(--color-primary);
-      }
-    }
-
-    textarea {
-      resize: vertical;
-    }
-  }
-
   .tag-input {
     .tag-chips {
       display: flex;
@@ -614,7 +579,7 @@ export default {
       gap: var(--spacing-small);
       margin-top: var(--spacing-small);
     }
-
+    
     .tag {
       display: inline-flex;
       align-items: center;
@@ -623,7 +588,7 @@ export default {
       background-color: var(--color-light);
       color: var(--color-text-secondary);
       border-radius: 4pt;
-
+      
       .tag-remove {
         margin-left: var(--spacing-small);
         background: none;
@@ -633,18 +598,19 @@ export default {
         font-size: 14px;
         line-height: 1;
         padding: 0;
-
+        
         &:hover {
           color: var(--color-danger);
         }
       }
     }
   }
-
+  
   .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: var(--spacing-medium);
+    margin-top: var(--spacing-large);
   }
 }
 
@@ -693,7 +659,7 @@ export default {
       color: white;
 
       &:hover {
-        background-color: darken(var(--color-danger), 10%);
+        background-color: var(--color-danger);
       }
     }
   }

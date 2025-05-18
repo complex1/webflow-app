@@ -27,7 +27,7 @@ export class UserService {
  
     getUser() {
         const http = new HttpService();
-        http.url = '/api/user';
+        http.url = '/api/users/user';
         http.method = 'GET';
         return http.run();
     }

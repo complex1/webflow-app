@@ -21,6 +21,7 @@
 
   /* Colors */
   --color-primary: #007aff; /* iOS blue */
+  --color-primary-rgb: 0, 122, 255; /* RGB values for opacity */
   --color-secondary: #5856d6; /* iOS purple */
   --color-background: #f2f2f7; /* iOS light gray */
   --color-text-primary: #000000; /* Black */
@@ -28,9 +29,13 @@
   --color-border: #c6c6c8; /* Border gray */
 
   --color-success: #28cd41; /* Success green */
+  --color-success-rgb: 40, 205, 65;
   --color-warning: #ffcc00; /* Warning yellow */
+  --color-warning-rgb: 255, 204, 0;
   --color-danger: #ff3b30; /* Danger red */
+  --color-danger-rgb: 255, 59, 48;
   --color-info: #007aff; /* Info blue */
+  --color-info-rgb: 0, 122, 255;
   --color-light: #f2f2f7; /* Light gray */
   --color-dark: #000000; /* Dark black */
   --color-white: #ffffff; /* White */
@@ -51,6 +56,7 @@
 .dark-theme {
   /* Colors */
   --color-primary: #0a84ff;
+  --color-primary-rgb: 10, 132, 255;
   --color-secondary: #5e5ce6;
   --color-background: #1c1c1e;
   --color-text-primary: #ffffff;
@@ -58,9 +64,13 @@
   --color-border: #38383a;
 
   --color-success: #32d74b;
+  --color-success-rgb: 50, 215, 75;
   --color-warning: #ffd60a;
+  --color-warning-rgb: 255, 214, 10;
   --color-danger: #ff453a;
+  --color-danger-rgb: 255, 69, 58;
   --color-info: #0a84ff;
+  --color-info-rgb: 10, 132, 255;
   --color-light: #2c2c2e;
   --color-dark: #ffffff;
   --color-white: #000000;
@@ -95,6 +105,9 @@ body {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 h1,

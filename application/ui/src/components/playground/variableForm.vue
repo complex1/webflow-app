@@ -1,13 +1,17 @@
 <template>
   <div class="variable-form p-l bg-white round-2">
     <div class="grid-2">
-      <div class="wfa-input">
-        <label for="name">Name</label>
-        <input type="text" id="name" v-model="name" @change="update" />
-      </div>
-      <div class="flex-space-between ">
-        <div class="wfa-input checkbox-inline-reverse mt-l">
-          <label for="formStore">Use Form Store</label>
+      <wfa-input
+        id="name"
+        label="Name"
+        v-model="name"
+        @update:modelValue="update"
+        :error="nameError"
+        required
+      />
+      <div class="flex-space-between">
+        <div class="checkbox-wrapper mt-l">
+          <label for="formStore" class="wfa-label">Use Form Store</label>
           <input
             type="checkbox"
             id="formStore"
@@ -24,57 +28,66 @@
         </span>
       </div>
     </div>
-    <div class="wfa-input mt-l">
-      <label for="description">Description</label>
-      <input
-        type="text"
-        id="description"
-        v-model="description"
-        @change="typeChange"
-      />
-    </div>
+    <wfa-input
+      id="description"
+      label="Description"
+      v-model="description"
+      @update:modelValue="update"
+      placeholder="Optional description"
+    />
     <div v-if="!formStore">
-      <div class="wfa-input mt-l">
-        <label for="type">Type</label>
-        <select id="type" v-model="type" @change="update">
-          <option value="string">String</option>
-          <option value="number">Number</option>
-          <option value="boolean">Boolean</option>
-          <option value="object">Object</option>
-          <option value="null">Null</option>
-          <option value="undefined">Undefined</option>
-        </select>
-      </div>
-      <div class="wfa-input mt-l">
-        <label for="defaultValue">Default Value</label>
-        <input
+      <wfa-input
+        id="type"
+        label="Type"
+        type="select"
+        v-model="type"
+        @update:modelValue="typeChange"
+        :error="typeError"
+        required
+      >
+        <option value="string">String</option>
+        <option value="number">Number</option>
+        <option value="boolean">Boolean</option>
+        <option value="object">Object</option>
+        <option value="null">Null</option>
+        <option value="undefined">Undefined</option>
+      </wfa-input>
+      <div class="mt-l">
+        <wfa-input
           v-if="type === 'string'"
-          type="text"
           id="defaultValue"
+          label="Default Value"
           v-model="defaultValue"
-          @change="update"
+          @update:modelValue="update"
+          placeholder="Enter default string value"
         />
-        <input
+        <wfa-input
           v-else-if="type === 'number'"
+          id="defaultValue"
+          label="Default Value"
           type="number"
-          id="defaultValue"
           v-model="defaultValue"
-          @change="update"
+          @update:modelValue="update"
+          placeholder="0"
         />
-        <input
-          v-else-if="type === 'boolean'"
-          type="checkbox"
-          id="defaultValue"
-          v-model="defaultValue"
-          @change="update"
-        />
-        <json-editor
-          v-else-if="type === 'object'"
-          id="defaultValue"
-          v-model="defaultValue"
-          @change="update"
-          :height="'200px'"
-        ></json-editor>
+        <div v-else-if="type === 'boolean'" class="checkbox-wrapper">
+          <label for="defaultValue" class="wfa-label">Default Value</label>
+          <input
+            type="checkbox"
+            id="defaultValue"
+            v-model="defaultValue"
+            @change="update"
+          />
+        </div>
+        <div v-else-if="type === 'object'">
+          <label for="defaultValue" class="wfa-label">Default Value</label>
+          <json-editor
+            id="defaultValue"
+            v-model="defaultValue"
+            @change="update"
+            :height="'200px'"
+          ></json-editor>
+        </div>
       </div>
     </div>
   </div>
@@ -83,8 +96,10 @@
 <script>
 import Variable from "../../classes/Variable";
 import jsonEditor from "../common/code/jsonEditor.vue";
+import wfaInput from "../common/wfa-input.vue";
+
 export default {
-  components: { jsonEditor },
+  components: { jsonEditor, wfaInput },
   name: "VariableForm",
   props: {
     variable: {
@@ -104,6 +119,8 @@ export default {
       defaultValue: this.variable.defaultValue,
       required: this.variable.required,
       formStore: this.variable.formStore,
+      nameError: '',
+      typeError: '',
     };
   },
   methods: {
@@ -111,6 +128,7 @@ export default {
       this.$emit("remove");
     },
     typeChange() {
+      // Reset default value based on selected type
       if (this.type === "string") {
         this.defaultValue = "";
       } else if (this.type === "number") {
@@ -121,17 +139,18 @@ export default {
         this.defaultValue = {};
       } else if (this.type === "array") {
         this.defaultValue = [];
-      } else if (this.type === "function") {
-        this.defaultValue = function () {};
-      } else if (this.type === "any") {
-        this.defaultValue = null;
       } else if (this.type === "null") {
         this.defaultValue = null;
       } else if (this.type === "undefined") {
         this.defaultValue = undefined;
       }
+      
+      this.update();
     },
     update() {
+      // Validate before emitting update
+      this.validate();
+      
       this.$emit("update", {
         name: this.name,
         type: this.type,
@@ -141,17 +160,48 @@ export default {
         formStore: this.formStore,
       });
     },
+    validate() {
+      // Basic validation
+      this.nameError = this.name ? '' : 'Name is required';
+      this.typeError = (!this.formStore && !this.type) ? 'Type is required' : '';
+      
+      return !this.nameError && !this.typeError;
+    }
   },
-  mounted() {},
 };
 </script>
-
-<style>
+<style lang="scss" scoped>
 .variable-form {
   position: relative;
 }
+
 .variable-form-remove {
   cursor: pointer;
   color: var(--color-danger);
+}
+
+.checkbox-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--spacing-large);
+
+  input[type="checkbox"] {
+    margin-top: var(--spacing-small);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    
+    &:checked {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb, 0, 122, 255), 0.2);
+    }
+  }
 }
 </style>

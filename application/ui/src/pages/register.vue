@@ -6,61 +6,45 @@
       >
         <h1 class="text-xl text-center mb-l">Register</h1>
         <form @submit.prevent="registerUser">
-          <div class="mb-m wfa-input">
-            <label for="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              v-model="user.name"
-              placeholder="Enter your name"
-              required
-            />
-            <span class="text-danger text-s" v-if="errors.name">{{
-              errors.name
-            }}</span>
-          </div>
+          <wfa-input
+            id="name"
+            label="Name"
+            type="text"
+            v-model="user.name"
+            placeholder="Enter your name"
+            required
+            :error="errors.name"
+          />
 
-          <div class="mb-m wfa-input">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              v-model="user.email"
-              placeholder="Enter your email"
-              required
-            />
-            <span class="text-danger text-s" v-if="errors.email">{{
-              errors.email
-            }}</span>
-          </div>
+          <wfa-input
+            id="email"
+            label="Email"
+            type="email"
+            v-model="user.email"
+            placeholder="Enter your email"
+            required
+            :error="errors.email"
+          />
 
-          <div class="mb-m wfa-input">
-            <label for="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              v-model="user.password"
-              placeholder="Enter your password"
-              required
-            />
-            <span class="text-danger text-s" v-if="errors.password">{{
-              errors.password
-            }}</span>
-          </div>
+          <wfa-input
+            id="password"
+            label="Password"
+            type="password"
+            v-model="user.password"
+            placeholder="Enter your password"
+            required
+            :error="errors.password"
+          />
 
-          <div class="mb-m wfa-input">
-            <label for="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              v-model="user.confirmPassword"
-              placeholder="Confirm your password"
-              required
-            />
-            <span class="text-danger text-s" v-if="errors.confirmPassword">{{
-              errors.confirmPassword
-            }}</span>
-          </div>
+          <wfa-input
+            id="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            v-model="user.confirmPassword"
+            placeholder="Confirm your password"
+            required
+            :error="errors.confirmPassword"
+          />
 
           <button
             type="submit"
@@ -83,9 +67,10 @@
 <script>
 import authLayout from '../components/common/authLayout.vue';
 import { UserService } from "../services/user.service.ts";
+import wfaInput from "../components/common/wfa-input.vue";
 
 export default {
-  components: { authLayout },
+  components: { authLayout, wfaInput },
   name: "RegisterPage",
   data() {
     return {
