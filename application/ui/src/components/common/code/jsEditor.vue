@@ -11,16 +11,18 @@
   ></monaco-editor>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, ref, onMounted, watch, PropType } from 'vue';
 import monacoEditor from "./monacoEditor.vue";
-export default {
+
+export default defineComponent({
   components: { monacoEditor },
   name: "JsEditor",
   props: {
     modelValue: {
-      type: String,
+      type: String as PropType<string>,
       required: true,
-      default: () => ({}),
+      default: '',
     },
     height: {
       type: String,
@@ -31,19 +33,41 @@ export default {
       default: false,
     },
   },
-  data() {
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
+    // Use primitive ref instead of reactive object to avoid proxy issues
+    const jsString = ref<string>(props.modelValue || '');
+    
+    const onChange = (value: string) => {
+      try {
+        // Create a clean value to break reactivity chain
+        const cleanValue = String(value || '');
+        jsString.value = cleanValue;
+        
+        // Use setTimeout to avoid potential reactivity issues
+        setTimeout(() => {
+          emit("update:modelValue", cleanValue);
+        }, 0);
+      } catch (error) {
+        console.error('Error in jsEditor change handler:', error);
+      }
+    };
+    
+    // Watch for external changes to modelValue
+    watch(() => props.modelValue, (newValue) => {
+      if (newValue !== jsString.value) {
+        jsString.value = newValue || '';
+      }
+    });
+    
+    onMounted(() => {
+      jsString.value = props.modelValue || '';
+    });
+    
     return {
-      jsString: this.modelValue, // Bind v-model to jsString
+      jsString,
+      onChange
     };
   },
-  methods: {
-    onChange(value) {
-      this.jsString = value;
-      this.$emit("update:modelValue", value);
-    },
-  },
-  created() {
-    this.jsString = this.modelValue;
-  },
-};
+});
 </script>

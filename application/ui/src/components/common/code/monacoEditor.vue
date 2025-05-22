@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted, onBeforeUnmount, PropType } from 'vue';
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, PropType, watch } from 'vue';
 import { MonacoEditor } from "./monaco";
 
 export default defineComponent({
@@ -61,7 +61,8 @@ export default defineComponent({
   },
   emits: ['onChange'],
   setup(props, { emit }) {
-    const monacoInstance = ref<any>(null);
+    // Use a regular variable instead of a reactive reference for the editor instance
+    let monacoInstance: MonacoEditor | null = null;
     const editorContainer = ref<HTMLElement | null>(null);
     const storedTheme = localStorage.getItem("monaco-theme") || "vs-dark";
     const editorTheme = ref<string>(props.theme || storedTheme);
@@ -91,29 +92,58 @@ export default defineComponent({
       const target = e.target as HTMLInputElement;
       editorTheme.value = target.checked ? "vs-dark" : "vs";
       localStorage.setItem("monaco-theme", editorTheme.value);
-      if (monacoInstance.value) {
-        monacoInstance.value.changeTheme(editorTheme.value);
+      if (monacoInstance) {
+        monacoInstance.changeTheme(editorTheme.value);
       }
     };
     
     onMounted(() => {
       if (editorContainer.value) {
-        monacoInstance.value = new MonacoEditor(editorContainer.value, {
-          value: props.value,
-          language: props.language,
-          theme: editorTheme.value,
-          readOnly: props.readOnly,
-          ...editorOptions.value,
-          onChange: (value: string) => {
-            emit("onChange", value);
-          },
-        });
+        try {
+          const handleChange = (value: string) => {
+            try {
+              // Create a clean value that's not a proxy
+              const cleanValue = String(value);
+              // Use setTimeout to avoid reactivity issues
+              setTimeout(() => {
+                emit("onChange", cleanValue);
+              }, 0);
+            } catch (error) {
+              console.error('Error in Monaco editor change handler:', error);
+            }
+          };
+
+          monacoInstance = new MonacoEditor(editorContainer.value, {
+            value: props.value || '',
+            language: props.language,
+            theme: editorTheme.value,
+            readOnly: props.readOnly,
+            ...editorOptions.value,
+            onChange: handleChange,
+          });
+        } catch (error) {
+          console.error('Error initializing Monaco editor:', error);
+        }
       }
     });
     
     onBeforeUnmount(() => {
-      if (monacoInstance.value) {
-        monacoInstance.value.dispose();
+      if (monacoInstance) {
+        monacoInstance.dispose();
+        monacoInstance = null;
+      }
+    });
+    
+    // Watch for external value changes
+    watch(() => props.value, (newValue) => {
+      // Only update if the editor instance exists and the value is different
+      // This prevents infinite loops when the editor itself is updating the value
+      if (monacoInstance && monacoInstance.getValue() !== newValue) {
+        try {
+          monacoInstance.setValue(newValue || '');
+        } catch (error) {
+          console.error('Error updating Monaco editor value:', error);
+        }
       }
     });
     

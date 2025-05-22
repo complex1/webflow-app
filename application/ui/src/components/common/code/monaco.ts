@@ -22,23 +22,66 @@ export class MonacoEditor {
 
     constructor(container: HTMLElement, options: MonacoEditorOptions) {
         this.container = container;
-        this.options = options;
-        this.editor = monaco.editor.create(this.container, this.options);
+        
+        // Create a deep copy of options to avoid any reactivity/proxy issues
+        this.options = JSON.parse(JSON.stringify({
+            ...options,
+            value: String(options.value || ''),
+            language: String(options.language || 'javascript'),
+            theme: String(options.theme || 'vs'),
+            readOnly: Boolean(options.readOnly)
+        }));
+        
+        // Store onChange callback separately (not as a reactive property)
+        if (options.onChange) {
+            // Use Function.prototype.bind to create a new function that's not reactive
+            this.onChange = Function.prototype.bind.call(
+                options.onChange,
+                null
+            );
+        }
+        
+        // Create clean editor options without onChange handler
+        const editorOptions = { ...this.options };
+        delete editorOptions.onChange;
+        
+        // Create editor with safe options
+        this.editor = monaco.editor.create(this.container, editorOptions);
 
+        // Set up the change handler with a try-catch to prevent crashes
         this.editor.onDidChangeModelContent(() => {
-            if (this.onChange) {
-                this.onChange(this.editor.getValue());
-            }
+            setTimeout(() => {
+                try {
+                    if (this.onChange) {
+                        // Get a clean non-reactive value
+                        const value = String(this.editor.getValue());
+                        this.onChange(value);
+                    }
+                } catch (error) {
+                    console.error('Error in Monaco editor change handler:', error);
+                }
+            }, 0); // Use setTimeout to break the reactive chain
         });
-        this.onChange = options.onChange;
     }
 
     public setValue(value: string) {
-        this.editor.setValue(value);
+        try {
+            // Convert to string to avoid proxy issues
+            const safeValue = String(value || '');
+            this.editor.setValue(safeValue);
+        } catch (error) {
+            console.error('Error setting Monaco editor value:', error);
+        }
     }
 
     public getValue(): string {
-        return this.editor.getValue();
+        try {
+            // Return a clean string copy, not a proxy
+            return String(this.editor.getValue());
+        } catch (error) {
+            console.error('Error getting Monaco editor value:', error);
+            return '';
+        }
     }
 
     public changeTheme(theme: string) {
@@ -46,6 +89,13 @@ export class MonacoEditor {
     }
 
     public dispose() {
-        this.editor.dispose();
+        try {
+            if (this.editor) {
+                this.editor.dispose();
+                this.editor = null;
+            }
+        } catch (error) {
+            console.error('Error disposing Monaco editor:', error);
+        }
     }
 }
