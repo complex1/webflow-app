@@ -93,17 +93,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, ref, PropType, watch } from 'vue';
 import Variable from "../../classes/Variable";
 import jsonEditor from "../common/code/jsonEditor.vue";
 import wfaInput from "../common/wfa-input.vue";
 
-export default {
+export default defineComponent({
   components: { jsonEditor, wfaInput },
   name: "VariableForm",
   props: {
     variable: {
-      type: Variable,
+      type: Object as PropType<Variable>,
       required: true,
     },
     canRemove: {
@@ -111,64 +112,98 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      name: this.variable.name,
-      type: this.variable.type,
-      description: this.variable.description,
-      defaultValue: this.variable.defaultValue,
-      required: this.variable.required,
-      formStore: this.variable.formStore,
-      nameError: '',
-      typeError: '',
+  emits: ['update', 'remove'],
+  setup(props, { emit }) {
+    // Type the emit function
+    type VariableFormEmits = {
+      (e: 'update', data: { name: string; type: string; description: string; defaultValue: any; required: boolean; formStore: boolean; }): void;
+      (e: 'remove'): void;
+    }
+    const emitter = emit as VariableFormEmits;
+    
+    // Reactive state
+    const name = ref<string>(props.variable.name);
+    const type = ref<string>(props.variable.type);
+    const description = ref<string>(props.variable.description);
+    const defaultValue = ref<any>(props.variable.defaultValue);
+    const required = ref<boolean>(props.variable.required);
+    const formStore = ref<boolean>(props.variable.formStore);
+    const nameError = ref<string>('');
+    const typeError = ref<string>('');
+    
+    // Watch for prop changes
+    watch(() => props.variable, (newVar) => {
+      name.value = newVar.name;
+      type.value = newVar.type;
+      description.value = newVar.description;
+      defaultValue.value = newVar.defaultValue;
+      required.value = newVar.required;
+      formStore.value = newVar.formStore;
+    });
+    
+    const removeVariable = () => {
+      emitter('remove');
     };
-  },
-  methods: {
-    removeVariable() {
-      this.$emit("remove");
-    },
-    typeChange() {
+    
+    const typeChange = () => {
       // Reset default value based on selected type
-      if (this.type === "string") {
-        this.defaultValue = "";
-      } else if (this.type === "number") {
-        this.defaultValue = 0;
-      } else if (this.type === "boolean") {
-        this.defaultValue = false;
-      } else if (this.type === "object") {
-        this.defaultValue = {};
-      } else if (this.type === "array") {
-        this.defaultValue = [];
-      } else if (this.type === "null") {
-        this.defaultValue = null;
-      } else if (this.type === "undefined") {
-        this.defaultValue = undefined;
+      if (type.value === "string") {
+        defaultValue.value = "";
+      } else if (type.value === "number") {
+        defaultValue.value = 0;
+      } else if (type.value === "boolean") {
+        defaultValue.value = false;
+      } else if (type.value === "object") {
+        defaultValue.value = {};
+      } else if (type.value === "array") {
+        defaultValue.value = [];
+      } else if (type.value === "null") {
+        defaultValue.value = null;
+      } else if (type.value === "undefined") {
+        defaultValue.value = undefined;
       }
       
-      this.update();
-    },
-    update() {
+      update();
+    };
+    
+    const update = () => {
       // Validate before emitting update
-      this.validate();
+      validate();
       
-      this.$emit("update", {
-        name: this.name,
-        type: this.type,
-        description: this.description,
-        defaultValue: this.defaultValue,
-        required: this.required,
-        formStore: this.formStore,
+      emitter('update', {
+        name: name.value,
+        type: type.value,
+        description: description.value,
+        defaultValue: defaultValue.value,
+        required: required.value,
+        formStore: formStore.value,
       });
-    },
-    validate() {
+    };
+    
+    const validate = () => {
       // Basic validation
-      this.nameError = this.name ? '' : 'Name is required';
-      this.typeError = (!this.formStore && !this.type) ? 'Type is required' : '';
+      nameError.value = name.value ? '' : 'Name is required';
+      typeError.value = (!formStore.value && !type.value) ? 'Type is required' : '';
       
-      return !this.nameError && !this.typeError;
-    }
-  },
-};
+      return !nameError.value && !typeError.value;
+    };
+    
+    return {
+      name,
+      type,
+      description,
+      defaultValue,
+      required,
+      formStore,
+      nameError,
+      typeError,
+      removeVariable,
+      typeChange,
+      update,
+      validate
+    };
+  }
+});
 </script>
 <style lang="scss" scoped>
 .variable-form {

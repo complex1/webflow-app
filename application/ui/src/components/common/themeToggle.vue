@@ -6,32 +6,50 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import type { ThemeToggleProps, ThemeToggleEmits } from './types';
+
+export default defineComponent({
   name: 'ThemeToggle',
-  data() {
-    return {
-      currentTheme: localStorage.getItem('theme') || 'light'
+  props: {
+    isDark: {
+      type: Boolean,
+      default: undefined
     }
   },
-  methods: {
-    toggleTheme() {
-      this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light'
-      localStorage.setItem('theme', this.currentTheme)
-      this.applyTheme()
-    },
-    applyTheme() {
-      if (this.currentTheme === 'dark') {
-        document.documentElement.classList.add('dark-theme')
+  emits: ['change'],
+  setup(props, { emit }) {
+    // Use isDark prop if provided, otherwise check localStorage
+    const storedTheme = localStorage.getItem('theme') || 'light';
+    const isDarkMode = props.isDark !== undefined ? props.isDark : storedTheme === 'dark';
+    const currentTheme = ref(isDarkMode ? 'dark' : 'light');
+    
+    const applyTheme = () => {
+      if (currentTheme.value === 'dark') {
+        document.documentElement.classList.add('dark-theme');
       } else {
-        document.documentElement.classList.remove('dark-theme')
+        document.documentElement.classList.remove('dark-theme');
       }
-    }
-  },
-  mounted() {
-    this.applyTheme()
+    };
+    
+    const toggleTheme = () => {
+      currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', currentTheme.value);
+      applyTheme();
+      emit('change', currentTheme.value === 'dark');
+    };
+    
+    onMounted(() => {
+      applyTheme();
+    });
+    
+    return {
+      currentTheme,
+      toggleTheme
+    };
   }
-}
+});
 </script>
 
 <style scoped>

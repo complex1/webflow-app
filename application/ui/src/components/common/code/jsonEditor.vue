@@ -10,14 +10,16 @@
   ></monaco-editor>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, ref, PropType, onMounted } from 'vue';
 import monacoEditor from "./monacoEditor.vue";
-export default {
+
+export default defineComponent({
   components: { monacoEditor },
   name: "JsonEditor",
   props: {
     modelValue: {
-      type: String,
+      type: [String, Object, Array] as PropType<string | object | any[]>,
       required: true,
       default: () => ({}),
     },
@@ -30,29 +32,52 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      jsonString: this.modelValue, // Bind v-model to jsonString
-    };
-  },
-  methods: {
-    toString(value) {
-      return JSON.stringify(value, null, 2);
-    },
-    toJson(value) {
-      return JSON.parse(value);
-    },
-    onChange(value) {
+  emits: ['update:modelValue', 'change'],
+  setup(props, { emit }) {
+    // Define functions before using them
+    const toString = (value: any): string => {
       try {
-        this.jsonString = value;
-        this.$emit("update:modelValue", JSON.parse(value));
-      } catch (e) {}
-    },
-  },
-  created() {
-    this.jsonString = this.toString(this.modelValue);
-  },
-};
+        return JSON.stringify(value, null, 2);
+      } catch (e) {
+        console.error('Error stringifying JSON:', e);
+        return '{}';
+      }
+    };
+    
+    const jsonString = ref<string>(toString(props.modelValue));
+    
+    const toJson = (value: string): any => {
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        console.error('Error parsing JSON:', e);
+        return {};
+      }
+    };
+    
+    const onChange = (value: string) => {
+      try {
+        jsonString.value = value;
+        const parsedValue = JSON.parse(value);
+        emit("update:modelValue", parsedValue);
+        emit("change", parsedValue);
+      } catch (e) {
+        // Silent error handling for invalid JSON
+      }
+    };
+    
+    onMounted(() => {
+      jsonString.value = toString(props.modelValue);
+    });
+    
+    return {
+      jsonString,
+      toString,
+      toJson,
+      onChange
+    };
+  }
+});
 </script>
 
 <style scoped>

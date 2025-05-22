@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="mask" :class="{ show: isOpen }" @click="$emit('close')"></div>
-    <div class="drawer" :class="{ 'drawer-open': isOpen }">
+    <div class="mask" :class="{ show: isOpen }" @click="emit('close')"></div>
+    <div class="drawer" :class="{ 'drawer-open': isOpen }" :style="drawerStyle">
       <div class="drawer-header">
         <h3 class="drawer-title">{{ title }}</h3>
-        <button class="drawer-close" @click="$emit('close')">&times;</button>
+        <button class="drawer-close" @click="emit('close')">&times;</button>
       </div>
       <div class="drawer-content">
         <slot></slot>
@@ -13,9 +13,12 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'drawerComponent',
+<script lang="ts">
+import { defineComponent, PropType, computed } from 'vue';
+import type { DrawerProps, DrawerEmits } from './types';
+
+export default defineComponent({
+  name: 'Drawer',
   props: {
     title: {
       type: String,
@@ -24,9 +27,31 @@ export default {
     isOpen: {
       type: Boolean,
       default: false
+    },
+    width: {
+      type: String,
+      default: 'max(40%, 500px)'
+    },
+    position: {
+      type: String as PropType<'right' | 'left'>,
+      default: 'right',
+      validator: (value: string): boolean => ['right', 'left'].includes(value)
     }
+  },
+  emits: ['close'],
+  setup(props, { emit }) {
+    const drawerStyle = computed(() => ({
+      width: props.width,
+      [props.position]: 0,
+      [props.position === 'right' ? 'left' : 'right']: 'auto'
+    }));
+    
+    return { 
+      emit,
+      drawerStyle 
+    };
   }
-}
+});
 </script>
 
 <style lang='scss' scoped>

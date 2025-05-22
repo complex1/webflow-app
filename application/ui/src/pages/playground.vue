@@ -5,57 +5,48 @@
   </div>
 </template>
 
-<script>
-import { mapMutations } from 'vuex';
+<script lang="ts">
+import { defineComponent, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 import workflowHeader from '../components/workflow/workflowHeader.vue';
 import WorkflowPlayground from '../components/workflow/workflowPlayground.vue';
 import { WebflowService } from '../services/webflow.service';
 import { getResponseToNodeList } from '../utils/workflowUtils';
+import type { WebflowCardProps } from '../components/dashboard/types';
+import type { IEdge } from '../model';
+import type FunctionalNode from '../classes/FunctionalNode';
+import type HttpNode from '../classes/HttpNode';
 
-export default {
+export default defineComponent({
   components: { workflowHeader, WorkflowPlayground },
   name: "workflow",
   
-  async created() {
-    // Check for webflow ID in route query params
-    const webflowId = this.$route.query.id;
-    if (webflowId) {
-      await this.loadWebflow(webflowId);
-    }
-  },
-  
-  methods: {
-    ...mapMutations({
-      setWorkflowId: 'workflowModule/setWorkflowId',
-      setWorkflowName: 'workflowModule/setWorkflowName',
-      setWorkflowDescription: 'workflowModule/setWorkflowDescription',
-      addNodeWithPosition: 'workflowModule/addNodeWithPosition',
-      addEdge: 'workflowModule/addEdge',
-    }),
+  setup() {
+    const route = useRoute();
+    const store = useStore();
+    const webflowService = new WebflowService();
     
-    async loadWebflow(id) {
+    const loadWebflow = async (id: string) => {
       try {
-        const webflowService = new WebflowService();
-        const webflow = await webflowService.getWebflowById(id);
+        const webflow = await webflowService.getWebflowById(id) as WebflowCardProps;
         
         if (webflow) {
-          this.setWorkflowId(webflow.id);
-          this.setWorkflowName(webflow.name);
-          this.setWorkflowDescription(webflow.description || '');
+          store.commit('workflowModule/setWorkflowId', webflow.id);
+          store.commit('workflowModule/setWorkflowName', webflow.name);
+          store.commit('workflowModule/setWorkflowDescription', webflow.description || '');
           
-          // If there's workflow data, you would load it here
-          // For example, if you store nodes and edges in webflow.data
+          // If there's workflow data, load it into the workflow state
           if (webflow.data) {
-            // TODO: Load workflow data into your workflow state
             const nodesWithPosition = getResponseToNodeList(webflow.data);
             nodesWithPosition.forEach(({ node, position }) => {
-              this.addNodeWithPosition({ node, position });
+              store.commit('workflowModule/addNodeWithPosition', { node, position });
             });
 
             // Assuming edges are also part of the webflow data
             if (webflow.data.edges) {
-              webflow.data.edges.forEach(edge => {
-                this.addEdge(edge);
+              webflow.data.edges.forEach((edge: IEdge) => {
+                store.commit('workflowModule/addEdge', edge);
               });
             }
           }
@@ -63,9 +54,21 @@ export default {
       } catch (error) {
         console.error('Error loading webflow:', error);
       }
-    }
+    };
+    
+    onMounted(async () => {
+      // Check for webflow ID in route query params
+      const webflowId = route.query.id as string;
+      if (webflowId) {
+        await loadWebflow(webflowId);
+      }
+    });
+    
+    return {
+      // No need to expose methods that are only used internally
+    };
   }
-};
+});
 </script>
 
 <style lang="scss">

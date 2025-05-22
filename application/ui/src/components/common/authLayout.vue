@@ -8,18 +8,19 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: "authLayoutComponent",
-  data() {
-    return {};
-  },
-  computed: {},
-  watch: {},
-  methods: {},
-  created() {},
-  mounted() {},
-};
+<script lang="ts">
+import { defineComponent } from 'vue';
+import type { AuthLayoutProps } from './types';
+
+export default defineComponent({
+  name: "AuthLayout",
+  props: {
+    title: {
+      type: String,
+      default: 'Authentication'
+    }
+  }
+});
 </script>
 <style lang='scss' scoped>
 .register-page {

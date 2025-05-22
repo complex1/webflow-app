@@ -162,14 +162,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { WebflowService } from "../services/webflow.service";
 import drawer from "../components/common/drawer.vue";
 import navbar from "../components/common/navbar.vue";
 import wfaInput from "../components/common/wfa-input.vue";
 import webflowCard from "../components/dashboard/webflow-card.vue";
+import type { WebflowCardProps } from "../components/dashboard/types";
+import type { WebflowForm } from './types';
 
-export default {
+export default defineComponent({
   name: "DashboardPage",
   components: {
     drawer,
@@ -177,51 +181,52 @@ export default {
     wfaInput,
     webflowCard,
   },
-  data() {
-    return {
-      webflows: [],
-      filteredWebflows: [],
-      loading: true,
-      searchQuery: "",
-      selectedTag: "",
-      drawerOpen: false,
-      isEditing: false,
-      webflowForm: {
-        name: "",
-        description: "",
-        icon: "pi pi-sitemap",
-        tags: [],
-      },
-      nameError: "",
-      tagInput: "",
-      showDeleteConfirm: false,
-      webflowToDelete: null,
-    };
-  },
-  computed: {
-    uniqueTags() {
+  setup() {
+    const router = useRouter();
+    const webflowService = new WebflowService();
+    
+    // State
+    const webflows = ref<WebflowCardProps[]>([]);
+    const filteredWebflows = ref<WebflowCardProps[]>([]);
+    const loading = ref(true);
+    const searchQuery = ref("");
+    const selectedTag = ref("");
+    const drawerOpen = ref(false);
+    const isEditing = ref(false);
+    const webflowForm = ref<WebflowForm>({
+      name: "",
+      description: "",
+      icon: "pi pi-sitemap",
+      tags: [],
+    });
+    const nameError = ref("");
+    const tagInput = ref("");
+    const showDeleteConfirm = ref(false);
+    const webflowToDelete = ref<WebflowCardProps | null>(null);
+    
+    // Computed properties
+    const uniqueTags = computed(() => {
       // Extract all unique tags from webflows
-      const allTags = this.webflows
+      // Using reduce instead of flatMap for better compatibility
+      const allTags: string[] = webflows.value
         .filter((webflow) => webflow.tags && webflow.tags.length > 0)
-        .flatMap((webflow) => webflow.tags);
+        .reduce((acc: string[], webflow) => {
+          return acc.concat(webflow.tags || []);
+        }, []);
       return [...new Set(allTags)];
-    },
-  },
-  async created() {
-    await this.fetchWebflows();
-  },
-  methods: {
-    async fetchWebflows() {
+    });
+    
+    // Methods
+    const fetchWebflows = async () => {
       try {
-        this.loading = true;
-        const webflowService = new WebflowService();
-        const webflows = await webflowService.getMyWebflows();
-        this.webflows = Array.isArray(webflows) ? webflows : [];
-        this.filteredWebflows = [...this.webflows];
-      } catch (error) {
+        loading.value = true;
+        const result = await webflowService.getMyWebflows();
+        webflows.value = Array.isArray(result) ? result : [];
+        filteredWebflows.value = [...webflows.value];
+      } catch (error: any) {
         console.error("Error fetching webflows:", error);
-        this.webflows = [];
-        this.filteredWebflows = [];
+        webflows.value = [];
+        filteredWebflows.value = [];
 
         // Check if unauthorized (likely token expired)
         if (
@@ -229,116 +234,126 @@ export default {
           (error.response.status === 401 || error.response.status === 403)
         ) {
           // Redirect to login
-          this.$router.push("/login");
+          router.push("/login");
         }
       } finally {
-        this.loading = false;
+        loading.value = false;
       }
-    },
-    filterWebflows() {
+    };
+    
+    const filterWebflows = () => {
       // Filter webflows based on search query and selected tag
-      this.filteredWebflows = this.webflows.filter((webflow) => {
+      filteredWebflows.value = webflows.value.filter((webflow) => {
         const matchesSearch =
-          !this.searchQuery ||
-          webflow.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          !searchQuery.value ||
+          webflow.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
           (webflow.description &&
             webflow.description
               .toLowerCase()
-              .includes(this.searchQuery.toLowerCase()));
+              .includes(searchQuery.value.toLowerCase()));
 
         const matchesTag =
-          !this.selectedTag ||
-          (webflow.tags && webflow.tags.includes(this.selectedTag));
+          !selectedTag.value ||
+          (webflow.tags && webflow.tags.includes(selectedTag.value));
 
         return matchesSearch && matchesTag;
       });
-    },
-    openCreateDrawer() {
-      this.isEditing = false;
-      this.webflowForm = {
+    };
+    
+    const openCreateDrawer = () => {
+      isEditing.value = false;
+      webflowForm.value = {
         name: "",
         description: "",
         icon: "pi pi-sitemap",
         tags: [],
       };
-      this.drawerOpen = true;
-    },
-    editWebflow(webflow) {
-      this.isEditing = true;
-      this.webflowForm = {
+      nameError.value = "";
+      drawerOpen.value = true;
+    };
+    
+    const editWebflow = (webflow: WebflowCardProps) => {
+      isEditing.value = true;
+      webflowForm.value = {
         id: webflow.id,
         name: webflow.name,
         description: webflow.description || "",
         icon: webflow.icon || "pi pi-sitemap",
         tags: webflow.tags ? [...webflow.tags] : [],
       };
-      this.drawerOpen = true;
-    },
-    closeDrawer() {
-      this.drawerOpen = false;
-    },
-    addTag() {
+      nameError.value = "";
+      drawerOpen.value = true;
+    };
+    
+    const closeDrawer = () => {
+      drawerOpen.value = false;
+      nameError.value = "";
+    };
+    
+    const addTag = () => {
       if (
-        this.tagInput.trim() &&
-        !this.webflowForm.tags.includes(this.tagInput.trim())
+        tagInput.value.trim() &&
+        !webflowForm.value.tags.includes(tagInput.value.trim())
       ) {
-        this.webflowForm.tags.push(this.tagInput.trim());
-        this.tagInput = "";
+        webflowForm.value.tags.push(tagInput.value.trim());
+        tagInput.value = "";
       }
-    },
-    removeTag(index) {
-      this.webflowForm.tags.splice(index, 1);
-    },
-    async saveWebflow() {
+    };
+    
+    const removeTag = (index: number) => {
+      webflowForm.value.tags.splice(index, 1);
+    };
+    
+    const saveWebflow = async () => {
       try {
         // Reset error message
-        this.nameError = "";
+        nameError.value = "";
 
         // Validate name
-        if (!this.webflowForm.name) {
-          this.nameError = "Name is required";
+        if (!webflowForm.value.name) {
+          nameError.value = "Name is required";
           return;
         }
 
-        if (this.webflowForm.name.length < 3) {
-          this.nameError = "Name must be at least 3 characters long";
+        if (webflowForm.value.name.length < 3) {
+          nameError.value = "Name must be at least 3 characters long";
           return;
         }
 
-        const webflowService = new WebflowService();
-
-        if (this.isEditing && this.webflowForm.id) {
-          await webflowService.updateWebflow(this.webflowForm.id, {
-            name: this.webflowForm.name,
-            description: this.webflowForm.description,
-            icon: this.webflowForm.icon,
-            tags: this.webflowForm.tags,
+        if (isEditing.value && webflowForm.value.id) {
+          // Update existing webflow
+          await webflowService.updateWebflow(webflowForm.value.id, {
+            name: webflowForm.value.name,
+            description: webflowForm.value.description,
+            icon: webflowForm.value.icon,
+            tags: webflowForm.value.tags,
           });
 
           // Show success message
           alert("Webflow updated successfully!");
         } else {
+          // Create new webflow
           await webflowService.createWebflow({
-            name: this.webflowForm.name,
-            description: this.webflowForm.description,
-            icon: this.webflowForm.icon,
-            tags: this.webflowForm.tags,
+            name: webflowForm.value.name,
+            description: webflowForm.value.description,
+            icon: webflowForm.value.icon,
+            tags: webflowForm.value.tags,
           });
 
           // Show success message
           alert("Webflow created successfully!");
         }
 
-        this.closeDrawer();
-        await this.fetchWebflows();
-      } catch (error) {
+        closeDrawer();
+        await fetchWebflows();
+      } catch (error: any) {
         console.error("Error saving webflow:", error);
 
         // Display appropriate error message
         if (error.response) {
           if (error.response.status === 401 || error.response.status === 403) {
             alert("Session expired. Please log in again.");
-            this.$router.push("/login");
+            router.push("/login");
           } else if (error.response.data && error.response.data.message) {
             alert(`Error: ${error.response.data.message}`);
           } else {
@@ -348,32 +363,33 @@ export default {
           alert("Network error. Please check your connection and try again.");
         }
       }
-    },
-    confirmDelete(webflow) {
-      this.webflowToDelete = webflow;
-      this.showDeleteConfirm = true;
-    },
-    async deleteWebflow() {
-      if (!this.webflowToDelete) return;
+    };
+    
+    const confirmDelete = (webflow: WebflowCardProps) => {
+      webflowToDelete.value = webflow;
+      showDeleteConfirm.value = true;
+    };
+    
+    const deleteWebflow = async () => {
+      if (!webflowToDelete.value) return;
 
       try {
-        const webflowService = new WebflowService();
-        await webflowService.deleteWebflow(this.webflowToDelete.id);
+        await webflowService.deleteWebflow(webflowToDelete.value.id);
 
         // Show success message
         alert("Webflow deleted successfully!");
 
-        this.showDeleteConfirm = false;
-        this.webflowToDelete = null;
-        await this.fetchWebflows();
-      } catch (error) {
+        showDeleteConfirm.value = false;
+        webflowToDelete.value = null;
+        await fetchWebflows();
+      } catch (error: any) {
         console.error("Error deleting webflow:", error);
 
         // Display appropriate error message
         if (error.response) {
           if (error.response.status === 401 || error.response.status === 403) {
             alert("Session expired. Please log in again.");
-            this.$router.push("/login");
+            router.push("/login");
           } else if (error.response.data && error.response.data.message) {
             alert(`Error: ${error.response.data.message}`);
           } else {
@@ -383,13 +399,46 @@ export default {
           alert("Network error. Please check your connection and try again.");
         }
       }
-    },
-    navigateToWorkflow(id) {
+    };
+    
+    const navigateToWorkflow = (id: string) => {
       // Navigate to the workflow editor page with the selected webflow
-      this.$router.push(`/playground?id=${id}`);
-    },
-  },
-};
+      router.push(`/playground?id=${id}`);
+    };
+    
+    // Initialize on component creation
+    onMounted(async () => {
+      await fetchWebflows();
+    });
+    
+    return {
+      webflows,
+      filteredWebflows,
+      loading,
+      searchQuery,
+      selectedTag,
+      drawerOpen,
+      isEditing,
+      webflowForm,
+      nameError,
+      tagInput,
+      showDeleteConfirm,
+      webflowToDelete,
+      uniqueTags,
+      fetchWebflows,
+      filterWebflows,
+      openCreateDrawer,
+      editWebflow,
+      closeDrawer,
+      addTag,
+      removeTag,
+      saveWebflow,
+      confirmDelete,
+      deleteWebflow,
+      navigateToWorkflow
+    };
+  }
+});
 </script>
 
 <style lang="scss" scoped>

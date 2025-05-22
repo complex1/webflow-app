@@ -44,29 +44,41 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
+import { useRouter } from 'vue-router';
+import { WebflowCardProps, WebflowCardEmits } from './types';
+
+export default defineComponent({
   name: "WebflowCard",
   props: {
     webflow: {
-      type: Object,
+      type: Object as PropType<WebflowCardProps>,
       required: true
     }
   },
-  methods: {
-    navigateToWorkflow(id) {
+  emits: ['edit', 'delete'],
+  setup(props, { emit }) {
+    // Type the emit function
+    const emitter = emit as WebflowCardEmits;
+    const router = useRouter();
+    
+    const navigateToWorkflow = (id: string) => {
       // Navigate to the workflow editor page with the selected webflow
-      this.$router.push(`/playground?id=${id}`);
-    },
-    editWebflow() {
+      router.push(`/playground?id=${id}`);
+    };
+    
+    const editWebflow = () => {
       // Emit event to parent component to handle editing
-      this.$emit('edit', this.webflow);
-    },
-    confirmDelete() {
+      emitter('edit', props.webflow);
+    };
+    
+    const confirmDelete = () => {
       // Emit event to parent component to handle deletion confirmation
-      this.$emit('delete', this.webflow);
-    },
-    formatDate(dateString) {
+      emitter('delete', props.webflow);
+    };
+    
+    const formatDate = (dateString?: string | Date) => {
       if (!dateString) return 'No date';
       
       const date = new Date(dateString);
@@ -78,9 +90,16 @@ export default {
         month: 'short', 
         day: 'numeric' 
       }).format(date);
-    }
+    };
+    
+    return {
+      navigateToWorkflow,
+      editWebflow,
+      confirmDelete,
+      formatDate
+    };
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

@@ -1,36 +1,47 @@
 <template>
   <div class="status-chip text-bold" :class="statusClass">
     <i :class="iconClass"></i>
-    <span>{{ status }}</span>
+    <span>{{ displayText || status }}</span>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, computed, PropType } from 'vue';
 import { NodeStatus } from "../../classes/Node";
+import type { StatusChipProps } from './types';
 
-export default {
+type SizeType = 'small' | 'medium' | 'large';
+
+export default defineComponent({
   name: "StatusChip",
   props: {
     status: {
-      type: String,
+      type: String as PropType<string>,
       required: true,
-      validator(value) {
-        return Object.values(NodeStatus).includes(value);
+      validator(value: string): boolean {
+        return Object.values(NodeStatus).includes(value as NodeStatus);
       },
     },
-    size: {
+    text: {
       type: String,
+      default: undefined
+    },
+    size: {
+      type: String as PropType<SizeType>,
       default: "medium",
-      validator(value) {
+      validator(value: string): boolean {
         return ["small", "medium", "large"].includes(value);
       },
     },
   },
-  computed: {
-    statusClass() {
+  setup(props) {
+    const displayText = computed(() => props.text);
+    
+    const statusClass = computed(() => {
       let sizeClass = "";
       let statusClass = "";
-      switch (this.size) {
+      
+      switch (props.size) {
         case "small":
           sizeClass = "text-xs";
           break;
@@ -43,7 +54,8 @@ export default {
         default:
           sizeClass = "";
       }
-      switch (this.status) {
+      
+      switch (props.status) {
         case NodeStatus.PENDING:
           statusClass = "bg-warning text-white";
           break;
@@ -66,10 +78,12 @@ export default {
           statusClass = "bg-default text-white";
           break;
       }
+      
       return `${sizeClass} ${statusClass}`;
-    },
-    iconClass() {
-      switch (this.status) {
+    });
+    
+    const iconClass = computed(() => {
+      switch (props.status) {
         case NodeStatus.PENDING:
           return "pi pi-clock";
         case NodeStatus.IN_PROGRESS:
@@ -85,9 +99,15 @@ export default {
         default:
           return "pi pi-question-circle";
       }
-    },
+    });
+    
+    return {
+      displayText,
+      statusClass,
+      iconClass
+    };
   },
-};
+});
 </script>
 
 <style scoped>

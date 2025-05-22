@@ -10,7 +10,7 @@
       </span>
       <div class="monaco-editor-header-actions flex-v-center">
         <div class="wfa-input">
-          <input type="checkbox" id="theme" :checked="_theme === 'vs-dark'" @change="changeTheme" />
+          <input type="checkbox" id="theme" :checked="editorTheme === 'vs-dark'" @change="changeTheme" />
         </div>
         <button
           class="btn btn-icon"
@@ -26,9 +26,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, PropType } from 'vue';
 import { MonacoEditor } from "./monaco";
-export default {
+
+export default defineComponent({
   name: "MonacoEditor",
   props: {
     value: {
@@ -45,7 +47,7 @@ export default {
       default: "vs-dark",
     },
     options: {
-      type: Object,
+      type: Object as PropType<Record<string, any>>,
       default: () => ({}),
     },
     height: {
@@ -57,59 +59,73 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      monacoInstance: null,
-      dispose: null,
-      _theme: this.theme || localStorage.getItem("monaco-theme") || "vs-dark",
-      fullscreen: false,
-    };
-  },
-  computed: {
-    _options() {
+  emits: ['onChange'],
+  setup(props, { emit }) {
+    const monacoInstance = ref<any>(null);
+    const editorContainer = ref<HTMLElement | null>(null);
+    const storedTheme = localStorage.getItem("monaco-theme") || "vs-dark";
+    const editorTheme = ref<string>(props.theme || storedTheme);
+    const fullscreen = ref<boolean>(false);
+    
+    const editorOptions = computed(() => {
       return {
         automaticLayout: true,
         minimap: {
           enabled: false,
         },
-        readOnly: this.readOnly,
+        readOnly: props.readOnly,
         scrollBeyondLastLine: false,
         lineNumbersMinChars: 3,
-        ...this.options,
+        ...props.options,
       };
-    },
-    headerStyle() {
-      return {
-        backgroundColor: this._theme === "vs-dark" ? "#1e1e1e" : "#ffffff",
-        color: this._theme === "vs-dark" ? "#ffffff" : "#000000",
-      };
-    },
-  },
-  methods: {
-    changeTheme(e) {
-      this._theme = e.target.checked ? "vs-dark" : "vs";
-      localStorage.setItem("monaco-theme", this._theme);
-      this.monacoInstance.changeTheme(this._theme);
-    },
-  },
-  mounted() {
-    this.monacoInstance = new MonacoEditor(this.$refs.editorContainer, {
-      value: this.value,
-      language: this.language,
-      theme: this._theme,
-      readOnly: this.readOnly,
-      ...this._options,
-      onChange: (value) => {
-        this.$emit("onChange", value);
-      },
     });
+    
+    const headerStyle = computed(() => {
+      return {
+        backgroundColor: editorTheme.value === "vs-dark" ? "#1e1e1e" : "#ffffff",
+        color: editorTheme.value === "vs-dark" ? "#ffffff" : "#000000",
+      };
+    });
+    
+    const changeTheme = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      editorTheme.value = target.checked ? "vs-dark" : "vs";
+      localStorage.setItem("monaco-theme", editorTheme.value);
+      if (monacoInstance.value) {
+        monacoInstance.value.changeTheme(editorTheme.value);
+      }
+    };
+    
+    onMounted(() => {
+      if (editorContainer.value) {
+        monacoInstance.value = new MonacoEditor(editorContainer.value, {
+          value: props.value,
+          language: props.language,
+          theme: editorTheme.value,
+          readOnly: props.readOnly,
+          ...editorOptions.value,
+          onChange: (value: string) => {
+            emit("onChange", value);
+          },
+        });
+      }
+    });
+    
+    onBeforeUnmount(() => {
+      if (monacoInstance.value) {
+        monacoInstance.value.dispose();
+      }
+    });
+    
+    return {
+      editorContainer,
+      editorTheme,
+      fullscreen,
+      headerStyle,
+      changeTheme,
+    };
   },
-  beforeDestroy() {
-    if (this.monacoInstance) {
-      this.monacoInstance.dispose();
-    }
-  },
-};
+});
 </script>
 
 <style scoped>

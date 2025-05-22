@@ -53,98 +53,123 @@
     </div>
   </div>
 </template>
-<script>
-import { mapMutations, mapState } from "vuex";
+<script lang="ts">
+import { defineComponent, ref, computed, nextTick, onMounted, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import themeToggle from '../common/themeToggle.vue';
 import { WebflowService } from '../../services/webflow.service';
-import { getPostBody } from '../../utils/workflowUtils'; // Assuming you have a utility function to convert workflow to post body
-export default {
+import { getPostBody } from '../../utils/workflowUtils';
+import type { WorkflowHeaderProps, WorkflowHeaderEmits } from './types';
+
+export default defineComponent({
   components: { themeToggle },
-  name: "workflowHeaderComponent",
-  data() {
-    return {
-      isEditing: false,
-      _workflowName: this.workflowName, // Local variable to bind with input box
-    };
-  },
-  computed: {
-    ...mapState({
-      workflowName: (state) => state.workflowModule.workflowName,
-      workflowDescription: (state) => state.workflowModule.workflowDescription,
-      workflowId: (state) => state.workflowModule.workflowId,
-    }),
-  },
-  methods: {
-    ...mapMutations({
-      setWorkflowName: "workflowModule/setWorkflowName",
-      setWorkflowDescription: "workflowModule/setWorkflowDescription",
-      setWorkflowId: "workflowModule/setWorkflowId",
-      saveWorkflowPositions: "workflowModule/saveWorkflowPositions",
-    }),
-    editWorkflowName() {
-      this.isEditing = true;
-      this._workflowName = this.workflowName; // Set the local variable to the current workflow name
-      this.$nextTick(() => {
-        this.$refs.workflowNameInput.focus(); // Focus the input field
+  name: "WorkflowHeader",
+  setup() {
+    const store = useStore();
+    const router = useRouter();
+    const workflowNameInput = ref<HTMLInputElement | null>(null);
+    
+    const isEditing = ref<boolean>(false);
+    const localWorkflowName = ref<string>('');
+    
+    const workflowName = computed(() => store.state.workflowModule.workflowName);
+    const workflowDescription = computed(() => store.state.workflowModule.workflowDescription);
+    const workflowId = computed(() => store.state.workflowModule.workflowId);
+    
+    // Initialize local name with store value
+    watch(workflowName, (newName) => {
+      localWorkflowName.value = newName;
+    }, { immediate: true });
+    
+    const editWorkflowName = () => {
+      isEditing.value = true;
+      localWorkflowName.value = workflowName.value;
+      
+      nextTick(() => {
+        if (workflowNameInput.value) {
+          workflowNameInput.value.focus();
+        }
       });
-    },
-    saveWorkflowName() {
-      if (this._workflowName.length < 3) {
-        this.$refs.workflowNameInput.classList.add("input-error");
+    };
+    
+    const saveWorkflowName = () => {
+      if (localWorkflowName.value.length < 3) {
+        if (workflowNameInput.value) {
+          workflowNameInput.value.classList.add('input-error');
+        }
         return;
       }
-      this.isEditing = false;
-      this.setWorkflowName(this._workflowName);
-      this._workflowName = this.workflowName;
-    },
-    playWorkflow() {
+      
+      isEditing.value = false;
+      store.commit('workflowModule/setWorkflowName', localWorkflowName.value);
+    };
+    
+    const playWorkflow = () => {
       console.log("Play workflow");
-    },
-    exportWorkflow() {
+    };
+    
+    const exportWorkflow = () => {
       console.log("Export workflow");
-    },
-    async saveWorkflow() {
+    };
+    
+    const saveWorkflow = async () => {
       try {
         const webflowService = new WebflowService();
-        const workflow = this.$store.state.workflowModule;
+        const workflow = store.state.workflowModule;
         
-        // Convert workflow to serializable format if needed
+        // Convert workflow to serializable format
         const workflowData = getPostBody(workflow);
 
-        if (this.workflowId) {
+        if (workflowId.value) {
           // Update existing webflow
-          await webflowService.updateWebflow(this.workflowId, {
-            name: this.workflowName,
-            description: this.workflowDescription,
+          await webflowService.updateWebflow(workflowId.value, {
+            name: workflowName.value,
+            description: workflowDescription.value,
             data: workflowData
           });
         } else {
           // Create new webflow
           const newWebflow = await webflowService.createWebflow({
-            name: this.workflowName,
-            description: this.workflowDescription,
+            name: workflowName.value,
+            description: workflowDescription.value,
             data: workflowData,
             tags: ['workflow']
-          });
-          
+          }) as { id?: string };
+
           // Update workflow ID in store
           if (newWebflow && newWebflow.id) {
-            this.setWorkflowId(newWebflow.id);
+            store.commit('workflowModule/setWorkflowId', newWebflow.id);
           }
         }
         
-        // Show success message or notification
+        // Show success message
         alert('Workflow saved successfully!');
       } catch (error) {
         console.error('Error saving workflow:', error);
         alert('Error saving workflow. Please try again.');
       }
-    },
-    goToDashboard() {
-      this.$router.push('/dashboard');
-    }
+    };
+    
+    const goToDashboard = () => {
+      router.push('/dashboard');
+    };
+    
+    return {
+      workflowName,
+      workflowId,
+      isEditing,
+      _workflowName: localWorkflowName,
+      workflowNameInput,
+      editWorkflowName,
+      saveWorkflowName,
+      playWorkflow,
+      exportWorkflow,
+      saveWorkflow,
+      goToDashboard
+    };
   },
-};
+});
 </script>
 <style lang='scss' scoped>
 .workflow-header {

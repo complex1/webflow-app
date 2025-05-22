@@ -3,14 +3,24 @@ declare global {
 		monaco: any;
 	}
 }
+
+interface MonacoEditorOptions {
+  value: string;
+  language: string;
+  theme: string;
+  readOnly: boolean;
+  onChange?: (value: string) => void;
+  [key: string]: any;
+}
+
 const monaco = window.monaco;
 export class MonacoEditor {
     private editor: any;
     private container: HTMLElement;
-    private options: any;
+    private options: MonacoEditorOptions;
     onChange: ((value: string) => void) | undefined;
 
-    constructor(container: HTMLElement, options: any) {
+    constructor(container: HTMLElement, options: MonacoEditorOptions) {
         this.container = container;
         this.options = options;
         this.editor = monaco.editor.create(this.container, this.options);

@@ -50,80 +50,96 @@
   </auth-layout>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import authLayout from '../components/common/authLayout.vue';
-import { UserService } from "../services/user.service.ts";
+import { UserService } from "../services/user.service";
 import wfaInput from "../components/common/wfa-input.vue";
 
-export default {
+interface User {
+  email: string;
+  password: string;
+}
+
+interface FormErrors {
+  email: string;
+  password: string;
+  form: string;
+}
+
+export default defineComponent({
   components: { authLayout, wfaInput },
   name: "LoginPage",
-  data() {
-    return {
-      user: {
-        email: "",
-        password: "",
-      },
-      errors: {
-        email: "",
-        password: "",
-        form: "",
-      },
-      isSubmitting: false,
-    };
-  },
-  methods: {
-    validateForm() {
+  setup() {
+    const router = useRouter();
+    
+    const user = reactive<User>({
+      email: "",
+      password: "",
+    });
+    
+    const errors = reactive<FormErrors>({
+      email: "",
+      password: "",
+      form: "",
+    });
+    
+    const isSubmitting = ref<boolean>(false);
+    
+    const validateForm = (): boolean => {
       let isValid = true;
-      this.errors = {
-        email: "",
-        password: "",
-        form: "",
-      };
+      errors.email = "";
+      errors.password = "";
+      errors.form = "";
 
       // Validate email
-      if (!this.user.email.trim()) {
-        this.errors.email = "Email is required";
+      if (!user.email.trim()) {
+        errors.email = "Email is required";
         isValid = false;
       }
 
       // Validate password
-      if (!this.user.password) {
-        this.errors.password = "Password is required";
+      if (!user.password) {
+        errors.password = "Password is required";
         isValid = false;
       }
 
       return isValid;
-    },
+    };
 
-    async loginUser() {
-      if (!this.validateForm()) {
+    const loginUser = async (): Promise<void> => {
+      if (!validateForm()) {
         return;
       }
 
-      this.isSubmitting = true;
+      isSubmitting.value = true;
 
       const userService = new UserService();
 
-      userService
-        .login(this.user.email, this.user.password)
-        .then((response) => {
-          // Handle successful login
-          console.log("Login successful:", response);
-          // Store token in localStorage
-          localStorage.setItem("token", response.token);
-          // Redirect to home page after successful login
-          this.$router.push("/");
-        })
-        .catch((error) => {
-          console.error("Login error:", error);
-          this.errors.form =
-            error.response.data.message || "Invalid email or password";
-        })
-        .finally(() => {
-          this.isSubmitting = false;
-        });
-    },
+      try {
+        // Specify the expected response type
+        const response = await userService.login(user.email, user.password) as { token: string };
+        // Handle successful login
+        console.log("Login successful:", response);
+        // Store token in localStorage
+        localStorage.setItem("token", response.token);
+        // Redirect to home page after successful login
+        router.push("/");
+      } catch (error: any) {
+        console.error("Login error:", error);
+        errors.form = error.response?.data?.message || "Invalid email or password";
+      } finally {
+        isSubmitting.value = false;
+      }
+    };
+    
+    return {
+      user,
+      errors,
+      isSubmitting,
+      loginUser
+    };
   },
-};
+});
 </script>

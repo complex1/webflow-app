@@ -13,29 +13,27 @@
     </div>
   </div>
 </template>
-<script lang="ts" >
-import ErrorMessage from '../../classes/ErrorMessage'
-export default {
-  name: 'validationErrorComponent',
+<script lang="ts">
+import { defineComponent, computed, PropType } from 'vue';
+import type ErrorMessage from '../../classes/ErrorMessage';
+import type { ValidationErrorProps } from './types';
+
+export default defineComponent({
+  name: 'ValidationError',
   props: {
     errors: {
-      type: Array as () => ErrorMessage[],
+      type: Array as PropType<ErrorMessage[]>,
       default: () => []
     }
   },
-  data () {
-    return {}
-  },
-  computed: {
-    hasErrors() {
-      return this.errors.length > 0;
-    }
-  },
-  watch: {},
-  methods: {},
-  created () {},
-  mounted () {}
-}
+  setup(props) {
+    const hasErrors = computed(() => props.errors.length > 0);
+    
+    return {
+      hasErrors
+    };
+  }
+});
 </script>
 <style lang='scss' scoped>
 </style>

@@ -64,99 +64,120 @@
   </auth-layout>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import authLayout from '../components/common/authLayout.vue';
-import { UserService } from "../services/user.service.ts";
+import { UserService } from "../services/user.service";
 import wfaInput from "../components/common/wfa-input.vue";
 
-export default {
+interface User {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface RegisterFormErrors {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export default defineComponent({
   components: { authLayout, wfaInput },
   name: "RegisterPage",
-  data() {
-    return {
-      user: {
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      },
-      errors: {
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      },
-      isSubmitting: false,
-    };
-  },
-  methods: {
-    validateForm() {
+  setup() {
+    const router = useRouter();
+    
+    const user = reactive<User>({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+    
+    const errors = reactive<RegisterFormErrors>({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+    
+    const isSubmitting = ref<boolean>(false);
+    
+    const validateForm = (): boolean => {
       let isValid = true;
-      this.errors = {
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      };
+      
+      // Reset errors
+      errors.name = "";
+      errors.email = "";
+      errors.password = "";
+      errors.confirmPassword = "";
 
       // Validate name
-      if (!this.user.name.trim()) {
-        this.errors.name = "Name is required";
+      if (!user.name.trim()) {
+        errors.name = "Name is required";
         isValid = false;
       }
 
       // Validate email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!this.user.email.trim()) {
-        this.errors.email = "Email is required";
+      if (!user.email.trim()) {
+        errors.email = "Email is required";
         isValid = false;
-      } else if (!emailRegex.test(this.user.email)) {
-        this.errors.email = "Please enter a valid email address";
+      } else if (!emailRegex.test(user.email)) {
+        errors.email = "Please enter a valid email address";
         isValid = false;
       }
 
       // Validate password
-      if (!this.user.password) {
-        this.errors.password = "Password is required";
+      if (!user.password) {
+        errors.password = "Password is required";
         isValid = false;
-      } else if (this.user.password.length < 6) {
-        this.errors.password = "Password must be at least 6 characters";
+      } else if (user.password.length < 6) {
+        errors.password = "Password must be at least 6 characters";
         isValid = false;
       }
 
       // Validate confirm password
-      if (this.user.password !== this.user.confirmPassword) {
-        this.errors.confirmPassword = "Passwords do not match";
+      if (user.password !== user.confirmPassword) {
+        errors.confirmPassword = "Passwords do not match";
         isValid = false;
       }
 
       return isValid;
-    },
+    };
 
-    async registerUser() {
-      if (!this.validateForm()) {
+    const registerUser = async (): Promise<void> => {
+      if (!validateForm()) {
         return;
       }
 
-      this.isSubmitting = true;
+      isSubmitting.value = true;
 
       const userService = new UserService();
 
-      userService
-        .register(this.user.name, this.user.email, this.user.password)
-        .then(() => {
-          // On successful registration
-          this.$router.push("/login");
-        })
-        .catch((error) => {
-          alert(error.message || "Registration failed. Please try again.");
-        })
-        .finally(() => {
-          this.isSubmitting = false;
-        });
-    },
+      try {
+        await userService.register(user.name, user.email, user.password, '');
+        // On successful registration
+        router.push("/login");
+      } catch (error: any) {
+        alert(error.message || "Registration failed. Please try again.");
+      } finally {
+        isSubmitting.value = false;
+      }
+    };
+    
+    return {
+      user,
+      errors,
+      isSubmitting,
+      registerUser
+    };
   },
-};
+});
 </script>
 
 <style scoped lang="scss">

@@ -1,123 +1,157 @@
 <template>
   <div>
-    <span ref="target" class="popover-target" @click="open">
+    <span ref="targetRef" class="popover-target" @click="open">
       <slot name="target"></slot>
     </span>
     <Teleport to="body" :disabled="!isOpen" :key="isOpen">
       <div
         v-if="isOpen"
-        ref="popover"
+        ref="popoverRef"
         class="popover-content"
-        :class="direction"
+        :class="props.position"
         :style="popoverStyle"
       >
-        <slot name="content"></slot>
+        <div v-if="props.title" class="popover-title">{{ props.title }}</div>
+        <div class="popover-body">
+          <slot name="content">{{ props.content }}</slot>
+        </div>
       </div>
     </Teleport>
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, ref, reactive, PropType, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import type { PopoverProps } from './types';
+
+type Position = 'top' | 'right' | 'bottom' | 'left';
+
+export default defineComponent({
   name: "Popover",
   props: {
-    direction: {
+    title: {
       type: String,
+      default: ''
+    },
+    content: {
+      type: String,
+      default: ''
+    },
+    position: {
+      type: String as PropType<Position>,
       default: "bottom",
+      validator: (value: string): boolean => ['top', 'right', 'bottom', 'left'].includes(value)
     },
     tooltip: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
-  data() {
-    return {
-      isOpen: false,
-      popoverStyle: {},
-    };
-  },
-  methods: {
-    checkOutsideClick(event) {
-      const target = this.$refs.target;
-      const popover = this.$refs.popover;
-      if (
-        target &&
-        popover &&
-        !target.contains(event.target) &&
-        !popover.contains(event.target)
-      ) {
-        this.close();
-      }
-    },
-    open() {
-      if (this.isOpen) return;
-      this.isOpen = true;
-      this.updatePosition();
-      setTimeout(() => {
-        !this.tooltip && window.addEventListener("click", this.checkOutsideClick);
-      }, 100);
+  setup(props) {
+    const targetRef = ref<HTMLElement | null>(null);
+    const popoverRef = ref<HTMLElement | null>(null);
+    const isOpen = ref(false);
+    const popoverStyle = reactive({
+      top: '0px',
+      left: '0px'
+    });
+
+    const checkOutsideClick = (event: MouseEvent) => {
+      if (!targetRef.value || !popoverRef.value) return;
       
-    },
-    close() {
-      this.isOpen = false;
-      !this.tooltip &&
-        window.removeEventListener("click", this.checkOutsideClick);
-    },
-    updatePosition() {
-      this.$nextTick(() => {
-        const target = this.$refs.target;
-        const popover = this.$refs.popover;
-        if (target && popover) {
-          const targetRect = target.getBoundingClientRect();
-          const popoverRect = popover.getBoundingClientRect();
+      if (
+        !targetRef.value.contains(event.target as Node) &&
+        !popoverRef.value.contains(event.target as Node)
+      ) {
+        close();
+      }
+    };
 
-          let top = 0;
-          let left = 0;
-
-          if (this.direction === "bottom" || this.direction === "top") {
-            left =
-              targetRect.left + targetRect.width / 2 - popoverRect.width / 2;
-          } else if (this.direction === "left" || this.direction === "right") {
-            top =
-              targetRect.top +
-              popoverRect.height / 2 -
-              popoverRect.height / 2 +
-              window.scrollY;
-          }
-          if (this.direction === "bottom") {
-            top = targetRect.bottom + window.scrollY + 8;
-          } else if (this.direction === "top") {
-            top = targetRect.top - popoverRect.height + window.scrollY - 8;
-          } else if (this.direction === "left") {
-            left = targetRect.left - popoverRect.width + window.scrollX - 8;
-          } else if (this.direction === "right") {
-            left = targetRect.right + window.scrollX + 8;
-          }
-          this.popoverStyle = {
-            top: `${top}px`,
-            left: `${left}px`,
-          };
+    const open = () => {
+      if (isOpen.value) return;
+      isOpen.value = true;
+      
+      nextTick(() => {
+        updatePosition();
+        if (!props.tooltip) {
+          setTimeout(() => {
+            window.addEventListener("click", checkOutsideClick);
+          }, 100);
         }
       });
-    },
-  },
-  mounted() {
-    window.addEventListener("resize", this.updatePosition);
-    window.addEventListener("scroll", this.updatePosition);
-    if (this.tooltip) {
-      this.$refs.target.addEventListener("mouseover", this.open);
-      this.$refs.target.addEventListener("mouseleave", this.close);
-    }
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.updatePosition);
-    window.removeEventListener("scroll", this.updatePosition);
-    if (this.tooltip) {
-      this.$refs.target.removeEventListener("mouseover", this.open);
-      this.$refs.target.removeEventListener("mouseleave", this.close);
-    }
-  },
-};
+    };
+
+    const close = () => {
+      isOpen.value = false;
+      if (!props.tooltip) {
+        window.removeEventListener("click", checkOutsideClick);
+      }
+    };
+
+    const updatePosition = () => {
+      const target = targetRef.value;
+      const popover = popoverRef.value;
+      
+      if (!target || !popover) return;
+      
+      const targetRect = target.getBoundingClientRect();
+      const popoverRect = popover.getBoundingClientRect();
+
+      let top = 0;
+      let left = 0;
+
+      if (props.position === "bottom" || props.position === "top") {
+        left = targetRect.left + targetRect.width / 2 - popoverRect.width / 2;
+      } else if (props.position === "left" || props.position === "right") {
+        top = targetRect.top + targetRect.height / 2 - popoverRect.height / 2 + window.scrollY;
+      }
+      
+      if (props.position === "bottom") {
+        top = targetRect.bottom + window.scrollY + 8;
+      } else if (props.position === "top") {
+        top = targetRect.top - popoverRect.height + window.scrollY - 8;
+      } else if (props.position === "left") {
+        left = targetRect.left - popoverRect.width + window.scrollX - 8;
+      } else if (props.position === "right") {
+        left = targetRect.right + window.scrollX + 8;
+      }
+      
+      popoverStyle.top = `${top}px`;
+      popoverStyle.left = `${left}px`;
+    };
+
+    onMounted(() => {
+      window.addEventListener("resize", updatePosition);
+      window.addEventListener("scroll", updatePosition);
+      
+      if (props.tooltip && targetRef.value) {
+        targetRef.value.addEventListener("mouseover", open);
+        targetRef.value.addEventListener("mouseleave", close);
+      }
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition);
+      window.removeEventListener("click", checkOutsideClick);
+      
+      if (props.tooltip && targetRef.value) {
+        targetRef.value.removeEventListener("mouseover", open);
+        targetRef.value.removeEventListener("mouseleave", close);
+      }
+    });
+
+    return {
+      props,
+      targetRef,
+      popoverRef,
+      isOpen,
+      popoverStyle,
+      open,
+      close
+    };
+  }
+});
 </script>
 
 <style scoped>
@@ -183,5 +217,15 @@ export default {
 
 .popover-content.right {
   transform: translateX(6pt);
+}
+
+.popover-title {
+  font-weight: bold;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.popover-body {
+  padding: 8px 12px;
 }
 </style>

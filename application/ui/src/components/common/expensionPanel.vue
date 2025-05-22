@@ -2,13 +2,17 @@
   <div class="expansion-panel">
     <div class="expansion-header" @click="toggle">
       <div class="expansion-header-container">
+        <div v-if="title" class="expansion-title">
+          <i v-if="icon" :class="'pi ' + icon"></i>
+          {{ title }}
+        </div>
         <slot name="header"></slot>
       </div>
-      <div class="expansion-header-icon" :class="{ open: isOpen }">
+      <div class="expansion-header-icon" :class="{ open: panelOpen }">
         <i class="pi pi-angle-down"></i>
       </div>
     </div>
-    <div class="expansion-content" v-if="isOpen" :style="{
+    <div class="expansion-content" v-if="panelOpen" :style="{
       maxHeight: maxHeight,
       overflow: 'auto',
     }">
@@ -17,26 +21,47 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, ref, PropType, onMounted } from 'vue';
+import type { ExpansionPanelProps } from './types';
+
+export default defineComponent({
   name: "ExpansionPanel",
   props: {
+    title: {
+      type: String,
+      default: ''
+    },
     maxHeight: {
       type: String,
-      default: "300px",
+      default: "300px"
     },
+    isOpen: {
+      type: Boolean,
+      default: false
+    },
+    icon: {
+      type: String,
+      default: ''
+    }
   },
-  data() {
-    return {
-      isOpen: false,
+  setup(props) {
+    const panelOpen = ref(props.isOpen);
+    
+    const toggle = () => {
+      panelOpen.value = !panelOpen.value;
     };
-  },
-  methods: {
-    toggle() {
-      this.isOpen = !this.isOpen;
-    },
-  },
-};
+    
+    onMounted(() => {
+      panelOpen.value = props.isOpen;
+    });
+    
+    return {
+      panelOpen,
+      toggle
+    };
+  }
+});
 </script>
 
 <style scoped lang="scss">
@@ -55,15 +80,24 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  &-container {
-    flex-grow: 1;
-  }
-  &-icon {
-    transition: transform 0.3s ease;
-    &.open {
-      transform: rotate(180deg);
-    }
-  }
+}
+
+.expansion-header-container {
+  flex-grow: 1;
+}
+
+.expansion-header-icon {
+  transition: transform 0.3s ease;
+}
+
+.expansion-header-icon.open {
+  transform: rotate(180deg);
+}
+
+.expansion-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small, 8px);
 }
 
 .expansion-content {

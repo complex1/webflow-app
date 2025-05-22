@@ -59,28 +59,30 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
+
+type InputType = 'text' | 'email' | 'password' | 'number' | 'textarea' | 'select' | 'date' | 'tel' | 'url';
+
+export default defineComponent({
   name: "WfaInput",
   props: {
     id: {
       type: String,
-      default() {
-        return `input-${Math.random().toString(36).substring(2, 9)}`;
-      },
+      default: () => `input-${Math.random().toString(36).substring(2, 9)}`
     },
     label: {
       type: String,
-      default: "",
+      default: ""
     },
     modelValue: {
       type: [String, Number],
-      default: "",
+      default: ""
     },
     type: {
-      type: String,
+      type: String as PropType<InputType>,
       default: "text",
-      validator: (value) => {
+      validator: (value: string): boolean => {
         return [
           "text",
           "email",
@@ -92,53 +94,62 @@ export default {
           "tel",
           "url",
         ].includes(value);
-      },
+      }
     },
     placeholder: {
       type: String,
-      default: "",
+      default: ""
     },
     disabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     required: {
       type: Boolean,
-      default: false,
+      default: false
     },
     min: {
       type: [String, Number],
-      default: null,
+      default: null
     },
     max: {
       type: [String, Number],
-      default: null,
+      default: null
     },
     maxlength: {
       type: [String, Number],
-      default: null,
+      default: null
     },
     rows: {
       type: [String, Number],
-      default: 3,
+      default: 3
     },
     error: {
       type: String,
-      default: "",
-    },
+      default: ""
+    }
   },
-  methods: {
-    updateValue(event) {
-      this.$emit("update:modelValue", event.target.value);
-    },
-    onBlur(event) {
-      this.$emit("blur", event);
-    },
-    onFocus(event) {
-      this.$emit("focus", event);
-    },
-  },
-};
+  emits: ['update:modelValue', 'blur', 'focus'],
+  setup(props, { emit }) {
+    const updateValue = (event: Event) => {
+      emit("update:modelValue", (event.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement).value);
+    };
+    
+    const onBlur = (event: FocusEvent) => {
+      emit("blur", event);
+    };
+    
+    const onFocus = (event: FocusEvent) => {
+      emit("focus", event);
+    };
+    
+    return {
+      updateValue,
+      onBlur,
+      onFocus
+    };
+  }
+});
 </script>
 
 <style lang="scss" scoped>
