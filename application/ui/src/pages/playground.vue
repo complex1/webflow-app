@@ -10,6 +10,7 @@ import { mapMutations } from 'vuex';
 import workflowHeader from '../components/workflow/workflowHeader.vue';
 import WorkflowPlayground from '../components/workflow/workflowPlayground.vue';
 import { WebflowService } from '../services/webflow.service';
+import { getResponseToNodeList } from '../utils/workflowUtils';
 
 export default {
   components: { workflowHeader, WorkflowPlayground },
@@ -28,6 +29,8 @@ export default {
       setWorkflowId: 'workflowModule/setWorkflowId',
       setWorkflowName: 'workflowModule/setWorkflowName',
       setWorkflowDescription: 'workflowModule/setWorkflowDescription',
+      addNodeWithPosition: 'workflowModule/addNodeWithPosition',
+      addEdge: 'workflowModule/addEdge',
     }),
     
     async loadWebflow(id) {
@@ -44,7 +47,17 @@ export default {
           // For example, if you store nodes and edges in webflow.data
           if (webflow.data) {
             // TODO: Load workflow data into your workflow state
-            console.log('Loading workflow data:', webflow.data);
+            const nodesWithPosition = getResponseToNodeList(webflow.data);
+            nodesWithPosition.forEach(({ node, position }) => {
+              this.addNodeWithPosition({ node, position });
+            });
+
+            // Assuming edges are also part of the webflow data
+            if (webflow.data.edges) {
+              webflow.data.edges.forEach(edge => {
+                this.addEdge(edge);
+              });
+            }
           }
         }
       } catch (error) {

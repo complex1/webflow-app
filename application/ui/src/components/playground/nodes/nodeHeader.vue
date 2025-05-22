@@ -1,41 +1,42 @@
 <template>
-  <div class="node-header p-s gap-m flex-space-between flex-v-center">
-    <div class="flex-grow" >
-      <div class="text-dark text-m text-500 flex-v-center gap-s">
+  <div class="node-header p-s flex-space-between flex-v-center bg-light-gradient border-bottom">
+    <div class="flex-grow">
+      <div class="text-dark font-500 flex-v-center gap-s">
+        <i class="pi pi-box mr-xs text-primary"></i>
         <div class="text-truncate" style="max-width: 200px">
           {{ nodeData.name }}
         </div>
         <popover v-if="nodeData.description || nodeData.description === ''" :tooltip="true">
           <template #target>
-            <small class="pi pi-info-circle cursor-pointer opacity-50 text-s"></small>
+            <small class="pi pi-info-circle cursor-pointer text-secondary opacity-70 text-s"></small>
           </template>
           <template #content>
-            <div class="text-m bg-white p-m round-1" style="max-width: 200px" >
+            <div class="text-m bg-white p-m round-2 shadow-1" style="max-width: 250px">
               <span class="text-secondary">
-                <strong>Description:</strong> {{ nodeData.description }}
+                <strong>Description:</strong> {{ nodeData.description || "No description provided" }}
               </span>
             </div>
           </template>
         </popover>
       </div>
     </div>
-    <div class="flex-v-center">
+    <div class="flex-v-center gap-s">
       <status-chip :status="nodeData.nodeStatus" size="small"></status-chip>
-      <popover ref="popover">
+      <popover ref="popover" placement="bottom-end">
         <template #target>
-          <button class="btn btn-icon" data-tooltip="Node Options">
-            <i class="pi pi-ellipsis-v cursor-pointer"></i>
+          <button class="btn btn-icon btn-ghost" data-tooltip="Node Options">
+            <i class="pi pi-ellipsis-v cursor-pointer text-secondary"></i>
           </button>
         </template>
         <template #content>
-          <div class="bg-white">
-            <div class="menu-item" @click="editNode">
-              <i class="pi pi-pencil mr-s"></i>
-              <span class="text-secondry">Edit Node</span>
+          <div class="bg-white round-1 shadow-2 node-menu">
+            <div class="menu-item flex-v-center p-xs hover-light" @click="editNode">
+              <i class="pi pi-pencil text-primary mr-s"></i>
+              <span class="text-secondary">Edit Node</span>
             </div>
-            <div class="menu-item" @click="deleteNode">
-              <i class="pi pi-trash mr-s"></i>
-              <span class="text-secondry">Delete Node</span>
+            <div class="menu-item flex-v-center p-xs hover-light" @click="deleteNode">
+              <i class="pi pi-trash text-danger mr-s"></i>
+              <span class="text-secondary">Delete Node</span>
             </div>
           </div>
         </template>
@@ -62,13 +63,18 @@ export default {
   computed: {},
   watch: {},
   methods: {
-    editNode() {},
+    editNode() {
+      this.$refs.popover.close();
+      this.$emit('edit-node', this.nodeData);
+    },
     deleteNode() {
       this.$refs.popover.close();
       DeleteConfirmationPopup(
         "Are you sure you want to delete this node?"
       ).then((result) => {
-        console.log(result);
+        if (result.isConfirmed) {
+          this.$emit('delete-node', this.nodeData.id);
+        }
       });
     },
   },
@@ -76,4 +82,22 @@ export default {
   mounted() {},
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.node-menu {
+  min-width: 150px;
+  overflow: hidden;
+}
+.menu-item {
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+.hover-light:hover {
+  background-color: var(--color-light);
+}
+.bg-light-gradient {
+  background: linear-gradient(to bottom, var(--color-light), rgba(var(--color-light-rgb), 0.5));
+}
+.border-bottom {
+  border-bottom: 1px solid var(--color-border);
+}
+</style>

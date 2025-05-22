@@ -10,7 +10,7 @@ export default class FunctionalNode extends Node {
         transform: string;
     }) {
         super(NodeType.FUNCTIONAL);
-        this.parameters = config?.parameters || [];
+        this.parameters = config?.parameters || [] as Variable[];
         this.transform = config?.transform || '';
     }
 
@@ -42,5 +42,17 @@ export default class FunctionalNode extends Node {
                 this.executing = false;
             }
         });
+    }
+    serialized() {
+        return {
+            ...super.serialized(),
+            parameters: this.parameters.map(param => param.serialized()),
+            transform: this.transform,
+        };
+    }
+    deserialized(serializedNode: any) {
+        super.deserialized(serializedNode);
+        this.parameters = serializedNode.parameters.map((param: any) => new Variable().deserialized(param));
+        this.transform = serializedNode.transform;
     }
 }

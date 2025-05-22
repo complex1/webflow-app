@@ -58,4 +58,20 @@ export default class Node {
     getData(): any {
         return this.nodeData;
     }
+    serialized() {
+        return {
+            id: this.id,
+            name: this.name,
+            description: this.description,
+            type: this.type,
+            order: this.order
+        };
+    }
+    deserialized(serializedNode: any) {
+        this.id = serializedNode.id;
+        this.name = serializedNode.name;
+        this.description = serializedNode.description;
+        this.type = serializedNode.type;
+        this.order = serializedNode.order;
+    }
 }

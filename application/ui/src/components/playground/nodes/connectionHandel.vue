@@ -1,7 +1,7 @@
 <template>
   <div>
     <Handle
-      :key="id"
+      :key="`target-${id}`"
       type="target"
       :position="Position.Left"
       :id="id"
@@ -9,14 +9,17 @@
         top: '15px',
         transform: 'translateY(-50%)',
         left: '-5px',
-        height: '5px',
-        width: '5px',
+        height: '6px',
+        width: '6px',
         background: 'var(--color-success)',
         borderRadius: '50%',
+        border: '1px solid rgba(255, 255, 255, 0.7)',
+        boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)',
+        zIndex: 10
       }"
     />
     <Handle
-      :key="id"
+      :key="`source-${id}`"
       type="source"
       :position="Position.Right"
       :id="id"
@@ -24,10 +27,13 @@
         top: '15px',
         transform: 'translateY(-50%)',
         right: '-5px',
-        height: '5px',
-        width: '5px',
+        height: '6px',
+        width: '6px',
         background: 'var(--color-primary)',
         borderRadius: '50%',
+        border: '1px solid rgba(255, 255, 255, 0.7)',
+        boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)',
+        zIndex: 10
       }"
     />
   </div>

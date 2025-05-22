@@ -57,6 +57,7 @@
 import { mapMutations, mapState } from "vuex";
 import themeToggle from '../common/themeToggle.vue';
 import { WebflowService } from '../../services/webflow.service';
+import { getPostBody } from '../../utils/workflowUtils'; // Assuming you have a utility function to convert workflow to post body
 export default {
   components: { themeToggle },
   name: "workflowHeaderComponent",
@@ -78,6 +79,7 @@ export default {
       setWorkflowName: "workflowModule/setWorkflowName",
       setWorkflowDescription: "workflowModule/setWorkflowDescription",
       setWorkflowId: "workflowModule/setWorkflowId",
+      saveWorkflowPositions: "workflowModule/saveWorkflowPositions",
     }),
     editWorkflowName() {
       this.isEditing = true;
@@ -104,24 +106,12 @@ export default {
     async saveWorkflow() {
       try {
         const webflowService = new WebflowService();
-        const workflow = this.$store.state.workflowModule.workflow;
+        const workflow = this.$store.state.workflowModule;
         
         // Convert workflow to serializable format if needed
-        const workflowData = {
-          nodes: Array.from(workflow.nodes.entries()).map(([id, node]) => ({
-            id,
-            type: node.type,
-            data: node.nodeData
-          })),
-          edges: workflow.edges.map(edge => ({
-            id: edge.id,
-            from: edge.from,
-            to: edge.to,
-            type: edge.type
-          }))
-        };
-        
-        if (this.workflowId && this.workflowId !== "111") { // Default ID is "111"
+        const workflowData = getPostBody(workflow);
+
+        if (this.workflowId) {
           // Update existing webflow
           await webflowService.updateWebflow(this.workflowId, {
             name: this.workflowName,

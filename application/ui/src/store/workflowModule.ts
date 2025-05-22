@@ -14,7 +14,7 @@ export interface WorkflowState {
 export default {
   namespaced: true,
   state: {
-    workflowId: "111",
+    workflowId: "",
     workflowName: "Untitled",
     workflowDescription: "lorem ipsum",
     workflow: new Workflow(),
@@ -78,5 +78,41 @@ export default {
       state.viewEdges.push(viewEdges);
       state.workflow.addEdge(edgeObject);
     },
+    addNodeWithPosition(state: WorkflowState, payload: { node: FunctionalNode | HttpNode; position: { x: number; y: number } }) {
+      const { node, position } = payload;
+      const viewNode: INode = {
+        id: node.id,
+        position: { ...position },
+        type: node.type,
+      };
+      state.viewNodes.push(viewNode);
+      state.workflow.addNode(node);
+    },
+    updateNodePosition(state: WorkflowState, payload: { id: string; position: { x: number; y: number } }) {
+      const { id, position } = payload;
+      const nodeIndex = state.viewNodes.findIndex((node) => node.id === id);
+      if (nodeIndex > -1) {
+        state.viewNodes[nodeIndex].position = { ...position };
+        console.log(`Node position updated in store: ${id} -> (${position.x}, ${position.y})`);
+      } else {
+        console.warn(`Could not update position for node ${id}: not found in viewNodes`);
+      }
+    },
+    
+    updateMultipleNodePositions(state: WorkflowState, nodes: Array<{ id: string; position: { x: number; y: number } }>) {
+      let updatedCount = 0;
+      
+      nodes.forEach(node => {
+        const nodeIndex = state.viewNodes.findIndex((n) => n.id === node.id);
+        if (nodeIndex > -1) {
+          state.viewNodes[nodeIndex].position = { ...node.position };
+          updatedCount++;
+        }
+      });
+      
+      if (updatedCount > 0) {
+        console.log(`Updated positions for ${updatedCount}/${nodes.length} nodes`);
+      }
+    }
   },
 };

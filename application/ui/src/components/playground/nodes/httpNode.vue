@@ -1,59 +1,64 @@
 <template>
-  <div class="http-node bg-white round-1">
+  <div class="bg-white round-2 shadow-2">
     <connection-handel :id="nodeData.id"></connection-handel>
     <node-header :nodeData="nodeData" />
-    <hr />
-    <div class="http-node-content px-m py-s">
-      <div class="http-node-api">
+    <div class="p-m">
+      <div class="http-api-container flex-v-center p-s round-1 bg-light mb-m">
         <span
-          :class="`http-methods v-center px-s text-s round-1 http-node-methods-${nodeData.method}`"
+          :class="`http-method-badge text-s text-center px-xs py-2xs round-1 ${getMethodClass(nodeData.method)}`"
         >
-          <small>
-            {{ nodeData.method }}
-          </small>
+          {{ nodeData.method }}
         </span>
-        <span class="http-node-url text-s text-primary-bg pl-m">
+        <span class="text-s text-primary-bg ml-s text-truncate" style="max-width: 250px">
           {{ nodeData.baseUrl }}{{ nodeData.url }}
         </span>
       </div>
 
-      <div class="grid-2">
-        <div>
-          <hr class="mt-s" />
-          <div class="text-s text-primary text-600 my-s">Request:</div>
-          <hr />
-          <div class="mt-m" v-if="nodeData.body">
-            <div class="text-s text-500 text-secondary">Request Body</div>
-            <variable-node
-              v-if="nodeData.body"
-              :variable="nodeData.body"
-            ></variable-node>
+      <div class="grid-2 gap-m">
+        <div class="request-section">
+          <div class="section-header border-bottom pb-2xs mb-s">
+            <div class="text-s text-primary font-600">Request</div>
           </div>
-          <div class="mt-m" v-if="nodeData.pathParams.length">
-            <div class="text-s text-500 text-secondary">Path Param</div>
+          
+          <div v-if="nodeData.body" class="mb-m">
+            <div class="text-xs text-secondary font-500 mb-2xs">Request Body</div>
+            <variable-node :variable="nodeData.body"></variable-node>
+          </div>
+          
+          <div v-if="nodeData.pathParams && nodeData.pathParams.length" class="mb-m">
+            <div class="text-xs text-secondary font-500 mb-2xs">
+              Path Parameters <span class="badge-count">{{ nodeData.pathParams.length }}</span>
+            </div>
             <variable-node
               v-for="(param, index) in nodeData.pathParams"
-              :key="index"
+              :key="`path-${index}`"
               :variable="param"
             ></variable-node>
           </div>
-          <div class="mt-m" v-if="nodeData.queryParams.length">
-            <div class="text-s text-500 text-secondary">Query Param</div>
+          
+          <div v-if="nodeData.queryParams && nodeData.queryParams.length" class="mb-m">
+            <div class="text-xs text-secondary font-500 mb-2xs">
+              Query Parameters <span class="badge-count">{{ nodeData.queryParams.length }}</span>
+            </div>
             <variable-node
               v-for="(param, index) in nodeData.queryParams"
-              :key="index"
+              :key="`query-${index}`"
               :variable="param"
             ></variable-node>
           </div>
-          <div class="mt-m" v-if="nodeData.headers.length">
-            <div class="text-s text-500 text-secondary">Headers</div>
+          
+          <div v-if="nodeData.headers && nodeData.headers.length" class="mb-m">
+            <div class="text-xs text-secondary font-500 mb-2xs">
+              Headers <span class="badge-count">{{ nodeData.headers.length }}</span>
+            </div>
             <variable-node
-              v-for="(param, index) in nodeData.headers"
-              :key="index"
-              :variable="param"
+              v-for="(header, index) in nodeData.headers"
+              :key="`header-${index}`"
+              :variable="header"
             ></variable-node>
           </div>
         </div>
+        
         <node-response :nodeData="nodeData"></node-response>
       </div>
     </div>
@@ -71,6 +76,7 @@ import NodeState from "./nodeState.vue";
 import VariableNode from "./variableNode.vue";
 import HttpNode from "../../../classes/HttpNode";
 import NodeResponse from "./nodeResponse.vue";
+
 export default {
   components: {
     statusChip,
@@ -99,47 +105,70 @@ export default {
       return this.workflow.getNode(this.id);
     },
   },
+  methods: {
+    getMethodClass(method) {
+      switch (method) {
+        case 'GET': return 'method-get';
+        case 'POST': return 'method-post';
+        case 'PUT': return 'method-put';
+        case 'DELETE': return 'method-delete';
+        case 'PATCH': return 'method-patch';
+        default: return '';
+      }
+    }
+  }
 };
 </script>
 
-<style scoped lang="scss">
-.http-node {
-  min-width: 200px;
-  filter: drop-shadow(var(--shadow-drop));
-
-  &-url {
-    max-width: 300px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &-methods {
-    &-GET {
-      background-color: var(--color-success);
-      color: var(--color-white);
-    }
-    &-POST {
-      background-color: var(--color-primary);
-      color: var(--color-white);
-    }
-    &-PUT {
-      background-color: var(--color-warning);
-      color: var(--color-white);
-    }
-    &-DELETE {
-      background-color: var(--color-danger);
-      color: var(--color-white);
-    }
-    &-PATCH {
-      background-color: var(--color-info);
-      color: var(--color-white);
-    }
-  }
-  &-res {
-    display: flex;
-    align-items: flex-end;
-    flex-direction: column;
-  }
+<style scoped>
+.http-method-badge {
+  display: inline-block;
+  min-width: 60px;
+  font-weight: 600;
+}
+.method-get {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+.method-post {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+.method-put {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning);
+}
+.method-delete {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+}
+.method-patch {
+  background-color: var(--color-info-light);
+  color: var(--color-info);
+}
+.border-bottom {
+  border-bottom: 1px solid var(--color-border);
+}
+.badge-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-secondary-light);
+  color: var(--color-secondary);
+  font-size: 0.7rem;
+  height: 16px;
+  min-width: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  margin-left: 4px;
+}
+.py-2xs {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

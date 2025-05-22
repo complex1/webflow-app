@@ -11,16 +11,8 @@
         <i class="pi pi-th-large"></i>
         <span>Dashboard</span>
       </router-link>
-      <router-link to="/playground" class="navbar-item">
-        <i class="pi pi-code"></i>
-        <span>Playground</span>
-      </router-link>
     </div>
     <div class="navbar-end">
-      <button class="btn btn-primary create-btn" @click="createNewWorkflow">
-        <i class="pi pi-plus"></i>
-        <span>Create Workflow</span>
-      </button>
       <theme-toggle></theme-toggle>
       <div class="user-menu" ref="userMenu">
         <button class="btn btn-icon" @click="toggleUserDropdown">
@@ -29,7 +21,7 @@
         <div class="dropdown-menu" v-if="showUserDropdown">
           <div class="dropdown-item user-info">
             <i class="pi pi-user"></i>
-            <span>{{ username || 'User' }}</span>
+            <span>{{ username || "User" }}</span>
           </div>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" @click="logout">
@@ -43,25 +35,25 @@
 </template>
 
 <script>
-import themeToggle from './themeToggle.vue';
+import themeToggle from "./themeToggle.vue";
 
 export default {
-  name: 'navbarComponent',
+  name: "navbarComponent",
   components: {
-    themeToggle
+    themeToggle,
   },
   data() {
     return {
       showUserDropdown: false,
-      username: localStorage.getItem('username') || null
+      username: localStorage.getItem("username") || null,
     };
   },
   mounted() {
     // Close dropdown when clicking outside
-    document.addEventListener('click', this.handleOutsideClick);
+    document.addEventListener("click", this.handleOutsideClick);
   },
   beforeUnmount() {
-    document.removeEventListener('click', this.handleOutsideClick);
+    document.removeEventListener("click", this.handleOutsideClick);
   },
   methods: {
     toggleUserDropdown() {
@@ -73,14 +65,14 @@ export default {
       }
     },
     createNewWorkflow() {
-      this.$router.push('/playground');
+      this.$router.push("/playground");
     },
     logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('username');
-      this.$router.push('/login');
-    }
-  }
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 
@@ -97,7 +89,7 @@ export default {
 
 .navbar-brand {
   margin-right: var(--spacing-xlarge);
-  
+
   .logo {
     display: flex;
     align-items: center;
@@ -105,7 +97,7 @@ export default {
     font-size: var(--font-size-large);
     font-weight: bold;
     text-decoration: none;
-    
+
     i {
       margin-right: var(--spacing-small);
       font-size: 24px;
@@ -127,16 +119,16 @@ export default {
   padding: var(--spacing-small) var(--spacing-medium);
   border-radius: 6pt;
   transition: background-color 0.2s;
-  
+
   &:hover {
     background-color: var(--color-light);
   }
-  
+
   &.router-link-active {
     color: var(--color-primary);
     font-weight: bold;
   }
-  
+
   i {
     margin-right: var(--spacing-small);
   }
@@ -152,7 +144,7 @@ export default {
   display: flex;
   align-items: center;
   gap: var(--spacing-small);
-  
+
   i {
     font-size: 14px;
   }
@@ -182,11 +174,11 @@ export default {
   color: var(--color-text-primary);
   cursor: pointer;
   transition: background-color 0.2s;
-  
+
   &:hover {
     background-color: var(--color-light);
   }
-  
+
   i {
     margin-right: var(--spacing-medium);
     width: 16px;
@@ -197,7 +189,7 @@ export default {
 .user-info {
   font-weight: bold;
   cursor: default;
-  
+
   &:hover {
     background-color: transparent;
   }

@@ -63,4 +63,30 @@ export default class Variable {
         }
         return errors
     }
+
+    serialized(){
+        return {
+            id: this.id,
+            name: this.name,
+            description: this.description,
+            defaultValue: this.defaultValue,
+            type: this.type,
+            formStore: this.formStore,
+            required: this.required
+        };
+    }
+    deserialized(serializedVariable: any) {
+        if (!serializedVariable || !serializedVariable.name) return null;
+        try {
+            this.id = serializedVariable.id || generateUUID();
+            this.name = serializedVariable.name;
+            this.description = serializedVariable.description || '';
+            this.defaultValue = serializedVariable.defaultValue || null;
+            this.type = serializedVariable.type || 'string';
+            this.formStore = serializedVariable.formStore || true;
+            this.required = serializedVariable.required || false;
+        } catch (error) {
+            console.error('Error deserializing variable:', error);
+        }
+    }
 }

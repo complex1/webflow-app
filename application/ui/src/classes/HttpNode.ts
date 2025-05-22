@@ -115,4 +115,26 @@ export default class HttpNode extends Node {
             });
         });
     }
+    serialized () {
+        return {
+            ...super.serialized(),
+            baseUrl: this.baseUrl,
+            url: this.url,
+            pathParams: this.pathParams.map(param => param.serialized()),
+            queryParams: this.queryParams.map(param => param.serialized()),
+            headers: this.headers.map(header => header.serialized()),
+            body: this.body ? this.body.serialized() : null,
+            method: this.method
+        };
+    }
+    deserialized (data: any) {
+        super.deserialized(data);
+        this.baseUrl = data.baseUrl;
+        this.url = data.url;
+        this.pathParams = data.pathParams.map((param: any) => new Variable(param));
+        this.queryParams = data.queryParams.map((param: any) => new Variable(param));
+        this.headers = data.headers.map((header: any) => new Variable(header));
+        this.body = data.body ? new Variable(data.body) : null;
+        this.method = data.method;
+    }
 }

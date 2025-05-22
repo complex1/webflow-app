@@ -178,12 +178,11 @@
         </div>
       </template>
     </expension-panel>
-    <validation-errors
+    <!-- <validation-errors
       v-if="errors.length > 0"
       :errors="errors"
       class="mt-m"
-      style="max-height: 20rem; overflow-y: auto"
-    ></validation-errors>
+      style="max-height: 20rem; overflow-y: auto"></validation-errors> -->
     <div class="flex-end mt-m">
       <button
         class="btn btn-primary btn-outline mx-m"
@@ -371,45 +370,45 @@ export default {
 
       return this.errors.length === 0;
     },
-  },
-  save() {
-    if (!this.validation()) {
-      return;
-    }
+    save() {
+      if (!this.validation()) {
+        return;
+      }
 
-    const httpNode = new HttpNode();
-    httpNode.name = this.name;
-    httpNode.description = this.description;
-    httpNode.baseUrl = this.baseUrl;
-    httpNode.url = this.url;
-    httpNode.method = this.method;
-    httpNode.pathParams = this.pathParams;
-    httpNode.queryParams = this.queryParams;
-    httpNode.headers = this.headers;
-    httpNode.body = this.body;
-    this.addHttpNode(httpNode);
+      const httpNode = new HttpNode();
+      httpNode.name = this.name;
+      httpNode.description = this.description;
+      httpNode.baseUrl = this.baseUrl;
+      httpNode.url = this.url;
+      httpNode.method = this.method;
+      httpNode.pathParams = this.pathParams;
+      httpNode.queryParams = this.queryParams;
+      httpNode.headers = this.headers;
+      httpNode.body = this.body;
+      this.addHttpNode(httpNode);
 
-    this.resetForm();
-    this.$emit("close");
-  },
-  cancel() {
-    this.resetForm();
-    this.$emit("close");
-  },
-  resetForm() {
-    this.name = "";
-    this.description = "";
-    this.baseUrl = "";
-    this.url = "";
-    this.method = "GET";
-    this.pathParams = [];
-    this.queryParams = [];
-    this.headers = [];
-    this.body = null;
-    this.errors = [];
-    this.nameError = "";
-    this.baseUrlError = "";
-    this.urlError = "";
+      this.resetForm();
+      this.$emit("close");
+    },
+    cancel() {
+      this.resetForm();
+      this.$emit("close");
+    },
+    resetForm() {
+      this.name = "";
+      this.description = "";
+      this.baseUrl = "";
+      this.url = "";
+      this.method = "GET";
+      this.pathParams = [];
+      this.queryParams = [];
+      this.headers = [];
+      this.body = null;
+      this.errors = [];
+      this.nameError = "";
+      this.baseUrlError = "";
+      this.urlError = "";
+    },
   },
 };
 </script>
