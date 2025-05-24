@@ -221,21 +221,6 @@ export default defineComponent({
 <style lang='scss' scoped>
 .workflow-playground {
   overflow: hidden;
-  
-  &::before {
-    content: 'Press Ctrl+Shift+P to log node positions | Ctrl+Shift+S to save workflow';
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    opacity: 0.5;
-    z-index: 100;
-    pointer-events: none;
-  }
 }
 </style>
 

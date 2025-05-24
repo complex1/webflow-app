@@ -70,6 +70,7 @@ import { useRouter } from 'vue-router';
 import authLayout from '../components/common/authLayout.vue';
 import { UserService } from "../services/user.service";
 import wfaInput from "../components/common/wfa-input.vue";
+import { error } from '../lib/toast';
 
 interface User {
   name: string;
@@ -163,8 +164,8 @@ export default defineComponent({
         await userService.register(user.name, user.email, user.password, '');
         // On successful registration
         router.push("/login");
-      } catch (error: any) {
-        alert(error.message || "Registration failed. Please try again.");
+      } catch (e: any) {
+        error(e.message || "Registration failed. Please try again.");
       } finally {
         isSubmitting.value = false;
       }

@@ -28,9 +28,9 @@ export default class Node {
     executionDone: boolean = false; // added executionDone property
     private order: number = 0; // added order property
 
-    constructor(type: NodeType) {
-        this.id = generateUUID();
-        this.type = type;
+    constructor(id?: string, type?: NodeType) {
+        this.id = id || generateUUID();
+        this.type = type || NodeType.FUNCTIONAL;
         this.name = null; // initialize name
         this.description = null; // initialize description
 

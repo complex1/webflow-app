@@ -172,6 +172,7 @@ import wfaInput from "../components/common/wfa-input.vue";
 import webflowCard from "../components/dashboard/webflow-card.vue";
 import type { WebflowCardProps } from "../components/dashboard/types";
 import type { WebflowForm } from './types';
+import { success, error } from '../lib/toast';
 
 export default defineComponent({
   name: "DashboardPage",
@@ -330,7 +331,7 @@ export default defineComponent({
           });
 
           // Show success message
-          alert("Webflow updated successfully!");
+          success("Webflow updated successfully!");
         } else {
           // Create new webflow
           await webflowService.createWebflow({
@@ -341,26 +342,26 @@ export default defineComponent({
           });
 
           // Show success message
-          alert("Webflow created successfully!");
+          success("Webflow created successfully!");
         }
 
         closeDrawer();
         await fetchWebflows();
-      } catch (error: any) {
-        console.error("Error saving webflow:", error);
+      } catch (e: any) {
+        console.error("Error saving webflow:", e);
 
         // Display appropriate error message
-        if (error.response) {
-          if (error.response.status === 401 || error.response.status === 403) {
-            alert("Session expired. Please log in again.");
+        if (e.response) {
+          if (e.response.status === 401 || e.response.status === 403) {
+            error("Session expired. Please log in again.");
             router.push("/login");
-          } else if (error.response.data && error.response.data.message) {
-            alert(`Error: ${error.response.data.message}`);
+          } else if (e.response.data && e.response.data.message) {
+            error(`Error: ${e.response.data.message}`);
           } else {
-            alert("Error saving webflow. Please try again.");
+            error("Error saving webflow. Please try again.");
           }
         } else {
-          alert("Network error. Please check your connection and try again.");
+          error("Network error. Please check your connection and try again.");
         }
       }
     };
@@ -377,26 +378,26 @@ export default defineComponent({
         await webflowService.deleteWebflow(webflowToDelete.value.id);
 
         // Show success message
-        alert("Webflow deleted successfully!");
+        success("Webflow deleted successfully!");
 
         showDeleteConfirm.value = false;
         webflowToDelete.value = null;
         await fetchWebflows();
-      } catch (error: any) {
-        console.error("Error deleting webflow:", error);
+      } catch (e: any) {
+        console.error("Error deleting webflow:", e);
 
         // Display appropriate error message
-        if (error.response) {
-          if (error.response.status === 401 || error.response.status === 403) {
-            alert("Session expired. Please log in again.");
+        if (e.response) {
+          if (e.response.status === 401 || e.response.status === 403) {
+            error("Session expired. Please log in again.");
             router.push("/login");
-          } else if (error.response.data && error.response.data.message) {
-            alert(`Error: ${error.response.data.message}`);
+          } else if (e.response.data && e.response.data.message) {
+            error(`Error: ${e.response.data.message}`);
           } else {
-            alert("Error deleting webflow. Please try again.");
+            error("Error deleting webflow. Please try again.");
           }
         } else {
-          alert("Network error. Please check your connection and try again.");
+          error("Network error. Please check your connection and try again.");
         }
       }
     };

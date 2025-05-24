@@ -23,6 +23,12 @@ export default {
   } as WorkflowState,
   getters: {},
   mutations: {
+    executeWorkflow(state: WorkflowState) {
+      const { workflow } = state;
+      workflow.execute((w: Workflow) => {
+        state.workflow = w;
+      });
+    },
     setWorkflowId(state: WorkflowState, id: string) {
       state.workflowId = id;
     },
@@ -65,7 +71,7 @@ export default {
       const edgeObject = new Edge()
       edgeObject.from = sourceHandle ?? "";
       edgeObject.to = targetHandle ?? "";
-      edgeObject.type = target === targetHandle ? EdgeType.CONNECTOR : EdgeType.DATA_TRANSFER;
+      edgeObject.type = target === targetHandle ? EdgeType.CONTROL_FLOW : EdgeType.DATA_TRANSFER;
       
       const viewEdges: IEdge = {
         id: edgeObject.id,

@@ -20,7 +20,7 @@
       <span class="pl-m">
         {{ variable.name }}
       </span>
-      <popover>
+      <popover @open="loadValue">
         <template #target>
           <small class="pi pi-info-circle cursor-pointer"></small>
         </template>
@@ -28,10 +28,10 @@
           <div class="text-m bg-white p-s round-1">
             <span v-if="noValue" class="text-danger">No value</span>
             <span v-else-if="dataType !== 'object'">
-              {{ getValue }}
+              {{ value }}
             </span>
             <div v-else style="width: 400px; height: 200px">
-              <json-editor :modelValue="getValue" :readOnly="true" />
+              <json-editor :modelValue="value" :readOnly="true" />
             </div>
           </div>
         </template>
@@ -45,6 +45,7 @@ import Variable from "../../../classes/Variable";
 import { Position, Handle } from "@vue-flow/core";
 import Popover from "../../common/popover.vue";
 import JsonEditor from "../../common/code/jsonEditor.vue";
+import { mapState } from 'vuex';
 export default {
   props: {
     variable: {
@@ -60,23 +61,36 @@ export default {
   data() {
     return {
       Position: Position,
+      value: this.variable.get(),
     };
   },
   computed: {
+    ...mapState({
+      workflow: (state) => state.workflowModule.workflow,
+    }),
     noValue() {
       return (
-        this.variable.defaultValue === undefined ||
-        this.variable.defaultValue === null
+        this.value === undefined ||
+        this.value === null
       );
     },
-    getValue() {
-      return this.variable.defaultValue || "";
-    },
     dataType() {
-      return typeof this.getValue;
+      return typeof this.value;
     },
   },
-  methods: {},
+  methods: {
+    loadValue() {
+      this.value = this.variable.get(this.workflow.globalStore);
+    },
+  },
+  watch: {
+    variable: {
+      handler() {
+        this.loadValue();
+      },
+      deep: true,
+    },
+  },
 };
 </script>
 

@@ -47,7 +47,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) {
+  emits: ['open', 'close'],
+  setup(props, { emit }) {
     const targetRef = ref<HTMLElement | null>(null);
     const popoverRef = ref<HTMLElement | null>(null);
     const isOpen = ref(false);
@@ -70,6 +71,7 @@ export default defineComponent({
     const open = () => {
       if (isOpen.value) return;
       isOpen.value = true;
+      emit('open');
       
       nextTick(() => {
         updatePosition();
@@ -83,6 +85,7 @@ export default defineComponent({
 
     const close = () => {
       isOpen.value = false;
+      emit('close');
       if (!props.tooltip) {
         window.removeEventListener("click", checkOutsideClick);
       }
@@ -225,7 +228,4 @@ export default defineComponent({
   border-bottom: 1px solid var(--color-border);
 }
 
-.popover-body {
-  padding: 8px 12px;
-}
 </style>

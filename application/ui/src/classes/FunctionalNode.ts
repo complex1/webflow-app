@@ -6,16 +6,19 @@ export default class FunctionalNode extends Node {
     transform: string;
 
     constructor(config?: {
+        id: string;
         parameters?: Variable[];
         transform: string;
     }) {
-        super(NodeType.FUNCTIONAL);
+        super(config?.id, NodeType.FUNCTIONAL);
         this.parameters = config?.parameters || [] as Variable[];
         this.transform = config?.transform || '';
     }
 
     execute(globalStore: Record<string, any>): any {
         this.executing = true;
+        this.executionDone = false;
+        const executionStartTime = Date.now();
         this.hasError = false;
         this.errorMessage = null;
         const paramsNames = this.parameters.map(param => param.name);
@@ -40,6 +43,8 @@ export default class FunctionalNode extends Node {
                 resolve(undefined);
             } finally {
                 this.executing = false;
+                this.executionDone = true;
+                this.executionTime = Date.now() - executionStartTime;
             }
         });
     }
@@ -52,7 +57,11 @@ export default class FunctionalNode extends Node {
     }
     deserialized(serializedNode: any) {
         super.deserialized(serializedNode);
-        this.parameters = serializedNode.parameters.map((param: any) => new Variable().deserialized(param));
+        this.parameters = serializedNode.parameters.map((param: any) => {
+            const variable = new Variable();
+            variable.deserialized(param);
+            return variable;
+        });
         this.transform = serializedNode.transform;
     }
 }

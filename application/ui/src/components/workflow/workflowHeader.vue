@@ -61,6 +61,7 @@ import themeToggle from '../common/themeToggle.vue';
 import { WebflowService } from '../../services/webflow.service';
 import { getPostBody } from '../../utils/workflowUtils';
 import type { WorkflowHeaderProps, WorkflowHeaderEmits } from './types';
+import { success, error } from '../../lib/toast';
 
 export default defineComponent({
   components: { themeToggle },
@@ -107,6 +108,7 @@ export default defineComponent({
     
     const playWorkflow = () => {
       console.log("Play workflow");
+      store.commit('workflowModule/executeWorkflow');
     };
     
     const exportWorkflow = () => {
@@ -144,10 +146,10 @@ export default defineComponent({
         }
         
         // Show success message
-        alert('Workflow saved successfully!');
-      } catch (error) {
-        console.error('Error saving workflow:', error);
-        alert('Error saving workflow. Please try again.');
+        success('Workflow saved successfully!');
+      } catch (e) {
+        console.error('Error saving workflow:', e);
+        error('Error saving workflow. Please try again.');
       }
     };
     

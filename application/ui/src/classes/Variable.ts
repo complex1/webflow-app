@@ -18,7 +18,7 @@ export default class Variable {
         formStore?: boolean;
         required?: boolean;
     }) {
-        this.id = generateUUID();
+        this.id = 'var-' + generateUUID();
         this.name = config?.name || '';
         this.description = config?.description || '';
         this.defaultValue = config?.defaultValue || null;
@@ -34,7 +34,7 @@ export default class Variable {
             }
         }
         catch (error) {
-            console.error(`Error getting value for variable ${this.name}:`, error);
+            // console.error(`Error getting value for variable ${this.name}:`, error);
             return this.defaultValue;
         }
     }

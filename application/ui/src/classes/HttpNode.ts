@@ -11,6 +11,7 @@ export default class HttpNode extends Node {
     method: string;
 
     constructor(config?: {
+        id: string;
         baseUrl: string;
         url: string;
         pathParams?: Variable[];
@@ -19,7 +20,7 @@ export default class HttpNode extends Node {
         body?: Variable | null;
         method?: string;
     }) {
-        super(NodeType.HTTP);
+        super(config?.id, NodeType.HTTP);
         this.baseUrl = config?.baseUrl || '';
         this.url = config?.url || '';
         this.pathParams = config?.pathParams || [];
@@ -131,9 +132,21 @@ export default class HttpNode extends Node {
         super.deserialized(data);
         this.baseUrl = data.baseUrl;
         this.url = data.url;
-        this.pathParams = data.pathParams.map((param: any) => new Variable(param));
-        this.queryParams = data.queryParams.map((param: any) => new Variable(param));
-        this.headers = data.headers.map((header: any) => new Variable(header));
+        this.pathParams = data.pathParams.map((param: any) => {
+            const variable = new Variable();
+            variable.deserialized(param);
+            return variable;
+        });
+        this.queryParams = data.queryParams.map((param: any) => {
+            const variable = new Variable();
+            variable.deserialized(param);
+            return variable;
+        });
+        this.headers = data.headers.map((header: any) => {
+            const variable = new Variable();
+            variable.deserialized(header);
+            return variable;
+        });
         this.body = data.body ? new Variable(data.body) : null;
         this.method = data.method;
     }

@@ -1,21 +1,26 @@
 <template>
-  <router-view></router-view>
+  <div class="fh fw">
+    <router-view></router-view>
+    <toast></toast>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
+import toast from "./lib/toast.vue";
 
 export default defineComponent({
-  name: 'App'
-})
+  components: { toast },
+  name: "App",
+});
 </script>
 
 <style>
 /* Import PrimeIcons */
-@import 'primeicons/primeicons.css';
+@import "primeicons/primeicons.css";
 
 /* Import Manrope font */
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap");
 
 /* Global styles */
 * {

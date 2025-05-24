@@ -31,50 +31,56 @@ export class Workflow {
     this.edges.push(edge);
   }
 
-  createMaps() {
-    this.sourceTargetMap.clear();
-    this.targetSourceMap.clear();
+  setMap() {
+    const sourceTargetMap = new Map<string, string[]>();
+    const targetSourceMap = new Map<string, string[]>();
+
     this.edges
-      .filter((edge) => edge.type === EdgeType.CONTROL_FLOW)
-      .forEach((edge) => {
-        if (!this.sourceTargetMap.has(edge.from)) {
-          this.sourceTargetMap.set(edge.from, []);
-        }
-        if (!this.targetSourceMap.has(edge.to)) {
-          this.targetSourceMap.set(edge.to, []);
-        }
-        this.sourceTargetMap.get(edge.from)?.push(edge.to);
-        this.targetSourceMap.get(edge.to)?.push(edge.from);
-      });
+    .filter((edge) => edge.type === EdgeType.CONTROL_FLOW)
+    .forEach((edge) => {
+      if (!sourceTargetMap.has(edge.from)) {
+        sourceTargetMap.set(edge.from, []);
+      }
+      if (!targetSourceMap.has(edge.to)) {
+        targetSourceMap.set(edge.to, []);
+      }
+      sourceTargetMap.get(edge.from)?.push(edge.to);
+      targetSourceMap.get(edge.to)?.push(edge.from);
+    });
+
+    this.sourceTargetMap = sourceTargetMap;
+    this.targetSourceMap = targetSourceMap;
   }
 
-  findRootNodesIds() {
+  setOrder() {
     const rootNodes = Array.from(this.nodes.values()).filter((node) => {
       return !this.targetSourceMap.has(node.id);
     });
-    return rootNodes.map((node) => node.id);
-  }
+    const rootIds = rootNodes.map((node) => node.id);
 
-  setOrder(ids: string[], order: number) {
-    ids.forEach((id) => {
-      const node = this.nodes.get(id);
-      if (node) {
-        node.setOrder(order);
-        const nextIds = this.sourceTargetMap.get(id);
-        if (nextIds) {
-          this.setOrder(nextIds, order + 1);
+    const setNodeOrder = (ids: string[], order: number) => {
+      ids.forEach((id) => {
+        const node = this.nodes.get(id);
+        if (node) {
+          node.setOrder(order);
+          const nextIds = this.sourceTargetMap.get(id);
+          if (nextIds) {
+            setNodeOrder(nextIds, order + 1);
+          }
         }
-      }
-    });
+      });
+    };
+
+    setNodeOrder(rootIds, 1);
   }
 
   setGlobalStore(node: WorkflowNode) {
     const dataTransferEdges = this.edges.filter(
-      (edge) => edge.type === EdgeType.DATA_TRANSFER && edge.from === node.id
+      (edge) => edge.type === EdgeType.DATA_TRANSFER && edge.from === `data-${node.id}`
     );
     dataTransferEdges.forEach((edge) => {
-      const tragetId = edge.to;
-      this.globalStore[tragetId] = node.nodeData;
+      const targetId = edge.to;
+      this.globalStore[targetId] = node.nodeData;
     });
   }
 
@@ -95,10 +101,9 @@ export class Workflow {
       }
     });
   }
-  async execute() {
-    this.createMaps();
-    const rootIds = this.findRootNodesIds();
-    this.setOrder(rootIds, 1);
+  async execute(callback: (workflow: Workflow) => void) {
+    this.setMap();
+    this.setOrder();
     this.setAllPending();
     const groupedNodes: WorkflowNode[][] = [];
     const maxOrder = Math.max(...Array.from(this.nodes.values()).map((node) => node.getOrder()));
@@ -118,6 +123,7 @@ export class Workflow {
           this.setGlobalStore(node);
         }
       });
+      callback(this);
     }
     console.log(JSON.stringify(this, null, 2));
   }

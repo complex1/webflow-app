@@ -41,7 +41,7 @@ export const getResponseToNodeList = (
       const type = node.type;
       const _node =
         type === NodeType.HTTP ? new HttpNode() : new FunctionalNode();
-      _node.deserialized(node.data);
+        _node.deserialized(node.data);
       return {
         position: node.position ? node.position : { x: 0, y: 0 },
         node: _node,
