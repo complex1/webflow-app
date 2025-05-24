@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
 import { userService } from "../services/user.service";
-
-const JWT_SECRET = process.env.JWT_SECRET || "workflow-app-secret-key";
+import { tokenUtil } from "../utils/token.util";
 
 // Extend Express Request to include user
 declare global {
@@ -29,7 +27,7 @@ export const authMiddleware = async (
     const token = authHeader.split(" ")[1];
 
     // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    const decoded = tokenUtil.verifyToken(token);
     if (!decoded || !decoded.userId) {
       res.status(401).json({ message: "Invalid token", errorCode: 'INVALID_TOKEN' });
       return;

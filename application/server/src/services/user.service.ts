@@ -4,8 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { AppDataSource } from '../db';
 import { UserEntity } from '../entities/user.entity';
 import { User, UserResponse } from '../models/user.model';
+import { JWT_SECRET } from '../config/auth.config';
+import { tokenUtil } from '../utils/token.util';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'workflow-app-secret-key';
 const SALT_ROUNDS = 10;
 
 /**
@@ -62,11 +63,66 @@ export const userService = {
     }
     
     // Generate JWT token
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = tokenUtil.generateToken(user.id);
     
     // Return user without password
     const { password: _, ...userResponse } = user;
     return { user: userResponse, token };
+  },
+  
+  /**
+   * Login with Google
+   */
+  async loginWithGoogle(email: string): Promise<{ user: UserResponse; token: string }> {
+    const userRepository = AppDataSource.getRepository(UserEntity);
+    
+    // Find user by email
+    const user = await userRepository.findOne({ where: { email } });
+    
+    if (!user) {
+      throw new Error('No user found with this email');
+    }
+    
+    // Generate JWT token
+    const token = tokenUtil.generateToken(user.id);
+    
+    // Return user without password
+    const { password: _, ...userResponse } = user;
+    return { user: userResponse, token };
+  },
+  
+  /**
+   * Register with Google
+   */
+  async registerWithGoogle(userData: { name: string; email: string; avatar: string }): Promise<UserResponse> {
+    const userRepository = AppDataSource.getRepository(UserEntity);
+    
+    // Check if user already exists
+    const existingUser = await userRepository.findOne({ where: { email: userData.email } });
+    if (existingUser) {
+      throw new Error('User already exists with this email');
+    }
+    
+    // Generate a random password for users registered with Google
+    // They won't use this password, but we need something in the database
+    const randomPassword = Math.random().toString(36).slice(-10);
+    const hashedPassword = await bcrypt.hash(randomPassword, SALT_ROUNDS);
+    
+    // Create new user
+    const newUser = userRepository.create({
+      id: uuidv4(),
+      name: userData.name,
+      email: userData.email,
+      password: hashedPassword,
+      avatar: userData.avatar,
+    });
+    
+    // Save user to database
+    await userRepository.save(newUser);
+    
+    // Return user without password
+    const { password, ...userResponse } = newUser;
+    return userResponse;
   },
   
   /**

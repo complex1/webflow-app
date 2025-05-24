@@ -4,8 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@types/cors": "^2.8.18",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
+    "google-auth-library": "^9.15.1",
     "http-proxy-middleware": "^2.0.6",
     "jsonwebtoken": "^9.0.0",
     "reflect-metadata": "^0.1.13",

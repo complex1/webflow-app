@@ -12,6 +12,17 @@ export class UserService {
         };
         return http.run();
     }
+
+    googleLogin(tokenId: string) {
+        const http = new HttpService();
+        http.url = '/api/auth/google';
+        http.method = 'POST';
+        http.body = {
+            tokenId: tokenId
+        };
+        return http.run();
+    }
+
     register (name: string, email: string, password: string, avatar: string) {
         const http = new HttpService();
         http.url = '/api/register';

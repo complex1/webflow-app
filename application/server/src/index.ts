@@ -4,6 +4,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import path from 'path';
 import fs from 'fs';
 import { Server } from 'http';
+import cors from 'cors';
 import { initDB } from './db';
 import apiRoutes from './routes';
 
@@ -26,6 +27,14 @@ initDB().then(() => {
 }).catch(err => {
   console.error('Failed to initialize database:', err);
 });
+
+// CORS configuration
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:3001'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Middleware
 app.use(express.json());

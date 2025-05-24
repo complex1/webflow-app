@@ -5,6 +5,8 @@ import App from "./App.vue";
 import store from "./store";
 import router from "./router";
 import { UserService } from "./services/user.service";
+// Import for TypeScript types
+import "./types/google.d.ts";
 
 const userService = new UserService();
 
