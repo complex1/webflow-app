@@ -1,10 +1,10 @@
 <template>
   <div class="bg-white round-2 shadow-2 p-m">
-    <div class="node-meta" style="height: 300px; width: 400px;">
+    <div v-if="!node.hasError" class="node-meta" style="height: 300px; width: 400px;">
       <json-editor :modelValue="node.nodeData" :readonly="true" />
     </div>
 
-    <div v-if="node.hasError" class="bg-danger p-s round-1 text-white text-s mt-m">
+    <div v-if="node.hasError" class="bg-danger p-s round-1 text-white text-s">
       <i class="pi pi-exclamation-triangle mr-s"></i>
       {{ node.errorMessage || "An unknown error occurred." }}
     </div>

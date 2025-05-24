@@ -3,6 +3,7 @@ import FunctionalNode from "../classes/FunctionalNode";
 import HttpNode from "../classes/HttpNode";
 import { Workflow } from "../classes/Workflow";
 import type { IEdge, INode } from "../model";
+import { warning } from "../lib/toast";
 export interface WorkflowState {
   workflow: Workflow;
   viewNodes: INode[];
@@ -50,6 +51,40 @@ export default {
       state.viewNodes.push(viewNodes);
       state.workflow.addNode(node);
     },
+    updateFunctionalNode(state: WorkflowState, node: FunctionalNode) {
+      const nodeIndex = state.viewNodes.findIndex((n) => n.id === node.id);
+      if (nodeIndex > -1) {
+        state.viewNodes[nodeIndex] = {
+          id: node.id,
+          position: {
+            x: state.viewNodes[nodeIndex].position.x,
+            y: state.viewNodes[nodeIndex].position.y,
+          },
+          type: node.type,
+        };
+        state.workflow.updateNode(node);
+      } else {
+        console.warn(`Node not found for update: ${node.id}`);
+      }
+    },
+    removeNode(state: WorkflowState, id: string) {
+      const nodeIndex = state.viewNodes.findIndex((n) => n.id === id);
+      if (nodeIndex > -1) {
+        state.viewNodes.splice(nodeIndex, 1);
+        state.workflow.removeNode(id);
+      } else {
+        console.warn(`Node not found for removal: ${id}`);
+      }
+    },
+    removeEdge(state: WorkflowState, id: string) {
+      const edgeIndex = state.viewEdges.findIndex((e) => e.id === id);
+      if (edgeIndex > -1) {
+        state.viewEdges.splice(edgeIndex, 1);
+        state.workflow.removeEdge(id);
+      } else {
+        console.warn(`Edge not found for removal: ${id}`);
+      }
+    },
     addHttpNode(state: WorkflowState, httpNode: HttpNode) {
       const viewNodes: INode = {
         id: httpNode.id,
@@ -64,10 +99,29 @@ export default {
     },
     addEdge(state: WorkflowState, edge: IEdge) {
       const {
+        source,
         target,
         sourceHandle,
         targetHandle
       } = edge;
+
+      if(source === target) {
+        warning(`Edge source and target cannot connect to the same node.`);
+        return;
+      }
+      if(!sourceHandle || !targetHandle) {
+        warning(`Edge must have both sourceHandle and targetHandle defined.`);
+        return;
+      }
+      if (source === sourceHandle && target !== targetHandle) {
+        warning(`Flow nodes cannot connect to data nodes.`);
+        return;
+      }
+      if (target === targetHandle && source !== sourceHandle) {
+        warning(`Data nodes cannot connect to flow nodes.`);
+        return;
+      }
+
       const edgeObject = new Edge()
       edgeObject.from = sourceHandle ?? "";
       edgeObject.to = targetHandle ?? "";
@@ -79,7 +133,11 @@ export default {
         target: edge.target,
         sourceHandle: edge.sourceHandle,
         targetHandle: edge.targetHandle,
-        type: edgeObject.type,
+        animated: edgeObject.type === EdgeType.DATA_TRANSFER,
+        style: {
+          stroke: edgeObject.type === EdgeType.CONTROL_FLOW ? 'green' : 'gray',
+          strokeWidth: 2,
+        }
       };
       state.viewEdges.push(viewEdges);
       state.workflow.addEdge(edgeObject);
@@ -99,12 +157,10 @@ export default {
       const nodeIndex = state.viewNodes.findIndex((node) => node.id === id);
       if (nodeIndex > -1) {
         state.viewNodes[nodeIndex].position = { ...position };
-        console.log(`Node position updated in store: ${id} -> (${position.x}, ${position.y})`);
       } else {
         console.warn(`Could not update position for node ${id}: not found in viewNodes`);
       }
     },
-    
     updateMultipleNodePositions(state: WorkflowState, nodes: Array<{ id: string; position: { x: number; y: number } }>) {
       let updatedCount = 0;
       

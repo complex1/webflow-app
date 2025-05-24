@@ -110,8 +110,12 @@ export default {
   name: "FunctionalNodeForm",
   props: {
     node: {
-      type: Object,
+      type: FunctionalNode,
       required: true,
+    },
+    isEdit: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -126,7 +130,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      addHttpNode: "workflowModule/addFunctionalNode",
+      addFunctionalNode: "workflowModule/addFunctionalNode",
+      updateFunctionalNode: "workflowModule/updateFunctionalNode",
     }),
     update() {
       this.validateName();
@@ -177,7 +182,10 @@ export default {
       functionalNode.description = this.description;
       functionalNode.parameters = this.parameters;
       functionalNode.transform = this.transform;
-      this.addHttpNode(functionalNode);
+      if (this.isEdit && this.node) {
+        functionalNode.id = this.node.id; // Preserve the ID for updates
+      }
+      this.isEdit ? this.updateFunctionalNode(functionalNode) : this.addFunctionalNode(functionalNode);
 
       this.name = "";
       this.description = "";
@@ -195,6 +203,14 @@ export default {
       this.errors = [];
       this.$emit("close");
     },
+  },
+  created() {
+    if (this.isEdit && this.node) {
+      this.name = this.node.name;
+      this.description = this.node.description;
+      this.parameters = this.node.parameters;
+      this.transform = this.node.transform || "";
+    }
   },
 };
 </script>

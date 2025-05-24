@@ -31,6 +31,8 @@ export default class Variable {
         try {
             if (this.formStore) {
                 return globalStore[this.id] || this.defaultValue;
+            } else {
+                return globalStore[this.name] || this.defaultValue;
             }
         }
         catch (error) {

@@ -30,6 +30,41 @@ export class Workflow {
   addEdge(edge: Edge) {
     this.edges.push(edge);
   }
+  updateNode(node: WorkflowNode) {
+    if (this.nodes.has(node.id)) {
+      this.nodes.set(node.id, node);
+    } else {
+      console.warn(`Node not found for update: ${node.id}`);
+    }
+  }
+
+  removeNode(id: string) {
+    this.nodes.delete(id);
+  }
+  removeEdge(id: string) {
+    const edge = this.edges.find((e) => e.id === id);
+    if (!edge) {
+      console.warn(`Edge not found for removal: ${id}`);
+      return;
+    }
+    // Remove the edge from the edges array
+    this.edges = this.edges.filter((e) => e.id !== id);
+  }
+
+  removeUnusedEdges() {
+    this.edges = this.edges.filter((edge) => {
+      if (edge.type === EdgeType.CONTROL_FLOW) {
+        return this.nodes.has(edge.from) && this.nodes.has(edge.to);
+      } else if (edge.type === EdgeType.DATA_TRANSFER) {
+        return this.nodes.has(edge.from) || this.nodes.has(edge.to);
+      }
+      return false; // Remove edges of unknown type
+    });
+    // Remove edges that are not connected to any nodes
+    this.edges = this.edges.filter((edge) => {
+      return this.nodes.has(edge.from) && this.nodes.has(edge.to);
+    });
+  }
 
   setMap() {
     const sourceTargetMap = new Map<string, string[]>();
@@ -102,6 +137,7 @@ export class Workflow {
     });
   }
   async execute(callback: (workflow: Workflow) => void) {
+    // this.removeUnusedEdges();
     this.setMap();
     this.setOrder();
     this.setAllPending();

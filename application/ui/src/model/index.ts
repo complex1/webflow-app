@@ -1,19 +1,24 @@
 export interface INode {
-    id: string;
-    position: { x: number; y: number };
-    type: string;
+  id: string;
+  position: { x: number; y: number };
+  type: string;
 }
 
 export interface IEdge {
-    id: string;
-    source: string;
-    target: string;
-    type: string;
-    sourceHandle?: string;
-    targetHandle?: string;
-    animated?: boolean;
-    label?: string;
-    data?: any;
+  id: string;
+  source: string;
+  target: string;
+  type?: string;
+  sourceHandle?: string;
+  targetHandle?: string;
+  animated?: boolean;
+  label?: string;
+  data?: any;
+  style?: {
+    stroke?: string;
+    strokeWidth?: number;
+    [key: string]: any;
+  };
 }
 
 export interface WebflowDto {

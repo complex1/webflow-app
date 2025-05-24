@@ -15,6 +15,7 @@
       @zoomChange="onZoomChange"
       @viewportChange="onViewportChange"
       @nodesInitialized="onNodesInitialized"
+      @edgesChange="onEdgesChange"
       ref="vueFlow"
     >
       <Background />
@@ -23,12 +24,13 @@
         <add-node></add-node>
       </Controls>
       <template #node-HTTP="nodeData">
-        <HttpNode :id="nodeData.id" />
+        <HttpNode :id="nodeData.id" @editNode="editNode" />
       </template>
       <template #node-FUNCTIONAL="nodeData">
-        <FunctionalNode :id="nodeData.id" />
+        <FunctionalNode :id="nodeData.id" @editNode="editNode" />
       </template>
     </VueFlow>
+    <edit-node :id="editNodeId" :open="openEdit" @close="closeEdit" />
   </div>
 </template>
 
@@ -42,6 +44,7 @@ import { useStore } from 'vuex';
 import AddNode from '../playground/addNode.vue';
 import HttpNode from '../playground/nodes/httpNode.vue';
 import FunctionalNode from '../playground/nodes/functionalNode.vue';
+import EditNode from '../playground/editNode.vue';
 
 // Define your interfaces here since there were issues with the external types file
 interface NodePosition {
@@ -90,6 +93,7 @@ export default defineComponent({
     AddNode,
     HttpNode,
     FunctionalNode,
+    EditNode,
   },
   setup() {
     // Store access
@@ -104,18 +108,39 @@ export default defineComponent({
     });
     const lastDraggedNodes = ref<Node[]>([]);
     const vueFlow = ref<InstanceType<typeof VueFlow> | null>(null);
+    const openEdit = ref<boolean>(false);
+    const editNodeId = ref<string | null>(null);
     
     // Computed properties
     const nodes = computed(() => store.state.workflowModule.viewNodes);
     const edges = computed(() => store.state.workflowModule.viewEdges);
     
     // Methods
+    const editNode = (nodeId: string) => {
+      openEdit.value = true;
+      editNodeId.value = nodeId;
+    };
+    const closeEdit = () => {
+      openEdit.value = false;
+      editNodeId.value = null;
+    };
+
     const onConnect = (params: ConnectParams) => {
       store.commit('workflowModule/addEdge', {
         source: params.source,
         target: params.target,
         sourceHandle: params.sourceHandle,
         targetHandle: params.targetHandle,
+      });
+    };
+
+    const onEdgesChange = (changes: Array<any>) => {
+      // Process edge changes from Vue Flow
+      changes.forEach(change => {
+        // If it's a remove change, call the removeEdge mutation
+        if (change.type === 'remove' && change.id) {
+          store.commit('workflowModule/removeEdge', change.id);
+        }
       });
     };
     
@@ -206,13 +231,18 @@ export default defineComponent({
       viewportState,
       lastDraggedNodes,
       vueFlow,
+      openEdit,
+      editNodeId,
+      editNode,
+      closeEdit,
       onConnect,
       onNodeDrag,
       onNodeDragStop,
       onNodesDragStop,
       onZoomChange,
       onViewportChange,
-      onNodesInitialized
+      onNodesInitialized,
+      onEdgesChange
     };
   }
 });

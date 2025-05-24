@@ -65,7 +65,7 @@ export default {
   methods: {
     editNode() {
       this.$refs.popover.close();
-      this.$emit('edit-node', this.nodeData);
+      this.$emit('edit-node', this.nodeData.id);
     },
     deleteNode() {
       this.$refs.popover.close();

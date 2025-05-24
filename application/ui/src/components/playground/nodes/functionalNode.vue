@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white round-2 shadow-2">
     <connection-handel :id="nodeData.id"></connection-handel>
-    <node-header :nodeData="nodeData" />
+    <node-header :nodeData="nodeData" @edit-node="$emit('edit-node', $event)" />
     <div class="p-m">
       <div class="grid-2 gap-m">
         <div class="parameters-section">
