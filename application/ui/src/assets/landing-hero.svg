@@ -1,0 +1,113 @@
+<svg width="600" height="350" viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f2f2f7" />
+      <stop offset="100%" stop-color="#e5e5ea" />
+    </linearGradient>
+    <linearGradient id="nodeGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#007aff" />
+      <stop offset="100%" stop-color="#5856d6" />
+    </linearGradient>
+    <linearGradient id="nodeGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5856d6" />
+      <stop offset="100%" stop-color="#007aff" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="5" />
+      <feOffset dx="0" dy="4" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="350" rx="8" fill="url(#bgGradient)" />
+
+  <!-- Grid Background -->
+  <g opacity="0.4">
+    <path d="M50 0 L50 350" stroke="#c6c6c8" stroke-width="0.5" />
+    <path d="M150 0 L150 350" stroke="#c6c6c8" stroke-width="0.5" />
+    <path d="M250 0 L250 350" stroke="#c6c6c8" stroke-width="0.5" />
+    <path d="M350 0 L350 350" stroke="#c6c6c8" stroke-width="0.5" />
+    <path d="M450 0 L450 350" stroke="#c6c6c8" stroke-width="0.5" />
+    <path d="M550 0 L550 350" stroke="#c6c6c8" stroke-width="0.5" />
+    
+    <path d="M0 50 L600 50" stroke="#c6c6c8" stroke-width="0.5" />
+    <path d="M0 100 L600 100" stroke="#c6c6c8" stroke-width="0.5" />
+    <path d="M0 150 L600 150" stroke="#c6c6c8" stroke-width="0.5" />
+    <path d="M0 200 L600 200" stroke="#c6c6c8" stroke-width="0.5" />
+    <path d="M0 250 L600 250" stroke="#c6c6c8" stroke-width="0.5" />
+    <path d="M0 300 L600 300" stroke="#c6c6c8" stroke-width="0.5" />
+  </g>
+
+  <!-- Node 1 (HTTP) -->
+  <g filter="url(#shadow)">
+    <rect x="100" y="100" width="120" height="80" rx="6" fill="white" />
+    <rect x="100" y="100" width="120" height="24" rx="6" fill="url(#nodeGradient1)" />
+    <text x="135" y="117" font-family="Arial" font-size="12" fill="white" text-anchor="middle">HTTP Node</text>
+    <circle cx="115" cy="112" r="6" fill="#ffffff" opacity="0.8" />
+    
+    <!-- Node content -->
+    <rect x="110" y="135" width="100" height="8" rx="4" fill="#e0e0e0" />
+    <rect x="110" y="150" width="80" height="8" rx="4" fill="#e0e0e0" />
+    <rect x="110" y="165" width="90" height="8" rx="4" fill="#e0e0e0" />
+  </g>
+
+  <!-- Node 2 (Function) -->
+  <g filter="url(#shadow)">
+    <rect x="300" y="80" width="120" height="80" rx="6" fill="white" />
+    <rect x="300" y="80" width="120" height="24" rx="6" fill="url(#nodeGradient2)" />
+    <text x="335" y="97" font-family="Arial" font-size="12" fill="white" text-anchor="middle">Function Node</text>
+    <circle cx="315" cy="92" r="6" fill="#ffffff" opacity="0.8" />
+    
+    <!-- Node content -->
+    <rect x="310" y="115" width="100" height="8" rx="4" fill="#e0e0e0" />
+    <rect x="310" y="130" width="80" height="8" rx="4" fill="#e0e0e0" />
+    <rect x="310" y="145" width="90" height="8" rx="4" fill="#e0e0e0" />
+  </g>
+
+  <!-- Node 3 (HTTP) -->
+  <g filter="url(#shadow)">
+    <rect x="380" y="200" width="120" height="80" rx="6" fill="white" />
+    <rect x="380" y="200" width="120" height="24" rx="6" fill="url(#nodeGradient1)" />
+    <text x="415" y="217" font-family="Arial" font-size="12" fill="white" text-anchor="middle">HTTP Node</text>
+    <circle cx="395" cy="212" r="6" fill="#ffffff" opacity="0.8" />
+    
+    <!-- Node content -->
+    <rect x="390" y="235" width="100" height="8" rx="4" fill="#e0e0e0" />
+    <rect x="390" y="250" width="80" height="8" rx="4" fill="#e0e0e0" />
+    <rect x="390" y="265" width="90" height="8" rx="4" fill="#e0e0e0" />
+  </g>
+
+  <!-- Connections -->
+  <path d="M220 140 C260 140, 260 120, 300 120" stroke="#007aff" stroke-width="2" fill="none" />
+  <path d="M360 160 C380 180, 360 200, 380 230" stroke="#007aff" stroke-width="2" fill="none" />
+
+  <!-- Connection points -->
+  <circle cx="220" cy="140" r="4" fill="#007aff" />
+  <circle cx="300" cy="120" r="4" fill="#007aff" />
+  <circle cx="360" cy="160" r="4" fill="#007aff" />
+  <circle cx="380" cy="230" r="4" fill="#007aff" />
+
+  <!-- Minimap -->
+  <rect x="500" y="20" width="80" height="60" rx="4" fill="rgba(255,255,255,0.5)" stroke="#c6c6c8" stroke-width="1" />
+  <rect x="510" y="30" width="20" height="14" rx="2" fill="rgba(0,122,255,0.6)" />
+  <rect x="540" y="28" width="20" height="14" rx="2" fill="rgba(88,86,214,0.6)" />
+  <rect x="550" y="48" width="20" height="14" rx="2" fill="rgba(0,122,255,0.6)" />
+  <path d="M530 37 L540 35" stroke="#007aff" stroke-width="0.5" fill="none" />
+  <path d="M550 42 L555 48" stroke="#007aff" stroke-width="0.5" fill="none" />
+
+  <!-- Controls -->
+  <rect x="20" y="20" width="30" height="100" rx="4" fill="rgba(255,255,255,0.8)" stroke="#c6c6c8" stroke-width="1" />
+  <circle cx="35" cy="40" r="10" fill="white" stroke="#c6c6c8" stroke-width="1" />
+  <text x="35" y="44" font-family="Arial" font-size="14" fill="#007aff" text-anchor="middle">+</text>
+  <circle cx="35" cy="70" r="10" fill="white" stroke="#c6c6c8" stroke-width="1" />
+  <text x="35" y="74" font-family="Arial" font-size="14" fill="#007aff" text-anchor="middle">-</text>
+  <circle cx="35" cy="100" r="10" fill="white" stroke="#c6c6c8" stroke-width="1" />
+  <text x="35" y="104" font-family="Arial" font-size="10" fill="#007aff" text-anchor="middle">↔</text>
+</svg>

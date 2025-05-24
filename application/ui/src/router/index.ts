@@ -10,7 +10,7 @@ import Dashboard from '../pages/dashboard.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
+    name: 'AppHome',
     component: Dashboard
   },
   {

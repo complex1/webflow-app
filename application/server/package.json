@@ -7,17 +7,20 @@
     "@types/cors": "^2.8.18",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "ejs": "^3.1.9",
     "express": "^5.1.0",
     "google-auth-library": "^9.15.1",
     "http-proxy-middleware": "^2.0.6",
     "jsonwebtoken": "^9.0.0",
     "reflect-metadata": "^0.1.13",
+    "sass": "^1.69.5",
     "sqlite3": "^5.1.6",
     "typeorm": "^0.3.17",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/ejs": "^3.1.5",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^22.15.18",
@@ -29,6 +32,8 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "optimize-images": "node scripts/optimize-images.js",
+    "test-endpoints": "node scripts/test-endpoints.js"
   }
 }

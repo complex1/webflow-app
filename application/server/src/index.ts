@@ -7,6 +7,8 @@ import { Server } from 'http';
 import cors from 'cors';
 import { initDB } from './db';
 import apiRoutes from './routes';
+import landingRoutes from './routes/landing.routes';
+import { faviconMiddleware } from './middleware/favicon.middleware';
 
 // Increase max listeners to avoid the warning
 require('events').EventEmitter.defaultMaxListeners = 15;
@@ -20,6 +22,10 @@ if (!fs.existsSync(DATA_DIR)) {
 const app = express();
 const PORT = process.env.PORT || 3000;
 let server: Server;
+
+// Set up EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Initialize the database
 initDB().then(() => {
@@ -39,6 +45,10 @@ app.use(cors({
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(faviconMiddleware);
+
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // API routes
 app.use('/api', apiRoutes);
@@ -52,15 +62,16 @@ app.use((req, res, next) => {
   next();
 });
 
-// Proxy middleware for non-API requests
-app.use('/', (req, res, next) => {
-  if (req.url.startsWith('/api')) {
-    return next();
-  }
-  
+// Landing page route - SSR
+app.use('/', landingRoutes);
+
+// Proxy middleware for other routes (app routes)
+app.use('/app', (req, res, next) => {
+  // Only proxy app routes to the client-side app
   createProxyMiddleware({
     target: 'http://localhost:3001',
     changeOrigin: true,
+    pathRewrite: { '^/app': '/' },
     logLevel: 'warn',
   })(req, res, next);
 });

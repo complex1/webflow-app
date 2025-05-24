@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /app/admin/
+Sitemap: https://webflow-app.example.com/sitemap.xml

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %>
+  </title>
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/css/landing.css" as="style">
+  <link rel="stylesheet" href="/css/landing.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <!-- Add favicon -->
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <!-- Add meta tags for SEO -->
+  <meta name="description"
+    content="Create, automate, and manage your workflows with a visual interface. Transform your business processes without writing a single line of code.">
+  <meta name="keywords"
+    content="workflow, automation, no-code, business process, workflow automation, business process management, visual workflow builder">
+  <!-- OpenGraph tags for social sharing -->
+  <meta property="og:title" content="Webflow - Build Powerful Workflows Without Code">
+  <meta property="og:description"
+    content="Create, automate, and manage your workflows with a visual interface. Transform your business processes without writing a single line of code.">
+  <meta property="og:image" content="/images/og-image.jpg">
+  <meta property="og:url" content="https://webflow-app.example.com">
+  <meta property="og:type" content="website">
+  <!-- Twitter Card tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Webflow - Build Powerful Workflows Without Code">
+  <meta name="twitter:description"
+    content="Create, automate, and manage your workflows with a visual interface. Transform your business processes without writing a single line of code.">
+  <meta name="twitter:image" content="/images/og-image.jpg">
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://webflow-app.example.com">
+</head>
+
+<body>
+  <div class="landing-page">
+    <!-- Navigation Bar -->
+    <nav class="landing-navbar">
+      <div class="container">
+        <div class="navbar-logo">
+          <a href="/" class="logo">
+            <i class="fas fa-sitemap"></i>
+            <span>Webflow</span>
+          </a>
+        </div>
+        <!-- <div class="navbar-menu">
+          <a href="#features" class="navbar-item">Features</a>
+        </div> -->
+        <div class="navbar-actions">
+          <a href="/app/login" class="navbar-item">Login</a>
+          <a href="/app/register" class="btn btn-primary">Get Started</a>
+        </div>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile menu (shown when toggled) -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#features" class="mobile-menu-item">Features</a>
+      <a href="/app/login" class="mobile-menu-item">Login</a>
+      <a href="/app/register" class="mobile-menu-item highlight">Get Started</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="fade-in delay-100">Build Powerful <span class="gradient-text">Workflows</span> Without Code</h1>
+          <p class="hero-subtitle fade-in delay-200">
+            Create, automate, and manage your workflows with a visual interface.
+            Transform your business processes without writing a single line of code.
+          </p>
+
+          <!-- Hero stats section -->
+          <!-- <div class="hero-stats fade-in delay-300">
+            <div class="hero-stat">
+              <span class="stat-value">
+                <%= stats.activeUsers %>
+              </span>
+              <span class="stat-label">Active Users</span>
+            </div>
+            <div class="hero-stat">
+              <span class="stat-value">
+                <%= stats.workflowsCreated %>
+              </span>
+              <span class="stat-label">Workflows Created</span>
+            </div>
+            <div class="hero-stat">
+              <span class="stat-value">
+                <%= stats.userRating %>
+              </span>
+              <span class="stat-label">User Rating</span>
+            </div>
+          </div> -->
+
+          <div class="auth-options fade-in delay-400">
+            <a href="/app/register" class="btn btn-primary btn-lg pulse-animation">Get Started</a>
+            <a href="/app/login" class="btn btn-outlined btn-lg">Login with Email or Google</a>
+          </div>
+        </div>
+        <div class="hero-image float-animation">
+          <img src="/images/workflow-visual.svg" alt="Webflow App Interface" />
+          <div class="hero-blob"></div>
+        </div>
+      </div>
+      <div class="hero-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+          <path fill="#ffffff" fill-opacity="1"
+            d="M0,192L48,176C96,160,192,128,288,122.7C384,117,480,139,576,165.3C672,192,768,224,864,218.7C960,213,1056,171,1152,154.7C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+          </path>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title fade-in">Powerful <span class="gradient-text">Features</span></h2>
+          <p class="section-subtitle fade-in">Everything you need to automate and streamline your business processes</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card slide-up" id="feature-1">
+            <div class="feature-icon">
+              <i class="fas fa-sitemap"></i>
+            </div>
+            <h3>Visual Workflow Builder</h3>
+            <p>Create complex workflows using our intuitive drag-and-drop interface without writing any code.</p>
+          </div>
+          <div class="feature-card slide-up" id="feature-2">
+            <div class="feature-icon">
+              <i class="fas fa-globe"></i>
+            </div>
+            <h3>API Integration</h3>
+            <p>Connect to any REST API and automate data transfers between your favorite systems and applications.</p>
+          </div>
+          <div class="feature-card slide-up" id="feature-3">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Secure Authentication</h3>
+            <p>Sign in securely with your email or Google account to access and manage your workflows.</p>
+          </div>
+          <div class="feature-card slide-up" id="feature-4">
+            <div class="feature-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3>Monitoring & Analytics</h3>
+            <p>Track workflow executions and analyze performance metrics with detailed dashboards.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">
+            <i class="fas fa-sitemap"></i>
+            <span>Webflow</span>
+          </div>
+          <div class="footer-links">
+            <div class="footer-links-column">
+              <h4>Navigation</h4>
+              <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="/app/register">Get Started</a></li>
+                <li><a href="/app/login">Login</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; <%= year %> Webflow App. All rights reserved.</p>
+          <div class="footer-social">
+            <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/js/landing.js" defer></script>
+</body>
+
+</html>
