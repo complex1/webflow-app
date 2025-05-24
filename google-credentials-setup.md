@@ -80,13 +80,44 @@ This guide provides detailed instructions for obtaining Google OAuth credentials
 
 ## Security Considerations
 
-- Never commit your Client ID to public repositories
+- Never commit your Client Secret to public repositories
 - For production, consider using environment variables:
 
-  **Client (ui):**
+  **Client (UI):**
   ```typescript
   export const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   ```
+  
+  **Server:**
+  ```typescript
+  export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+  ```
+
+- Set up proper CORS configuration on your server
+- Implement rate limiting for authentication endpoints
+- Validate tokens on the server side
+- Set up domain verification in Google Cloud Console
+- Regularly audit access and permissions in your Google Cloud Console
+- Implement proper token storage methods (use HttpOnly cookies when possible)
+
+## Troubleshooting
+
+- **"Error 400: redirect_uri_mismatch"**: Ensure your redirect URI exactly matches what's configured in Google Cloud Console
+- **"Error 403: org_internal"**: If you're using Internal user type, ensure the user belongs to your organization
+- **"Error: idpiframe_initialization_failed"**: Often related to cookies or third-party cookie restrictions
+- **"Error: popup_closed_by_user"**: The user closed the Google sign-in popup before completing authentication
+
+If you encounter issues, check the [Google OAuth 2.0 documentation](https://developers.google.com/identity/protocols/oauth2) for more detailed information.
+
+## Next Steps
+
+After setting up your credentials:
+1. Implement the toggle feature to enable/disable Google authentication
+2. Test both new user registration and existing user login flows
+3. Set up proper error handling for authentication failures
+4. Implement security monitoring and logging for authentication events
+
+For more information, refer to the `google-auth-testing.md` and `google-auth-debugging.md` documents.
   
   **Server:**
   ```typescript

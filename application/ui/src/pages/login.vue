@@ -155,8 +155,8 @@ export default defineComponent({
         console.log("Login successful:", response);
         // Store token in localStorage
         localStorage.setItem("token", response.token);
-        // Redirect to home page after successful login
-        router.push("/");
+        // Redirect to dashboard after successful login
+        router.push("/dashboard");
       } catch (error: any) {
         console.error("Login error:", error);
         errors.form = error.response?.data?.message || "Invalid email or password";

@@ -1,9 +1,9 @@
 <template>
   <div class="navbar">
     <div class="navbar-brand">
-      <router-link to="/" class="logo">
-        <i class="pi pi-sitemap"></i>
-        <span>Webflow</span>
+      <router-link to="/dashboard" class="logo">
+        <img src="../../assets/logo-min.svg" alt="">
+        <span class="mx-m text-bold">ApiFlux</span>
       </router-link>
     </div>
     <div class="navbar-menu">
