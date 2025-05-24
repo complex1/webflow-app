@@ -1,3 +1,4 @@
+import { proxyService } from '../services/proxy.service';
 import Node, { NodeStatus, NodeType } from './Node';
 import Variable from './Variable';
 
@@ -68,6 +69,7 @@ export default class HttpNode extends Node {
         const body = this.getBody(globalStore);
 
         const options = {
+            url,
             method: this.method,
             headers: {
                 ...headers,
@@ -89,17 +91,19 @@ export default class HttpNode extends Node {
         const executionStartTime = Date.now();
         this.executionDone = false;
         return new Promise((resolve, reject) => {
-            fetch(url, options)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+            proxyService.request(options)
+            .then((data:any) => {
+                if (data.error) {
+                    this.hasError = true;
+                    this.errorMessage = data.error;
+                    this.nodeStatus = NodeStatus.FAILURE;
+                    this.nodeData = null;
+                } else {
+                    this.hasError = false;
+                    this.executing = false;
+                    this.nodeStatus = NodeStatus.SUCCESS;
+                    this.nodeData = data.data;
                 }
-                return response.json();
-            })
-            .then(data => {
-                this.executing = false;
-                this.nodeStatus = NodeStatus.SUCCESS;
-                this.nodeData = data;
                 resolve(undefined);
             })
             .catch(error => {

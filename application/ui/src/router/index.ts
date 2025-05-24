@@ -5,6 +5,7 @@ import Playground from '../pages/playground.vue';
 import Register from '../pages/register.vue';
 import Login from '../pages/login.vue';
 import Dashboard from '../pages/dashboard.vue';
+import ProxyTest from '../pages/proxy-test.vue';
 
 // Define your routes
 const routes: Array<RouteRecordRaw> = [
@@ -32,6 +33,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/proxy-test',
+    name: 'ProxyTest',
+    component: ProxyTest
   },
   // Add more routes as needed
   {

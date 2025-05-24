@@ -11,18 +11,19 @@ declare global {
   }
 }
 
-export const authMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    // Get token from Authorization header
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      res.status(401).json({ message: "Authentication required", errorCode: 'INVALID_TOKEN' });
-      return;
-    }
+export const authMiddleware = {
+  async verifyToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      // Get token from Authorization header
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        res.status(401).json({ message: "Authentication required", errorCode: 'INVALID_TOKEN' });
+        return;
+      }
 
     const token = authHeader.split(" ")[1];
 
@@ -44,8 +45,9 @@ export const authMiddleware = async (
     req.user = user;
 
     next();
-  } catch (error) {
-    res.status(401).json({ message: "Authentication failed", errorCode: 'INVALID_TOKEN' });
-    return;
+    } catch (error) {
+      res.status(401).json({ message: "Authentication failed", errorCode: 'INVALID_TOKEN' });
+      return;
+    }
   }
 };

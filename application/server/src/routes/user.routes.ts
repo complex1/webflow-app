@@ -11,7 +11,7 @@ router.post('/login', userController.login);
 router.post('/auth/google', googleAuthController.googleLogin);
 
 // Protected routes
-router.get('/user', authMiddleware, userController.getUser);
-router.put('/user/avatar', authMiddleware, userController.updateAvatar);
+router.get('/user', authMiddleware.verifyToken, userController.getUser);
+router.put('/user/avatar', authMiddleware.verifyToken, userController.updateAvatar);
 
 export default router;

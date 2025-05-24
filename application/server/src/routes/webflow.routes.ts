@@ -6,7 +6,7 @@ const router = Router();
 const webflowController = new WebflowController();
 
 // Apply authentication middleware to all routes
-router.use(authMiddleware);
+router.use(authMiddleware.verifyToken);
 
 // GET all webflows
 router.get('/', webflowController.getAllWebflows);
