@@ -19,7 +19,8 @@
     "lint:fix": "concurrently \"cd application/server && npm run lint:fix\" \"cd application/client && npm run lint:fix\""
   },
   "dependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3"
   },
   "devDependencies": {
     "prettier": "^3.5.3"
