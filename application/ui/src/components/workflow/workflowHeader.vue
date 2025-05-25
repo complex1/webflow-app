@@ -62,6 +62,7 @@ import { getPostBody } from '../../utils/workflowUtils';
 import type { WorkflowHeaderProps, WorkflowHeaderEmits } from './types';
 import { success, error } from '../../lib/toast';
 import UserAvatar from '../common/userAvatar.vue';
+import { exportWorkflowService } from '../../services/importExport.service';
 
 export default defineComponent({
   components: { UserAvatar },
@@ -112,7 +113,7 @@ export default defineComponent({
     };
     
     const exportWorkflow = () => {
-      console.log("Export workflow");
+      exportWorkflowService(workflowId.value);
     };
     
     const saveWorkflow = async () => {

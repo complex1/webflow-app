@@ -29,6 +29,10 @@
           <button class="btn btn-primary" @click="openCreateDrawer">
             <i class="pi pi-plus mx-s"></i> Create New Webflow
           </button>
+          <button class="btn btn-secondary fh" @click="askToImportWebflow">
+            <i class="pi pi-upload mx-s"></i> Import Webflow
+          </button>
+          <input type="file" style="display: none;" id="ImportWebflow" @change="importWebflow">
         </div>
       </div>
 
@@ -173,6 +177,7 @@ import webflowCard from "../components/dashboard/webflow-card.vue";
 import type { WebflowCardProps } from "../components/dashboard/types";
 import type { WebflowForm } from './types';
 import { success, error } from '../lib/toast';
+import { importWorkflowService } from '../services/importExport.service';
 
 export default defineComponent({
   name: "DashboardPage",
@@ -218,6 +223,37 @@ export default defineComponent({
     });
     
     // Methods
+    const askToImportWebflow = () => {
+      const fileInput = document.getElementById("ImportWebflow") as HTMLInputElement;
+      if (fileInput) {
+        fileInput.click();
+      }
+    };
+
+    const importWebflow = async (event: Event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        try {
+          const newWorkflow = await importWorkflowService(file);
+          // Validate and cast the imported workflow to the correct type
+          if (
+            newWorkflow &&
+            typeof newWorkflow === 'object' &&
+            'id' in newWorkflow &&
+            'name' in newWorkflow
+          ) {
+            fetchWebflows();
+            success("Webflow imported successfully!");
+          } else {
+            error("Imported file is not a valid webflow.");
+          }
+        } catch (error) {
+          console.error("Error importing webflow:", error);
+          error("Error importing webflow. Please try again.");
+        }
+      }
+    };
+
     const fetchWebflows = async () => {
       try {
         loading.value = true;
@@ -436,7 +472,9 @@ export default defineComponent({
       saveWebflow,
       confirmDelete,
       deleteWebflow,
-      navigateToWorkflow
+      navigateToWorkflow,
+      askToImportWebflow,
+      importWebflow,
     };
   }
 });
@@ -471,6 +509,7 @@ export default defineComponent({
   display: flex;
   margin-bottom: var(--spacing-large);
   gap: var(--spacing-medium);
+  align-items: stretch;
   .search-box {
     position: relative;
     flex: 1;

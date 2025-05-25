@@ -6,7 +6,14 @@ import type { WorkflowState } from "../store/workflowModule";
 export const getPostBody = (workflowState: WorkflowState) => {
   const { viewNodes, viewEdges, workflow } = workflowState;
   const postBody = {} as any;
-  postBody.edges = viewEdges;
+  postBody.edges = viewEdges.map((edge) => ({
+    id: edge.id,
+    source: edge.source,
+    target: edge.target,
+    sourceHandle: edge.sourceHandle,
+    targetHandle: edge.targetHandle,
+    type: edge.type,
+  }));
   postBody.nodes = [] as any[];
 
   viewNodes.forEach((node) => {
