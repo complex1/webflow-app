@@ -51,14 +51,14 @@
         </div>
         <div class="flex-v-center">
           <span class="text-s font-400 opacity-50 w-100px">Response:</span>
-          <popover :tooltip="false" class="pl-xs">
+          <popover class="playground-popover pl-xs"  :tooltip="false">
             <template #target>
               <span class="text-s text-primary font-600 cursor-pointer hover-underline">
                 <i class="pi pi-eye mr-2xs"></i> View Data
               </span>
             </template>
             <template #content>
-              <node-state :node="nodeData" />
+              <node-state class="playground-zoom" :node="nodeData" />
             </template>
           </popover>
         </div>

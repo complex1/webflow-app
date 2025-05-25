@@ -68,7 +68,6 @@
 <script lang="ts">
 import { mapState } from "vuex";
 import { Workflow } from "../../../classes/Workflow";
-import Popover from "../../common/popover.vue";
 import statusChip from "../../common/statusChip.vue";
 import NodeHeader from "./nodeHeader.vue";
 import ConnectionHandel from "./connectionHandel.vue";
@@ -81,7 +80,6 @@ export default {
   components: {
     statusChip,
     VariableNode,
-    Popover,
     ConnectionHandel,
     NodeState,
     NodeHeader,

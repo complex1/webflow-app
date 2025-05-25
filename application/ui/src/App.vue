@@ -2,15 +2,17 @@
   <div class="fh fw">
     <router-view></router-view>
     <toast></toast>
+    <theme-toggle/>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import ThemeToggle from "./components/common/themeToggle.vue";
 import toast from "./lib/toast.vue";
 
 export default defineComponent({
-  components: { toast },
+  components: { toast, ThemeToggle },
   name: "App",
 });
 </script>

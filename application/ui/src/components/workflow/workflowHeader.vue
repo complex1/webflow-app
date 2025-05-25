@@ -25,7 +25,6 @@
       </div>
     </div>
     <div class="workflow-actions">
-      <theme-toggle></theme-toggle>
       <button
         data-tooltip="Run Pipeline"
         data-tooltip-position="bottom"
@@ -50,6 +49,7 @@
       >
         <i class="pi pi-save"></i>
       </button>
+      <user-avatar class="mx-m" />
     </div>
   </div>
 </template>
@@ -57,14 +57,14 @@
 import { defineComponent, ref, computed, nextTick, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import themeToggle from '../common/themeToggle.vue';
 import { WebflowService } from '../../services/webflow.service';
 import { getPostBody } from '../../utils/workflowUtils';
 import type { WorkflowHeaderProps, WorkflowHeaderEmits } from './types';
 import { success, error } from '../../lib/toast';
+import UserAvatar from '../common/userAvatar.vue';
 
 export default defineComponent({
-  components: { themeToggle },
+  components: { UserAvatar },
   name: "WorkflowHeader",
   setup() {
     const store = useStore();

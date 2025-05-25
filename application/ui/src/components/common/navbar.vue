@@ -13,34 +13,18 @@
       </router-link>
     </div>
     <div class="navbar-end">
-      <theme-toggle></theme-toggle>
-      <div class="user-menu" ref="userMenu">
-        <button class="btn btn-icon" @click="toggleUserDropdown">
-          <i class="pi pi-user"></i>
-        </button>
-        <div class="dropdown-menu" v-if="showUserDropdown">
-          <div class="dropdown-item user-info">
-            <i class="pi pi-user"></i>
-            <span>{{ username || "User" }}</span>
-          </div>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" @click="logout">
-            <i class="pi pi-sign-out"></i>
-            <span>Logout</span>
-          </a>
-        </div>
-      </div>
+      <user-avatar class="mr-m" />
     </div>
   </div>
 </template>
 
 <script>
-import themeToggle from "./themeToggle.vue";
+import UserAvatar from './userAvatar.vue';
 
 export default {
   name: "navbarComponent",
   components: {
-    themeToggle,
+    UserAvatar,
   },
   data() {
     return {

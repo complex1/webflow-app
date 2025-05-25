@@ -2,16 +2,16 @@
   <div class="node-header p-s flex-space-between flex-v-center bg-light-gradient border-bottom">
     <div class="flex-grow">
       <div class="text-dark font-500 flex-v-center gap-s">
-        <i class="pi pi-box mr-xs text-primary"></i>
+        <i class="mr-xs text-primary" :class="nodeIcon"></i>
         <div class="text-truncate" style="max-width: 200px">
           {{ nodeData.name }}
         </div>
-        <popover v-if="nodeData.description || nodeData.description === ''" :tooltip="true">
+        <popover class="playground-popover" v-if="nodeData.description || nodeData.description === ''" :tooltip="true">
           <template #target>
             <small class="pi pi-info-circle cursor-pointer text-secondary opacity-70 text-s"></small>
           </template>
           <template #content>
-            <div class="text-m bg-white p-m round-2 shadow-1" style="max-width: 250px">
+            <div class="text-m bg-white p-m round-2 shadow-1 playground-zoom" style="max-width: 250px">
               <span class="text-secondary">
                 <strong>Description:</strong> {{ nodeData.description || "No description provided" }}
               </span>
@@ -22,14 +22,14 @@
     </div>
     <div class="flex-v-center gap-s">
       <status-chip :status="nodeData.nodeStatus" size="small"></status-chip>
-      <popover ref="popover" placement="bottom-end">
+      <popover class="playground-popover"  ref="popover" placement="bottom-end">
         <template #target>
           <button class="btn btn-icon btn-ghost" data-tooltip="Node Options">
             <i class="pi pi-ellipsis-v cursor-pointer text-secondary"></i>
           </button>
         </template>
         <template #content>
-          <div class="bg-white round-1 shadow-2 node-menu">
+          <div class="bg-white round-1 shadow-2 node-menu playground-zoom">
             <div class="menu-item flex-v-center p-xs hover-light" @click="editNode">
               <i class="pi pi-pencil text-primary mr-s"></i>
               <span class="text-secondary">Edit Node</span>
@@ -60,7 +60,17 @@ export default {
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    nodeIcon() {
+      if (this.nodeData.type === 'FUNCTIONAL') {
+        return 'pi pi-cog text-info';
+      } else if (this.nodeData.type === 'DATA') {
+        return 'pi pi-database';
+      } else if (this.nodeData.type === 'HTTP') {
+        return 'pi pi-globe text-success';
+      }
+    },
+  },
   watch: {},
   methods: {
     editNode() {

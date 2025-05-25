@@ -19,7 +19,18 @@
       ref="vueFlow"
     >
       <Background />
-      <MiniMap pannable zoomable />
+      <MiniMap
+        pannable
+        zoomable
+        :nodeColor="miniMapNodeColor"
+        position="bottom-left"
+        backgroundColor="#f0f0f0"
+        :nodeStrokeWidth="2"
+        :nodeBorderRadius="4"
+        :nodeBorderWidth="1"
+        :nodeWidth="100"
+        :nodeHeight="50"
+      />
       <Controls position="top-right" class="horizontal-controls">
         <add-node></add-node>
       </Controls>
@@ -200,6 +211,7 @@ export default defineComponent({
     
     const onZoomChange = ({ zoom }: { zoom: number }) => {
       currentZoom.value = zoom;
+      setZoomCssVariable(zoom);
       // Log position of all nodes at this zoom level if we have dragged nodes recently
     };
     
@@ -209,6 +221,23 @@ export default defineComponent({
         y: viewport.y,
         zoom: viewport.zoom
       };
+      setZoomCssVariable(viewport.zoom);
+    };
+
+    const setZoomCssVariable = (zoom: number) => {
+      // Set a CSS variable for zoom level
+      document.documentElement.style.setProperty('--vue-flow-zoom', zoom.toString());
+    };
+
+    const miniMapNodeColor = (node: Node) => {
+      switch (node.type) {
+        case 'HTTP':
+          return '#00aaff';
+        case 'FUNCTIONAL':
+          return '#ffaa00';
+        default:
+          return '#ccc';
+      }
     };
 
     const onNodesInitialized = () => {
@@ -218,6 +247,7 @@ export default defineComponent({
     // Lifecycle hooks
     onMounted(() => {
       // Log initial positions of all nodes when component is mounted
+      setZoomCssVariable(currentZoom.value);
     });
 
     onBeforeUnmount(() => {
@@ -242,7 +272,8 @@ export default defineComponent({
       onZoomChange,
       onViewportChange,
       onNodesInitialized,
-      onEdgesChange
+      onEdgesChange,
+      miniMapNodeColor
     };
   }
 });

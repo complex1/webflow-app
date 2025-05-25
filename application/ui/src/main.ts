@@ -20,12 +20,16 @@ const renderApp = () => {
 }
 
 if (!isLoginPage) {
+  store.commit("setLoading", true);
   userService
     .getUser()
-    .then((user) => {
+    .then((user:any) => {
       if (!user) {
         window.location.href = "/login";
       } else {
+        store.commit("setUser", user.user);
+        store.commit("setAuthentication", true);
+        store.commit("setLoading", false);
         renderApp();
       }
     })

@@ -20,12 +20,12 @@
       <span class="pl-m">
         {{ variable.name }}
       </span>
-      <popover @open="loadValue">
+      <popover class="playground-popover" @open="loadValue">
         <template #target>
           <small class="pi pi-info-circle cursor-pointer"></small>
         </template>
         <template #content>
-          <div class="text-m bg-white p-s round-1">
+          <div class="text-m bg-white p-s round-1 playground-zoom">
             <span v-if="noValue" class="text-danger">No value</span>
             <span v-else-if="dataType !== 'object'">
               {{ value }}

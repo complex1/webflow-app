@@ -7,8 +7,7 @@
       <div
         v-if="isOpen"
         ref="popoverRef"
-        class="popover-content"
-        :class="props.position"
+        :class="`popover-content ${props.position} ${popoverClasses.join(' ')}`"
         :style="popoverStyle"
       >
         <div v-if="props.title" class="popover-title">{{ props.title }}</div>
@@ -49,6 +48,7 @@ export default defineComponent({
   },
   emits: ['open', 'close'],
   setup(props, { emit }) {
+    const popoverClasses = ref<string[]>([]); 
     const targetRef = ref<HTMLElement | null>(null);
     const popoverRef = ref<HTMLElement | null>(null);
     const isOpen = ref(false);
@@ -118,7 +118,18 @@ export default defineComponent({
       } else if (props.position === "right") {
         left = targetRect.right + window.scrollX + 8;
       }
-      
+
+      if (left < 0) {
+        left = 10; // Prevent popover from going off-screen
+      } else if (left + popoverRect.width > window.innerWidth) {
+        left = window.innerWidth - popoverRect.width - 10; // Adjust if it goes off-screen
+      }
+      if (top < 0) {
+        top = 10; // Prevent popover from going off-screen
+      } else if (top + popoverRect.height > window.innerHeight) {
+        top = window.innerHeight - popoverRect.height - 10; // Adjust if it goes off-screen
+      }
+
       popoverStyle.top = `${top}px`;
       popoverStyle.left = `${left}px`;
     };
@@ -131,6 +142,11 @@ export default defineComponent({
         targetRef.value.addEventListener("mouseover", open);
         targetRef.value.addEventListener("mouseleave", close);
       }
+
+      // check if component have a class "playground-popover"
+      if (targetRef.value && targetRef.value.parentElement.classList.contains("playground-popover")) {
+        popoverClasses.value.push("playground-popover-content");
+      } 
     });
 
     onBeforeUnmount(() => {
@@ -146,6 +162,7 @@ export default defineComponent({
 
     return {
       props,
+      popoverClasses,
       targetRef,
       popoverRef,
       isOpen,

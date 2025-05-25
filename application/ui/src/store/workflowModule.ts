@@ -17,13 +17,21 @@ export default {
   state: {
     workflowId: "",
     workflowName: "Untitled",
-    workflowDescription: "lorem ipsum",
+    workflowDescription: "",
     workflow: new Workflow(),
     viewNodes: [] as INode[], // initialized viewNodes with an empty array
     viewEdges: [] as IEdge[], // initialized viewEdges with an empty array
   } as WorkflowState,
   getters: {},
   mutations: {
+    resetWorkflowState(state: WorkflowState) {
+      state.workflow = new Workflow();
+      state.viewNodes = [];
+      state.viewEdges = [];
+      state.workflowId = "";
+      state.workflowName = "Untitled";
+      state.workflowDescription = "";
+    },
     executeWorkflow(state: WorkflowState) {
       const { workflow } = state;
       workflow.execute((w: Workflow) => {

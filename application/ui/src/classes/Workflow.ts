@@ -161,6 +161,5 @@ export class Workflow {
       });
       callback(this);
     }
-    console.log(JSON.stringify(this, null, 2));
   }
 }

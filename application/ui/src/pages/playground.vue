@@ -1,12 +1,12 @@
 <template>
   <div class="workflow" >
     <workflow-header></workflow-header>
-    <workflow-playground></workflow-playground>
+    <workflow-playground v-if="!loading"></workflow-playground>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import workflowHeader from '../components/workflow/workflowHeader.vue';
@@ -23,11 +23,15 @@ export default defineComponent({
   name: "workflow",
   
   setup() {
+    const loading = ref<boolean>(true);
     const route = useRoute();
     const store = useStore();
     const webflowService = new WebflowService();
     
     const loadWebflow = async (id: string) => {
+      loading.value = true;
+      // Reset workflow state before loading a new webflow
+      store.commit('workflowModule/resetWorkflowState');
       try {
         const webflow = await webflowService.getWebflowById(id) as WebflowCardProps;
         
@@ -53,9 +57,11 @@ export default defineComponent({
         }
       } catch (error) {
         console.error('Error loading webflow:', error);
+      } finally {
+        loading.value = false;
       }
     };
-    
+
     onMounted(async () => {
       // Check for webflow ID in route query params
       const webflowId = route.query.id as string;
@@ -65,6 +71,7 @@ export default defineComponent({
     });
     
     return {
+      loading,
       // No need to expose methods that are only used internally
     };
   }
