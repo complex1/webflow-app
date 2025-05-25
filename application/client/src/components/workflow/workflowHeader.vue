@@ -54,19 +54,18 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed, nextTick, onMounted, watch } from 'vue';
+import { defineComponent, ref, computed, nextTick, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { WebflowService } from '../../services/webflow.service';
 import { getPostBody } from '../../utils/workflowUtils';
-import type { WorkflowHeaderProps, WorkflowHeaderEmits } from './types';
 import { success, error } from '../../lib/toast';
 import UserAvatar from '../common/userAvatar.vue';
 import { exportWorkflowService } from '../../services/importExport.service';
 
 export default defineComponent({
   components: { UserAvatar },
-  name: "WorkflowHeader",
+  name: 'WorkflowHeader',
   setup() {
     const store = useStore();
     const router = useRouter();
@@ -108,7 +107,7 @@ export default defineComponent({
     };
     
     const playWorkflow = () => {
-      console.log("Play workflow");
+      console.log('Play workflow');
       store.commit('workflowModule/executeWorkflow');
     };
     

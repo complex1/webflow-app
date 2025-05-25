@@ -32,7 +32,7 @@ export default class FunctionalNode extends Node {
                 this.nodeStatus = NodeStatus.SUCCESS;
                 this.hasError = false;
                 this.errorMessage = null;
-                resolve(undefined)
+                resolve(undefined);
             } catch (error) {
                 console.error(`Error executing transform for FunctionalNode ${this.id}:`, error);
                 this.hasError = true;

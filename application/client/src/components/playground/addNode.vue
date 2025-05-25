@@ -40,13 +40,13 @@
 
 <script>
 import Drawer from '../common/drawer.vue';
-import modal from "../common/modal.vue";
-import Popover from "../common/popover.vue";
-import FunctionalNodeForm from "./functionalNodeForm.vue";
-import HttpNodeForm from "./httpNodeForm.vue";
+import modal from '../common/modal.vue';
+import Popover from '../common/popover.vue';
+import FunctionalNodeForm from './functionalNodeForm.vue';
+import HttpNodeForm from './httpNodeForm.vue';
 export default {
   components: { modal, HttpNodeForm, FunctionalNodeForm, Popover, Drawer },
-  name: "AddNode",
+  name: 'AddNode',
   data() {
     return {
       addHttpModal: false,

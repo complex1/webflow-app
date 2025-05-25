@@ -21,7 +21,7 @@ export const proxyService = {
       const httpService = new HttpService();
       httpService.url = '/api/proxy';
       httpService.method = 'POST';
-      httpService.body = options
+      httpService.body = options;
       return httpService.run();
   }
 };

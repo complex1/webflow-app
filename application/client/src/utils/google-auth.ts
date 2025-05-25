@@ -1,5 +1,5 @@
 // Google authentication utility functions
-import { GOOGLE_CLIENT_ID } from "../config/auth.config";
+import { GOOGLE_CLIENT_ID } from '../config/auth.config';
 
 export interface GoogleCredentialResponse {
   credential: string;

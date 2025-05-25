@@ -89,15 +89,15 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import Variable from "../../classes/Variable";
-import FunctionalNode from "../../classes/FunctionalNode";
-import expensionPanel from "../common/expensionPanel.vue";
-import VariableForm from "./variableForm.vue";
-import ErrorMessage from "../../classes/ErrorMessage";
-import ValidationErrors from "../common/validationError.vue";
+import { mapMutations } from 'vuex';
+import Variable from '../../classes/Variable';
+import FunctionalNode from '../../classes/FunctionalNode';
+import expensionPanel from '../common/expensionPanel.vue';
+import VariableForm from './variableForm.vue';
+import ErrorMessage from '../../classes/ErrorMessage';
+import ValidationErrors from '../common/validationError.vue';
 import JsEditor from '../common/code/jsEditor.vue';
-import wfaInput from "../common/wfa-input.vue";
+import wfaInput from '../common/wfa-input.vue';
 
 export default {
   components: { 
@@ -107,7 +107,7 @@ export default {
     JsEditor,
     wfaInput
   },
-  name: "FunctionalNodeForm",
+  name: 'FunctionalNodeForm',
   props: {
     node: {
       type: FunctionalNode,
@@ -120,24 +120,24 @@ export default {
   },
   data() {
     return {
-      name: "",
-      description: "",
+      name: '',
+      description: '',
       parameters: [],
-      transform: "",
+      transform: '',
       errors: [],
-      nameError: "",
+      nameError: '',
     };
   },
   methods: {
     ...mapMutations({
-      addFunctionalNode: "workflowModule/addFunctionalNode",
-      updateFunctionalNode: "workflowModule/updateFunctionalNode",
+      addFunctionalNode: 'workflowModule/addFunctionalNode',
+      updateFunctionalNode: 'workflowModule/updateFunctionalNode',
     }),
     update() {
       this.validateName();
     },
     validateName() {
-      this.nameError = this.name ? "" : "Name is required";
+      this.nameError = this.name ? '' : 'Name is required';
     },
     AddParameter() {
       const variable = new Variable();
@@ -158,16 +158,16 @@ export default {
       this.errors = [];
       this.validateName();
       
-      if (this.name === "") {
-        this.errors.push(new ErrorMessage("Name is required.", "ERROR"));
+      if (this.name === '') {
+        this.errors.push(new ErrorMessage('Name is required.', 'ERROR'));
       }
-      if (this.transform === "") {
+      if (this.transform === '') {
         this.errors.push(
-          new ErrorMessage("Transform function is required.", "ERROR")
+          new ErrorMessage('Transform function is required.', 'ERROR')
         );
       }
       this.parameters.forEach((param, index) => {
-        this.errors = this.errors.concat(param.validation("Parameter", index + 1));
+        this.errors = this.errors.concat(param.validation('Parameter', index + 1));
       });
       
       return this.errors.length === 0;
@@ -187,21 +187,21 @@ export default {
       }
       this.isEdit ? this.updateFunctionalNode(functionalNode) : this.addFunctionalNode(functionalNode);
 
-      this.name = "";
-      this.description = "";
+      this.name = '';
+      this.description = '';
       this.parameters = [];
-      this.transform = "";
-      this.nameError = "";
-      this.$emit("close");
+      this.transform = '';
+      this.nameError = '';
+      this.$emit('close');
     },
     cancel() {
-      this.name = "";
-      this.description = "";
+      this.name = '';
+      this.description = '';
       this.parameters = [];
-      this.transform = "";
-      this.nameError = "";
+      this.transform = '';
+      this.nameError = '';
       this.errors = [];
-      this.$emit("close");
+      this.$emit('close');
     },
   },
   created() {
@@ -209,7 +209,7 @@ export default {
       this.name = this.node.name;
       this.description = this.node.description;
       this.parameters = this.node.parameters;
-      this.transform = this.node.transform || "";
+      this.transform = this.node.transform || '';
     }
   },
 };

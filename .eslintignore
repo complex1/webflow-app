@@ -1,0 +1,19 @@
+# Dependency directories
+**/node_modules
+
+# Build directories
+**/dist
+**/build
+**/lib
+**/coverage
+
+# Specific files
+**/*.min.js
+**/monaco/**
+
+# Data files
+**/data
+
+# Public assets
+**/public/assets
+**/public/monaco

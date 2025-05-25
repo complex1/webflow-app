@@ -66,15 +66,15 @@
 </template>
 
 <script lang="ts">
-import { mapState } from "vuex";
-import { Workflow } from "../../../classes/Workflow";
-import statusChip from "../../common/statusChip.vue";
-import NodeHeader from "./nodeHeader.vue";
-import ConnectionHandel from "./connectionHandel.vue";
-import NodeState from "./nodeState.vue";
-import VariableNode from "./variableNode.vue";
-import HttpNode from "../../../classes/HttpNode";
-import NodeResponse from "./nodeResponse.vue";
+import { mapState } from 'vuex';
+import { Workflow } from '../../../classes/Workflow';
+import statusChip from '../../common/statusChip.vue';
+import NodeHeader from './nodeHeader.vue';
+import ConnectionHandel from './connectionHandel.vue';
+import NodeState from './nodeState.vue';
+import VariableNode from './variableNode.vue';
+import HttpNode from '../../../classes/HttpNode';
+import NodeResponse from './nodeResponse.vue';
 
 export default {
   components: {
@@ -85,7 +85,7 @@ export default {
     NodeHeader,
     NodeResponse,
   },
-  name: "HttpNode",
+  name: 'HttpNode',
   props: {
     id: {
       type: String,
@@ -97,14 +97,15 @@ export default {
   },
   computed: {
     ...mapState({
-      workflow: (state): Workflow => state.workflowModule.workflow,
+      workflow: (state: any): Workflow => state.workflowModule.workflow as Workflow,
     }),
-    nodeData(): HttpNode {
+    nodeData(): HttpNode | null {
+      if (!this.workflow) return null;
       return this.workflow.getNode(this.id);
     },
   },
   methods: {
-    getMethodClass(method) {
+    getMethodClass(method: string): string {
       switch (method) {
         case 'GET': return 'method-get';
         case 'POST': return 'method-post';

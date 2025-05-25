@@ -22,22 +22,22 @@
 import UserAvatar from './userAvatar.vue';
 
 export default {
-  name: "navbarComponent",
+  name: 'navbarComponent',
   components: {
     UserAvatar,
   },
   data() {
     return {
       showUserDropdown: false,
-      username: localStorage.getItem("username") || null,
+      username: localStorage.getItem('username') || null,
     };
   },
   mounted() {
     // Close dropdown when clicking outside
-    document.addEventListener("click", this.handleOutsideClick);
+    document.addEventListener('click', this.handleOutsideClick);
   },
   beforeUnmount() {
-    document.removeEventListener("click", this.handleOutsideClick);
+    document.removeEventListener('click', this.handleOutsideClick);
   },
   methods: {
     toggleUserDropdown() {
@@ -49,12 +49,12 @@ export default {
       }
     },
     createNewWorkflow() {
-      this.$router.push("/playground");
+      this.$router.push('/playground');
     },
     logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      this.$router.push("/login");
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      this.$router.push('/login');
     },
   },
 };

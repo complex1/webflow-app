@@ -1,5 +1,5 @@
-import { createStore } from "vuex";
-import workflowModule from "./workflowModule";
+import { createStore } from 'vuex';
+import workflowModule from './workflowModule';
 interface State {
   user: {
     id: string | null;
@@ -16,10 +16,10 @@ const store = createStore<State>({
   state: {
     user: {
       id: null,
-      name: "",
-      email: "",
-      avatar: "",
-      token: "",
+      name: '',
+      email: '',
+      avatar: '',
+      token: '',
     },
     isAuthenticated: false,
     isLoading: false,
@@ -31,10 +31,10 @@ const store = createStore<State>({
     clearUser(state) {
       state.user = {
         id: null,
-        name: "",
-        email: "",
-        avatar: "",
-        token: "",
+        name: '',
+        email: '',
+        avatar: '',
+        token: '',
       };
     },
     setAuthentication(state, isAuthenticated) {

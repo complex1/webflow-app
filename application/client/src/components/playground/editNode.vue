@@ -17,13 +17,13 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 import drawer from '../common/drawer.vue';
 import FunctionalNodeForm from './functionalNodeForm.vue';
 import HttpNodeForm from './httpNodeForm.vue';
 export default {
   components: { drawer, HttpNodeForm, FunctionalNodeForm },
-  name: "editNodeComponent",
+  name: 'editNodeComponent',
   props: {
     id: {
       type: String,
@@ -42,10 +42,10 @@ export default {
       workflow: (state) => state.workflowModule.workflow,
     }),
     isFunctional() {
-      return this.nodeData.type === "FUNCTIONAL";
+      return this.nodeData.type === 'FUNCTIONAL';
     },
     isHttp() {
-      return this.nodeData.type === "HTTP";
+      return this.nodeData.type === 'HTTP';
     },
     nodeData() {
       return this.workflow.getNode(this.id);
@@ -54,7 +54,7 @@ export default {
   watch: {},
   methods: {
     onClose () {
-      this.$emit("close");
+      this.$emit('close');
     },
   },
   created() {},

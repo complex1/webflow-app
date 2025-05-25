@@ -50,7 +50,7 @@ import { useRouter } from 'vue-router';
 import { WebflowCardProps, WebflowCardEmits } from './types';
 
 export default defineComponent({
-  name: "WebflowCard",
+  name: 'WebflowCard',
   props: {
     webflow: {
       type: Object as PropType<WebflowCardProps>,

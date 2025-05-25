@@ -199,17 +199,17 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import Variable from "../../classes/Variable";
-import ExpensionPanel from "../common/expensionPanel.vue";
-import variableForm from "./variableForm.vue";
-import HttpNode from "../../classes/HttpNode";
-import ErrorMessage from "../../classes/ErrorMessage";
-import validationErrors from "../common/validationError.vue";
-import wfaInput from "../common/wfa-input.vue";
+import { mapMutations } from 'vuex';
+import Variable from '../../classes/Variable';
+import ExpensionPanel from '../common/expensionPanel.vue';
+import variableForm from './variableForm.vue';
+import HttpNode from '../../classes/HttpNode';
+import ErrorMessage from '../../classes/ErrorMessage';
+import validationErrors from '../common/validationError.vue';
+import wfaInput from '../common/wfa-input.vue';
 
 export default {
-  name: "HttpNodeForm",
+  name: 'HttpNodeForm',
   props: {
     node: {
       type: HttpNode,
@@ -224,53 +224,53 @@ export default {
   },
   data: function () {
     return {
-      name: "",
-      description: "",
-      baseUrl: "",
-      url: "",
+      name: '',
+      description: '',
+      baseUrl: '',
+      url: '',
       pathParams: [],
       queryParams: [],
       headers: [],
       body: null,
-      method: "GET",
+      method: 'GET',
       errors: [],
-      nameError: "",
-      baseUrlError: "",
-      urlError: "",
+      nameError: '',
+      baseUrlError: '',
+      urlError: '',
     };
   },
   methods: {
     ...mapMutations({
-      addHttpNode: "workflowModule/addHttpNode",
+      addHttpNode: 'workflowModule/addHttpNode',
     }),
     update() {
       this.validateFields();
     },
     validateFields() {
-      this.nameError = this.name ? "" : "Name is required";
-      this.baseUrlError = this.baseUrl ? "" : "Base URL is required";
-      this.urlError = this.url ? "" : "URL is required";
+      this.nameError = this.name ? '' : 'Name is required';
+      this.baseUrlError = this.baseUrl ? '' : 'Base URL is required';
+      this.urlError = this.url ? '' : 'URL is required';
 
       // Validate URL format
       if (this.baseUrl && !this.isValidUrl(this.baseUrl)) {
-        this.baseUrlError = "Invalid URL format";
+        this.baseUrlError = 'Invalid URL format';
       }
     },
     isValidUrl(url) {
       try {
         // Check if it's a valid URL (supports http/https protocols)
-        return url.startsWith("http://") || url.startsWith("https://");
+        return url.startsWith('http://') || url.startsWith('https://');
       } catch (e) {
         return false;
       }
     },
     onChangeMethod() {
-      if (this.method === "GET" || this.method === "DELETE") {
+      if (this.method === 'GET' || this.method === 'DELETE') {
         this.body = null;
       } else {
         this.body = new Variable();
-        this.body.name = "body";
-        this.body.type = "object";
+        this.body.name = 'body';
+        this.body.type = 'object';
       }
     },
     onUpdateBody(variable) {
@@ -331,40 +331,40 @@ export default {
       this.validateFields();
 
       if (!this.name) {
-        this.errors.push(new ErrorMessage("Name is required", "ERROR"));
+        this.errors.push(new ErrorMessage('Name is required', 'ERROR'));
       }
       if (!this.baseUrl) {
-        this.errors.push(new ErrorMessage("Base URL is required", "ERROR"));
+        this.errors.push(new ErrorMessage('Base URL is required', 'ERROR'));
       }
       if (!this.url) {
-        this.errors.push(new ErrorMessage("URL is required", "ERROR"));
+        this.errors.push(new ErrorMessage('URL is required', 'ERROR'));
       }
       if (this.baseUrl && !this.isValidUrl(this.baseUrl)) {
-        this.errors.push(new ErrorMessage("Invalid Base URL format", "ERROR"));
+        this.errors.push(new ErrorMessage('Invalid Base URL format', 'ERROR'));
       }
 
       if (
-        this.method === "POST" ||
-        this.method === "PUT" ||
-        this.method === "PATCH"
+        this.method === 'POST' ||
+        this.method === 'PUT' ||
+        this.method === 'PATCH'
       ) {
         if (this.body) {
-          this.errors = this.errors.concat(this.body.validation("Body") || []);
+          this.errors = this.errors.concat(this.body.validation('Body') || []);
         }
       }
       this.pathParams.forEach((item, index) => {
         this.errors = this.errors.concat(
-          item.validation("Path Parameter", index + 1) || []
+          item.validation('Path Parameter', index + 1) || []
         );
       });
       this.queryParams.forEach((item, index) => {
         this.errors = this.errors.concat(
-          item.validation("Query Parameter", index + 1) || []
+          item.validation('Query Parameter', index + 1) || []
         );
       });
       this.headers.forEach((item, index) => {
         this.errors = this.errors.concat(
-          item.validation("Header", index + 1) || []
+          item.validation('Header', index + 1) || []
         );
       });
 
@@ -388,26 +388,26 @@ export default {
       this.addHttpNode(httpNode);
 
       this.resetForm();
-      this.$emit("close");
+      this.$emit('close');
     },
     cancel() {
       this.resetForm();
-      this.$emit("close");
+      this.$emit('close');
     },
     resetForm() {
-      this.name = "";
-      this.description = "";
-      this.baseUrl = "";
-      this.url = "";
-      this.method = "GET";
+      this.name = '';
+      this.description = '';
+      this.baseUrl = '';
+      this.url = '';
+      this.method = 'GET';
       this.pathParams = [];
       this.queryParams = [];
       this.headers = [];
       this.body = null;
       this.errors = [];
-      this.nameError = "";
-      this.baseUrlError = "";
-      this.urlError = "";
+      this.nameError = '';
+      this.baseUrlError = '';
+      this.urlError = '';
     },
   },
 };

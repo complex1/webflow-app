@@ -45,12 +45,12 @@
   </div>
 </template>
 <script>
-import Popover from "../../common/popover.vue";
-import statusChip from "../../common/statusChip.vue";
-import { DeleteConfirmationPopup } from "../../../lib/alertPopup";
+import Popover from '../../common/popover.vue';
+import statusChip from '../../common/statusChip.vue';
+import { DeleteConfirmationPopup } from '../../../lib/alertPopup';
 export default {
   components: { statusChip, Popover },
-  name: "nodeHeaderComponent",
+  name: 'nodeHeaderComponent',
   props: {
     nodeData: {
       type: Object,
@@ -80,7 +80,7 @@ export default {
     deleteNode() {
       this.$refs.popover.close();
       DeleteConfirmationPopup(
-        "Are you sure you want to delete this node?"
+        'Are you sure you want to delete this node?'
       ).then((result) => {
         if (result.isConfirmed) {
           this.$emit('delete-node', this.nodeData.id);

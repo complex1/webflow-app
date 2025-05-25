@@ -8,4 +8,4 @@ export const GOOGLE_CLIENT_ID = '816845651416-a9hlo52qv0dr86d0h3h7738oivvunmfm.a
 export const AUTH_CONFIG = {
   // Enable/disable Google authentication
   enableGoogleAuth: true,
-}
+};

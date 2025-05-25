@@ -35,7 +35,7 @@ export default class HttpNode extends Node {
     }
 
     getUrl(globalStore: Record<string, any>): string {
-        let path = this.pathParams.reduce((acc, param) => {
+        const path = this.pathParams.reduce((acc, param) => {
             const value = param.get(globalStore);
             return acc.replace(`:${param.name}`, value);
         }, this.url);

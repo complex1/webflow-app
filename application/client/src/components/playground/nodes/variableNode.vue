@@ -41,10 +41,10 @@
 </template>
 
 <script>
-import Variable from "../../../classes/Variable";
-import { Position, Handle } from "@vue-flow/core";
-import Popover from "../../common/popover.vue";
-import JsonEditor from "../../common/code/jsonEditor.vue";
+import Variable from '../../../classes/Variable';
+import { Position, Handle } from '@vue-flow/core';
+import Popover from '../../common/popover.vue';
+import JsonEditor from '../../common/code/jsonEditor.vue';
 import { mapState } from 'vuex';
 export default {
   props: {

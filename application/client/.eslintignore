@@ -1,0 +1,26 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build directories
+dist
+build
+out
+public/monaco
+public/min
+
+# Testing
+coverage
+
+# Editor directories and files
+.vscode
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*.*

@@ -7,13 +7,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import ThemeToggle from "./components/common/themeToggle.vue";
-import toast from "./lib/toast.vue";
+import { defineComponent } from 'vue';
+import ThemeToggle from './components/common/themeToggle.vue';
+import toast from './lib/toast.vue';
 
 export default defineComponent({
   components: { toast, ThemeToggle },
-  name: "App",
+  name: 'App',
 });
 </script>
 

@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import toastSystem, { Toast } from './toast';
+import toastSystem from './toast';
 
 export default defineComponent({
   name: 'ToastNotifications',

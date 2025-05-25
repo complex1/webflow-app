@@ -95,13 +95,13 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType, watch } from 'vue';
-import Variable from "../../classes/Variable";
-import jsonEditor from "../common/code/jsonEditor.vue";
-import wfaInput from "../common/wfa-input.vue";
+import Variable from '../../classes/Variable';
+import jsonEditor from '../common/code/jsonEditor.vue';
+import wfaInput from '../common/wfa-input.vue';
 
 export default defineComponent({
   components: { jsonEditor, wfaInput },
-  name: "VariableForm",
+  name: 'VariableForm',
   props: {
     variable: {
       type: Object as PropType<Variable>,
@@ -147,19 +147,19 @@ export default defineComponent({
     
     const typeChange = () => {
       // Reset default value based on selected type
-      if (type.value === "string") {
-        defaultValue.value = "";
-      } else if (type.value === "number") {
+      if (type.value === 'string') {
+        defaultValue.value = '';
+      } else if (type.value === 'number') {
         defaultValue.value = 0;
-      } else if (type.value === "boolean") {
+      } else if (type.value === 'boolean') {
         defaultValue.value = false;
-      } else if (type.value === "object") {
+      } else if (type.value === 'object') {
         defaultValue.value = {};
-      } else if (type.value === "array") {
+      } else if (type.value === 'array') {
         defaultValue.value = [];
-      } else if (type.value === "null") {
+      } else if (type.value === 'null') {
         defaultValue.value = null;
-      } else if (type.value === "undefined") {
+      } else if (type.value === 'undefined') {
         defaultValue.value = undefined;
       }
       

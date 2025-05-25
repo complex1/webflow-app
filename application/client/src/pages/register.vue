@@ -68,8 +68,8 @@
 import { defineComponent, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import authLayout from '../components/common/authLayout.vue';
-import { UserService } from "../services/user.service";
-import wfaInput from "../components/common/wfa-input.vue";
+import { UserService } from '../services/user.service';
+import wfaInput from '../components/common/wfa-input.vue';
 import { error } from '../lib/toast';
 
 interface User {
@@ -88,22 +88,22 @@ interface RegisterFormErrors {
 
 export default defineComponent({
   components: { authLayout, wfaInput },
-  name: "RegisterPage",
+  name: 'RegisterPage',
   setup() {
     const router = useRouter();
     
     const user = reactive<User>({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     });
     
     const errors = reactive<RegisterFormErrors>({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     });
     
     const isSubmitting = ref<boolean>(false);
@@ -112,39 +112,39 @@ export default defineComponent({
       let isValid = true;
       
       // Reset errors
-      errors.name = "";
-      errors.email = "";
-      errors.password = "";
-      errors.confirmPassword = "";
+      errors.name = '';
+      errors.email = '';
+      errors.password = '';
+      errors.confirmPassword = '';
 
       // Validate name
       if (!user.name.trim()) {
-        errors.name = "Name is required";
+        errors.name = 'Name is required';
         isValid = false;
       }
 
       // Validate email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!user.email.trim()) {
-        errors.email = "Email is required";
+        errors.email = 'Email is required';
         isValid = false;
       } else if (!emailRegex.test(user.email)) {
-        errors.email = "Please enter a valid email address";
+        errors.email = 'Please enter a valid email address';
         isValid = false;
       }
 
       // Validate password
       if (!user.password) {
-        errors.password = "Password is required";
+        errors.password = 'Password is required';
         isValid = false;
       } else if (user.password.length < 6) {
-        errors.password = "Password must be at least 6 characters";
+        errors.password = 'Password must be at least 6 characters';
         isValid = false;
       }
 
       // Validate confirm password
       if (user.password !== user.confirmPassword) {
-        errors.confirmPassword = "Passwords do not match";
+        errors.confirmPassword = 'Passwords do not match';
         isValid = false;
       }
 
@@ -163,9 +163,9 @@ export default defineComponent({
       try {
         await userService.register(user.name, user.email, user.password, '');
         // On successful registration
-        router.push("/login");
+        router.push('/login');
       } catch (e: any) {
-        error(e.message || "Registration failed. Please try again.");
+        error(e.message || 'Registration failed. Please try again.');
       } finally {
         isSubmitting.value = false;
       }

@@ -1,9 +1,9 @@
-import Edge, { EdgeType } from "../classes/Edge";
-import FunctionalNode from "../classes/FunctionalNode";
-import HttpNode from "../classes/HttpNode";
-import { Workflow } from "../classes/Workflow";
-import type { IEdge, INode } from "../model";
-import { warning } from "../lib/toast";
+import Edge, { EdgeType } from '../classes/Edge';
+import FunctionalNode from '../classes/FunctionalNode';
+import HttpNode from '../classes/HttpNode';
+import { Workflow } from '../classes/Workflow';
+import type { IEdge, INode } from '../model';
+import { warning } from '../lib/toast';
 export interface WorkflowState {
   workflow: Workflow;
   viewNodes: INode[];
@@ -15,9 +15,9 @@ export interface WorkflowState {
 export default {
   namespaced: true,
   state: {
-    workflowId: "",
-    workflowName: "Untitled",
-    workflowDescription: "",
+    workflowId: '',
+    workflowName: 'Untitled',
+    workflowDescription: '',
     workflow: new Workflow(),
     viewNodes: [] as INode[], // initialized viewNodes with an empty array
     viewEdges: [] as IEdge[], // initialized viewEdges with an empty array
@@ -28,9 +28,9 @@ export default {
       state.workflow = new Workflow();
       state.viewNodes = [];
       state.viewEdges = [];
-      state.workflowId = "";
-      state.workflowName = "Untitled";
-      state.workflowDescription = "";
+      state.workflowId = '';
+      state.workflowName = 'Untitled';
+      state.workflowDescription = '';
     },
     executeWorkflow(state: WorkflowState) {
       const { workflow } = state;
@@ -114,25 +114,25 @@ export default {
       } = edge;
 
       if(source === target) {
-        warning(`Edge source and target cannot connect to the same node.`);
+        warning('Edge source and target cannot connect to the same node.');
         return;
       }
       if(!sourceHandle || !targetHandle) {
-        warning(`Edge must have both sourceHandle and targetHandle defined.`);
+        warning('Edge must have both sourceHandle and targetHandle defined.');
         return;
       }
       if (source === sourceHandle && target !== targetHandle) {
-        warning(`Flow nodes cannot connect to data nodes.`);
+        warning('Flow nodes cannot connect to data nodes.');
         return;
       }
       if (target === targetHandle && source !== sourceHandle) {
-        warning(`Data nodes cannot connect to flow nodes.`);
+        warning('Data nodes cannot connect to flow nodes.');
         return;
       }
 
-      const edgeObject = new Edge()
-      edgeObject.from = sourceHandle ?? "";
-      edgeObject.to = targetHandle ?? "";
+      const edgeObject = new Edge();
+      edgeObject.from = sourceHandle ?? '';
+      edgeObject.to = targetHandle ?? '';
       edgeObject.type = target === targetHandle ? EdgeType.CONTROL_FLOW : EdgeType.DATA_TRANSFER;
       
       const viewEdges: IEdge = {

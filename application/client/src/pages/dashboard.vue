@@ -169,18 +169,18 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { WebflowService } from "../services/webflow.service";
-import drawer from "../components/common/drawer.vue";
-import navbar from "../components/common/navbar.vue";
-import wfaInput from "../components/common/wfa-input.vue";
-import webflowCard from "../components/dashboard/webflow-card.vue";
-import type { WebflowCardProps } from "../components/dashboard/types";
+import { WebflowService } from '../services/webflow.service';
+import drawer from '../components/common/drawer.vue';
+import navbar from '../components/common/navbar.vue';
+import wfaInput from '../components/common/wfa-input.vue';
+import webflowCard from '../components/dashboard/webflow-card.vue';
+import type { WebflowCardProps } from '../components/dashboard/types';
 import type { WebflowForm } from './types';
 import { success, error } from '../lib/toast';
 import { importWorkflowService } from '../services/importExport.service';
 
 export default defineComponent({
-  name: "DashboardPage",
+  name: 'DashboardPage',
   components: {
     drawer,
     navbar,
@@ -195,18 +195,18 @@ export default defineComponent({
     const webflows = ref<WebflowCardProps[]>([]);
     const filteredWebflows = ref<WebflowCardProps[]>([]);
     const loading = ref(true);
-    const searchQuery = ref("");
-    const selectedTag = ref("");
+    const searchQuery = ref('');
+    const selectedTag = ref('');
     const drawerOpen = ref(false);
     const isEditing = ref(false);
     const webflowForm = ref<WebflowForm>({
-      name: "",
-      description: "",
-      icon: "pi pi-sitemap",
+      name: '',
+      description: '',
+      icon: 'pi pi-sitemap',
       tags: [],
     });
-    const nameError = ref("");
-    const tagInput = ref("");
+    const nameError = ref('');
+    const tagInput = ref('');
     const showDeleteConfirm = ref(false);
     const webflowToDelete = ref<WebflowCardProps | null>(null);
     
@@ -224,7 +224,7 @@ export default defineComponent({
     
     // Methods
     const askToImportWebflow = () => {
-      const fileInput = document.getElementById("ImportWebflow") as HTMLInputElement;
+      const fileInput = document.getElementById('ImportWebflow') as HTMLInputElement;
       if (fileInput) {
         fileInput.click();
       }
@@ -243,13 +243,12 @@ export default defineComponent({
             'name' in newWorkflow
           ) {
             fetchWebflows();
-            success("Webflow imported successfully!");
+            success('Webflow imported successfully!');
           } else {
-            error("Imported file is not a valid webflow.");
+            error('Imported file is not a valid webflow.');
           }
-        } catch (error) {
-          console.error("Error importing webflow:", error);
-          error("Error importing webflow. Please try again.");
+        } catch {
+          error('Error importing webflow. Please try again.');
         }
       }
     };
@@ -261,7 +260,7 @@ export default defineComponent({
         webflows.value = Array.isArray(result) ? result : [];
         filteredWebflows.value = [...webflows.value];
       } catch (error: any) {
-        console.error("Error fetching webflows:", error);
+        console.error('Error fetching webflows:', error);
         webflows.value = [];
         filteredWebflows.value = [];
 
@@ -271,7 +270,7 @@ export default defineComponent({
           (error.response.status === 401 || error.response.status === 403)
         ) {
           // Redirect to login
-          router.push("/login");
+          router.push('/login');
         }
       } finally {
         loading.value = false;
@@ -300,12 +299,12 @@ export default defineComponent({
     const openCreateDrawer = () => {
       isEditing.value = false;
       webflowForm.value = {
-        name: "",
-        description: "",
-        icon: "pi pi-sitemap",
+        name: '',
+        description: '',
+        icon: 'pi pi-sitemap',
         tags: [],
       };
-      nameError.value = "";
+      nameError.value = '';
       drawerOpen.value = true;
     };
     
@@ -314,17 +313,17 @@ export default defineComponent({
       webflowForm.value = {
         id: webflow.id,
         name: webflow.name,
-        description: webflow.description || "",
-        icon: webflow.icon || "pi pi-sitemap",
+        description: webflow.description || '',
+        icon: webflow.icon || 'pi pi-sitemap',
         tags: webflow.tags ? [...webflow.tags] : [],
       };
-      nameError.value = "";
+      nameError.value = '';
       drawerOpen.value = true;
     };
     
     const closeDrawer = () => {
       drawerOpen.value = false;
-      nameError.value = "";
+      nameError.value = '';
     };
     
     const addTag = () => {
@@ -333,7 +332,7 @@ export default defineComponent({
         !webflowForm.value.tags.includes(tagInput.value.trim())
       ) {
         webflowForm.value.tags.push(tagInput.value.trim());
-        tagInput.value = "";
+        tagInput.value = '';
       }
     };
     
@@ -344,16 +343,16 @@ export default defineComponent({
     const saveWebflow = async () => {
       try {
         // Reset error message
-        nameError.value = "";
+        nameError.value = '';
 
         // Validate name
         if (!webflowForm.value.name) {
-          nameError.value = "Name is required";
+          nameError.value = 'Name is required';
           return;
         }
 
         if (webflowForm.value.name.length < 3) {
-          nameError.value = "Name must be at least 3 characters long";
+          nameError.value = 'Name must be at least 3 characters long';
           return;
         }
 
@@ -367,7 +366,7 @@ export default defineComponent({
           });
 
           // Show success message
-          success("Webflow updated successfully!");
+          success('Webflow updated successfully!');
         } else {
           // Create new webflow
           await webflowService.createWebflow({
@@ -378,26 +377,26 @@ export default defineComponent({
           });
 
           // Show success message
-          success("Webflow created successfully!");
+          success('Webflow created successfully!');
         }
 
         closeDrawer();
         await fetchWebflows();
       } catch (e: any) {
-        console.error("Error saving webflow:", e);
+        console.error('Error saving webflow:', e);
 
         // Display appropriate error message
         if (e.response) {
           if (e.response.status === 401 || e.response.status === 403) {
-            error("Session expired. Please log in again.");
-            router.push("/login");
+            error('Session expired. Please log in again.');
+            router.push('/login');
           } else if (e.response.data && e.response.data.message) {
             error(`Error: ${e.response.data.message}`);
           } else {
-            error("Error saving webflow. Please try again.");
+            error('Error saving webflow. Please try again.');
           }
         } else {
-          error("Network error. Please check your connection and try again.");
+          error('Network error. Please check your connection and try again.');
         }
       }
     };
@@ -414,26 +413,26 @@ export default defineComponent({
         await webflowService.deleteWebflow(webflowToDelete.value.id);
 
         // Show success message
-        success("Webflow deleted successfully!");
+        success('Webflow deleted successfully!');
 
         showDeleteConfirm.value = false;
         webflowToDelete.value = null;
         await fetchWebflows();
       } catch (e: any) {
-        console.error("Error deleting webflow:", e);
+        console.error('Error deleting webflow:', e);
 
         // Display appropriate error message
         if (e.response) {
           if (e.response.status === 401 || e.response.status === 403) {
-            error("Session expired. Please log in again.");
-            router.push("/login");
+            error('Session expired. Please log in again.');
+            router.push('/login');
           } else if (e.response.data && e.response.data.message) {
             error(`Error: ${e.response.data.message}`);
           } else {
-            error("Error deleting webflow. Please try again.");
+            error('Error deleting webflow. Please try again.');
           }
         } else {
-          error("Network error. Please check your connection and try again.");
+          error('Network error. Please check your connection and try again.');
         }
       }
     };

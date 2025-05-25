@@ -13,7 +13,7 @@ import { defineComponent } from 'vue';
 import type { AuthLayoutProps } from './types';
 
 export default defineComponent({
-  name: "AuthLayout",
+  name: 'AuthLayout',
   props: {
     title: {
       type: String,

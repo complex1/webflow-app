@@ -28,23 +28,23 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, onBeforeUnmount, PropType, watch } from 'vue';
-import { MonacoEditor } from "./monaco";
+import { MonacoEditor } from './monaco';
 
 export default defineComponent({
-  name: "MonacoEditor",
+  name: 'MonacoEditor',
   props: {
     value: {
       type: String,
       required: true,
-      default: "",
+      default: '',
     },
     language: {
       type: String,
-      default: "javascript",
+      default: 'javascript',
     },
     theme: {
       type: String,
-      default: "vs-dark",
+      default: 'vs-dark',
     },
     options: {
       type: Object as PropType<Record<string, any>>,
@@ -52,7 +52,7 @@ export default defineComponent({
     },
     height: {
       type: String,
-      default: "100%",
+      default: '100%',
     },
     readOnly: {
       type: Boolean,
@@ -64,7 +64,7 @@ export default defineComponent({
     // Use a regular variable instead of a reactive reference for the editor instance
     let monacoInstance: MonacoEditor | null = null;
     const editorContainer = ref<HTMLElement | null>(null);
-    const storedTheme = localStorage.getItem("monaco-theme") || "vs-dark";
+    const storedTheme = localStorage.getItem('monaco-theme') || 'vs-dark';
     const editorTheme = ref<string>(props.theme || storedTheme);
     const fullscreen = ref<boolean>(false);
     
@@ -83,15 +83,15 @@ export default defineComponent({
     
     const headerStyle = computed(() => {
       return {
-        backgroundColor: editorTheme.value === "vs-dark" ? "#1e1e1e" : "#ffffff",
-        color: editorTheme.value === "vs-dark" ? "#ffffff" : "#000000",
+        backgroundColor: editorTheme.value === 'vs-dark' ? '#1e1e1e' : '#ffffff',
+        color: editorTheme.value === 'vs-dark' ? '#ffffff' : '#000000',
       };
     });
     
     const changeTheme = (e: Event) => {
       const target = e.target as HTMLInputElement;
-      editorTheme.value = target.checked ? "vs-dark" : "vs";
-      localStorage.setItem("monaco-theme", editorTheme.value);
+      editorTheme.value = target.checked ? 'vs-dark' : 'vs';
+      localStorage.setItem('monaco-theme', editorTheme.value);
       if (monacoInstance) {
         monacoInstance.changeTheme(editorTheme.value);
       }
@@ -106,7 +106,7 @@ export default defineComponent({
               const cleanValue = String(value);
               // Use setTimeout to avoid reactivity issues
               setTimeout(() => {
-                emit("onChange", cleanValue);
+                emit('onChange', cleanValue);
               }, 0);
             } catch (error) {
               console.error('Error in Monaco editor change handler:', error);

@@ -35,9 +35,9 @@
   </popover>
 </template>
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
-import { useStore } from "vuex";
-import popover from "./popover.vue";
+import { computed, defineComponent, ref } from 'vue';
+import { useStore } from 'vuex';
+import popover from './popover.vue';
 
 export default defineComponent({
   components: { popover },
@@ -54,20 +54,20 @@ export default defineComponent({
       return user.value.avatar;
     });
     const userName = computed(() => {
-      return user.value.name || user.value.email || "User";
+      return user.value.name || user.value.email || 'User';
     });
     const userInitials = computed(() => {
       if (user.value.name) {
         return user.value.name
-          .split(" ")
+          .split(' ')
           .map((part) => part.charAt(0).toUpperCase())
-          .join("");
+          .join('');
       }
-      return user.value.email ? user.value.email.charAt(0).toUpperCase() : "U";
+      return user.value.email ? user.value.email.charAt(0).toUpperCase() : 'U';
     });
 
     const logout = () => {
-      window.location.href = "/login";
+      window.location.href = '/login';
     };
 
     return {

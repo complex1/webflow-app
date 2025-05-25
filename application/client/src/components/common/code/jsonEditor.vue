@@ -12,11 +12,11 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType, onMounted } from 'vue';
-import monacoEditor from "./monacoEditor.vue";
+import monacoEditor from './monacoEditor.vue';
 
 export default defineComponent({
   components: { monacoEditor },
-  name: "JsonEditor",
+  name: 'JsonEditor',
   props: {
     modelValue: {
       type: [String, Object, Array] as PropType<string | object | any[]>,
@@ -25,7 +25,7 @@ export default defineComponent({
     },
     height: {
       type: String,
-      default: "100%",
+      default: '100%',
     },
     readOnly: {
       type: Boolean,
@@ -59,8 +59,8 @@ export default defineComponent({
       try {
         jsonString.value = value;
         const parsedValue = JSON.parse(value);
-        emit("update:modelValue", parsedValue);
-        emit("change", parsedValue);
+        emit('update:modelValue', parsedValue);
+        emit('change', parsedValue);
       } catch (e) {
         // Silent error handling for invalid JSON
       }

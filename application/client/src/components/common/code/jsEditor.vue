@@ -13,11 +13,11 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch, PropType } from 'vue';
-import monacoEditor from "./monacoEditor.vue";
+import monacoEditor from './monacoEditor.vue';
 
 export default defineComponent({
   components: { monacoEditor },
-  name: "JsEditor",
+  name: 'JsEditor',
   props: {
     modelValue: {
       type: String as PropType<string>,
@@ -26,7 +26,7 @@ export default defineComponent({
     },
     height: {
       type: String,
-      default: "100%",
+      default: '100%',
     },
     readOnly: {
       type: Boolean,
@@ -46,7 +46,7 @@ export default defineComponent({
         
         // Use setTimeout to avoid potential reactivity issues
         setTimeout(() => {
-          emit("update:modelValue", cleanValue);
+          emit('update:modelValue', cleanValue);
         }, 0);
       } catch (error) {
         console.error('Error in jsEditor change handler:', error);

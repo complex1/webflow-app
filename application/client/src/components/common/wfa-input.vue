@@ -65,7 +65,7 @@ import { defineComponent, PropType } from 'vue';
 type InputType = 'text' | 'email' | 'password' | 'number' | 'textarea' | 'select' | 'date' | 'tel' | 'url';
 
 export default defineComponent({
-  name: "WfaInput",
+  name: 'WfaInput',
   props: {
     id: {
       type: String,
@@ -73,32 +73,32 @@ export default defineComponent({
     },
     label: {
       type: String,
-      default: ""
+      default: ''
     },
     modelValue: {
       type: [String, Number],
-      default: ""
+      default: ''
     },
     type: {
       type: String as PropType<InputType>,
-      default: "text",
+      default: 'text',
       validator: (value: string): boolean => {
         return [
-          "text",
-          "email",
-          "password",
-          "number",
-          "textarea",
-          "select",
-          "date",
-          "tel",
-          "url",
+          'text',
+          'email',
+          'password',
+          'number',
+          'textarea',
+          'select',
+          'date',
+          'tel',
+          'url',
         ].includes(value);
       }
     },
     placeholder: {
       type: String,
-      default: ""
+      default: ''
     },
     disabled: {
       type: Boolean,
@@ -126,21 +126,21 @@ export default defineComponent({
     },
     error: {
       type: String,
-      default: ""
+      default: ''
     }
   },
   emits: ['update:modelValue', 'blur', 'focus'],
-  setup(props, { emit }) {
+  setup(_, { emit }) {
     const updateValue = (event: Event) => {
-      emit("update:modelValue", (event.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement).value);
+      emit('update:modelValue', (event.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement).value);
     };
     
     const onBlur = (event: FocusEvent) => {
-      emit("blur", event);
+      emit('blur', event);
     };
     
     const onFocus = (event: FocusEvent) => {
-      emit("focus", event);
+      emit('focus', event);
     };
     
     return {

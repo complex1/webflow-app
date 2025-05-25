@@ -1,7 +1,7 @@
-import FunctionalNode from "../classes/FunctionalNode";
-import HttpNode from "../classes/HttpNode";
-import { NodeType } from "../classes/Node";
-import type { WorkflowState } from "../store/workflowModule";
+import FunctionalNode from '../classes/FunctionalNode';
+import HttpNode from '../classes/HttpNode';
+import { NodeType } from '../classes/Node';
+import type { WorkflowState } from '../store/workflowModule';
 
 export const getPostBody = (workflowState: WorkflowState) => {
   const { viewNodes, viewEdges, workflow } = workflowState;

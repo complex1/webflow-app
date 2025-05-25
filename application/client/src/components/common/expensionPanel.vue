@@ -26,7 +26,7 @@ import { defineComponent, ref, PropType, onMounted } from 'vue';
 import type { ExpansionPanelProps } from './types';
 
 export default defineComponent({
-  name: "ExpansionPanel",
+  name: 'ExpansionPanel',
   props: {
     title: {
       type: String,
@@ -34,7 +34,7 @@ export default defineComponent({
     },
     maxHeight: {
       type: String,
-      default: "300px"
+      default: '300px'
     },
     isOpen: {
       type: Boolean,

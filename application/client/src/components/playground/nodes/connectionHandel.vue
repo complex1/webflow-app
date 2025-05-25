@@ -40,9 +40,9 @@
 </template>
 
 <script>
-import { Position, Handle } from "@vue-flow/core";
+import { Position, Handle } from '@vue-flow/core';
 export default {
-  name: "ConnectionHandle",
+  name: 'ConnectionHandle',
   props: {
     id: {
       type: String,

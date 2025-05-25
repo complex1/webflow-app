@@ -68,13 +68,13 @@
 </template>
 
 <script>
-import popover from "../../common/popover.vue";
-import NodeState from "./nodeState.vue";
-import { Position, Handle } from "@vue-flow/core";
+import popover from '../../common/popover.vue';
+import NodeState from './nodeState.vue';
+import { Position, Handle } from '@vue-flow/core';
 
 export default {
   components: { popover, NodeState, Handle },
-  name: "NodeResponse",
+  name: 'NodeResponse',
   props: {
     nodeData: {
       type: Object,

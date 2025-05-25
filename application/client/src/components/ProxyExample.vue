@@ -125,7 +125,7 @@ export default {
       sendRequest
     };
   }
-}
+};
 </script>
 
 <style scoped>

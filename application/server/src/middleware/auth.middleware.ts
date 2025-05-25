@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { userService } from "../services/user.service";
-import { tokenUtil } from "../utils/token.util";
+import { Request, Response, NextFunction } from 'express';
+import { userService } from '../services/user.service';
+import { tokenUtil } from '../utils/token.util';
 
 // Extend Express Request to include user
 declare global {
@@ -20,24 +20,24 @@ export const authMiddleware = {
     try {
       // Get token from Authorization header
       const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        res.status(401).json({ message: "Authentication required", errorCode: 'INVALID_TOKEN' });
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        res.status(401).json({ message: 'Authentication required', errorCode: 'INVALID_TOKEN' });
         return;
       }
 
-    const token = authHeader.split(" ")[1];
+    const token = authHeader.split(' ')[1];
 
     // Verify token
     const decoded = tokenUtil.verifyToken(token);
     if (!decoded || !decoded.userId) {
-      res.status(401).json({ message: "Invalid token", errorCode: 'INVALID_TOKEN' });
+      res.status(401).json({ message: 'Invalid token', errorCode: 'INVALID_TOKEN' });
       return;
     }
 
     // Get user from database
     const user = await userService.getUserById(decoded.userId);
     if (!user) {
-      res.status(401).json({ message: "User not found", errorCode: 'INVALID_TOKEN' });
+      res.status(401).json({ message: 'User not found', errorCode: 'INVALID_TOKEN' });
       return;
     }
 
@@ -46,7 +46,7 @@ export const authMiddleware = {
 
     next();
     } catch (error) {
-      res.status(401).json({ message: "Authentication failed", errorCode: 'INVALID_TOKEN' });
+      res.status(401).json({ message: 'Authentication failed', errorCode: 'INVALID_TOKEN' });
       return;
     }
   }

@@ -110,15 +110,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import authLayout from "../components/common/authLayout.vue";
-import { UserService } from "../services/user.service";
-import wfaInput from "../components/common/wfa-input.vue";
-import toggleSwitch from "../components/common/toggle-switch.vue";
-import { googleAuthUtil, GoogleCredentialResponse } from "../utils/google-auth";
-import { verifyGoogleSetup, checkGSIScript } from "../utils/google-auth-verify";
-import { AUTH_CONFIG } from "../config/auth.config";
+import { defineComponent, reactive, ref, onMounted } from 'vue';
+import authLayout from '../components/common/authLayout.vue';
+import { UserService } from '../services/user.service';
+import wfaInput from '../components/common/wfa-input.vue';
+import toggleSwitch from '../components/common/toggle-switch.vue';
+import { googleAuthUtil, GoogleCredentialResponse } from '../utils/google-auth';
+import { verifyGoogleSetup, checkGSIScript } from '../utils/google-auth-verify';
+import { AUTH_CONFIG } from '../config/auth.config';
 
 interface User {
   email: string;
@@ -133,42 +132,40 @@ interface FormErrors {
 
 export default defineComponent({
   components: { authLayout, wfaInput, toggleSwitch },
-  name: "LoginPage",
+  name: 'LoginPage',
   setup() {
-    const router = useRouter();
 
     const user = reactive<User>({
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     });
 
     const errors = reactive<FormErrors>({
-      email: "",
-      password: "",
-      form: "",
+      email: '',
+      password: '',
+      form: '',
     });
 
     const isSubmitting = ref<boolean>(false);
     const isGoogleScriptLoaded = ref<boolean>(false);
     const isGoogleLoading = ref<boolean>(false);
-    const googleAuth = ref<any>(null);
     const enableGoogleAuth = ref<boolean>(AUTH_CONFIG.enableGoogleAuth);
 
     const validateForm = (): boolean => {
       let isValid = true;
-      errors.email = "";
-      errors.password = "";
-      errors.form = "";
+      errors.email = '';
+      errors.password = '';
+      errors.form = '';
 
       // Validate email
       if (!user.email.trim()) {
-        errors.email = "Email is required";
+        errors.email = 'Email is required';
         isValid = false;
       }
 
       // Validate password
       if (!user.password) {
-        errors.password = "Password is required";
+        errors.password = 'Password is required';
         isValid = false;
       }
 
@@ -191,15 +188,15 @@ export default defineComponent({
           user.password
         )) as { token: string };
         // Handle successful login
-        console.log("Login successful:", response);
+        console.log('Login successful:', response);
         // Store token in localStorage
-        localStorage.setItem("token", response.token);
+        localStorage.setItem('token', response.token);
         // Redirect to dashboard after successful login
-        window.location.href = '/dashboard'
+        window.location.href = '/dashboard';
       } catch (error: any) {
-        console.error("Login error:", error);
+        console.error('Login error:', error);
         errors.form =
-          error.response?.data?.message || "Invalid email or password";
+          error.response?.data?.message || 'Invalid email or password';
       } finally {
         isSubmitting.value = false;
       }
@@ -212,8 +209,8 @@ export default defineComponent({
         isGoogleScriptLoaded.value = true;
         initGoogleAuth();
       } catch (error) {
-        console.error("Error loading Google Sign-In script:", error);
-        errors.form = "Failed to load Google Sign-In. Please try again later.";
+        console.error('Error loading Google Sign-In script:', error);
+        errors.form = 'Failed to load Google Sign-In. Please try again later.';
       }
     };
 
@@ -223,7 +220,7 @@ export default defineComponent({
 
       const initialized = googleAuthUtil.initialize(handleCredentialResponse);
       if (!initialized) {
-        console.error("Failed to initialize Google Sign-In");
+        console.error('Failed to initialize Google Sign-In');
       }
     };
 
@@ -241,12 +238,12 @@ export default defineComponent({
         };
 
         // Store token and redirect
-        localStorage.setItem("token", authResponse.token);
-        window.location.href = '/dashboard'
+        localStorage.setItem('token', authResponse.token);
+        window.location.href = '/dashboard';
       } catch (error: any) {
-        console.error("Google login error:", error);
+        console.error('Google login error:', error);
         errors.form =
-          error.response?.data?.message || "Error logging in with Google";
+          error.response?.data?.message || 'Error logging in with Google';
       } finally {
         isSubmitting.value = false;
       }
@@ -256,7 +253,7 @@ export default defineComponent({
     const handleGoogleLogin = (): void => {
       if (!isGoogleScriptLoaded.value) {
         errors.form =
-          "Google Sign-In is still loading. Please try again in a moment.";
+          'Google Sign-In is still loading. Please try again in a moment.';
         return;
       }
 
@@ -264,7 +261,7 @@ export default defineComponent({
 
       const success = googleAuthUtil.prompt();
       if (!success) {
-        errors.form = "Failed to initialize Google Sign-In. Please try again.";
+        errors.form = 'Failed to initialize Google Sign-In. Please try again.';
       }
 
       setTimeout(() => {
@@ -281,9 +278,9 @@ export default defineComponent({
       if (value && !isGoogleScriptLoaded.value) {
         // Load Google Sign-In if enabled
         loadGoogleSignIn().catch((err) => {
-          console.error("Failed to load Google Sign-In:", err);
+          console.error('Failed to load Google Sign-In:', err);
           errors.form =
-            "Failed to initialize Google authentication. Please try again later.";
+            'Failed to initialize Google authentication. Please try again later.';
         });
 
         // Check if GSI script loaded after 2 seconds
@@ -293,27 +290,27 @@ export default defineComponent({
       }
 
       // Store the preference in localStorage
-      localStorage.setItem("enableGoogleAuth", value ? "true" : "false");
+      localStorage.setItem('enableGoogleAuth', value ? 'true' : 'false');
     };
 
     // Load Google Sign-In when component mounts
     onMounted(() => {
       // Get stored preference (default to config value if not stored)
-      const storedPref = localStorage.getItem("enableGoogleAuth");
+      const storedPref = localStorage.getItem('enableGoogleAuth');
       if (storedPref !== null) {
-        enableGoogleAuth.value = storedPref === "true";
+        enableGoogleAuth.value = storedPref === 'true';
       }
 
       if (enableGoogleAuth.value) {
         // Run Google authentication verification
-        console.log("Running Google authentication verification...");
+        console.log('Running Google authentication verification...');
         verifyGoogleSetup();
 
         // Load Google Sign-In
         loadGoogleSignIn().catch((err) => {
-          console.error("Failed to load Google Sign-In:", err);
+          console.error('Failed to load Google Sign-In:', err);
           errors.form =
-            "Failed to initialize Google authentication. Please try again later.";
+            'Failed to initialize Google authentication. Please try again later.';
         });
 
         // Check if GSI script loaded after 2 seconds

@@ -155,7 +155,7 @@ export default defineComponent({
       });
     };
     
-    const onNodeDrag = ({ node, event }: NodeDragEvent) => {
+    const onNodeDrag = ({ }: NodeDragEvent) => {
       // We don't log during drag to avoid console spam
       // But you could use this to update a state or UI element
     };
@@ -165,14 +165,6 @@ export default defineComponent({
       
       // Save the node to our last dragged nodes list
       lastDraggedNodes.value = [node];
-      
-      const nodePosition = {
-        id: node.id,
-        type: node.type,
-        position: { x: node.position.x, y: node.position.y },
-        positionAbsolute: node.positionAbsolute ? 
-          { x: node.positionAbsolute.x, y: node.positionAbsolute.y } : undefined
-      };
       
       // Save node position to store
       try {

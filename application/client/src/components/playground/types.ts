@@ -1,8 +1,8 @@
 // Types for playground components
-import type Variable from "../../classes/Variable";
-import type HttpNode from "../../classes/HttpNode";
-import type FunctionalNode from "../../classes/FunctionalNode";
-import type Node from "../../classes/Node";
+import type Variable from '../../classes/Variable';
+import type HttpNode from '../../classes/HttpNode';
+import type FunctionalNode from '../../classes/FunctionalNode';
+import type Node from '../../classes/Node';
 
 export interface VariableFormData {
   name: string;

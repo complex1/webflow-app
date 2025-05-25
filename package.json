@@ -10,9 +10,14 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd application/server && npm run dev",
     "client": "cd application/client && npm run dev",
-    "build": "cd application/server && npm run build && cd ../client && npm run build"
+    "build": "cd application/server && npm run build && cd ../client && npm run build",
+    "lint": "concurrently \"cd application/server && npm run lint\" \"cd application/client && npm run lint\"",
+    "lint:fix": "concurrently \"cd application/server && npm run lint:fix\" \"cd application/client && npm run lint:fix\""
   },
   "dependencies": {
     "concurrently": "^9.1.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
   }
 }

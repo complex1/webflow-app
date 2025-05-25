@@ -1,0 +1,21 @@
+# Dependencies
+node_modules
+
+# Build directories
+dist
+build
+
+# Database files
+data/*.sqlite
+
+# Testing
+coverage
+
+# Editor directories and files
+.vscode
+.idea
+.DS_Store
+*.suo
+*.njsproj
+*.sln
+*.sw?

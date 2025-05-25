@@ -26,7 +26,7 @@ import type { PopoverProps } from './types';
 type Position = 'top' | 'right' | 'bottom' | 'left';
 
 export default defineComponent({
-  name: "Popover",
+  name: 'Popover',
   props: {
     title: {
       type: String,
@@ -38,7 +38,7 @@ export default defineComponent({
     },
     position: {
       type: String as PropType<Position>,
-      default: "bottom",
+      default: 'bottom',
       validator: (value: string): boolean => ['top', 'right', 'bottom', 'left'].includes(value)
     },
     tooltip: {
@@ -77,7 +77,7 @@ export default defineComponent({
         updatePosition();
         if (!props.tooltip) {
           setTimeout(() => {
-            window.addEventListener("click", checkOutsideClick);
+            window.addEventListener('click', checkOutsideClick);
           }, 100);
         }
       });
@@ -87,7 +87,7 @@ export default defineComponent({
       isOpen.value = false;
       emit('close');
       if (!props.tooltip) {
-        window.removeEventListener("click", checkOutsideClick);
+        window.removeEventListener('click', checkOutsideClick);
       }
     };
 
@@ -103,19 +103,19 @@ export default defineComponent({
       let top = 0;
       let left = 0;
 
-      if (props.position === "bottom" || props.position === "top") {
+      if (props.position === 'bottom' || props.position === 'top') {
         left = targetRect.left + targetRect.width / 2 - popoverRect.width / 2;
-      } else if (props.position === "left" || props.position === "right") {
+      } else if (props.position === 'left' || props.position === 'right') {
         top = targetRect.top + targetRect.height / 2 - popoverRect.height / 2 + window.scrollY;
       }
       
-      if (props.position === "bottom") {
+      if (props.position === 'bottom') {
         top = targetRect.bottom + window.scrollY + 8;
-      } else if (props.position === "top") {
+      } else if (props.position === 'top') {
         top = targetRect.top - popoverRect.height + window.scrollY - 8;
-      } else if (props.position === "left") {
+      } else if (props.position === 'left') {
         left = targetRect.left - popoverRect.width + window.scrollX - 8;
-      } else if (props.position === "right") {
+      } else if (props.position === 'right') {
         left = targetRect.right + window.scrollX + 8;
       }
 
@@ -135,28 +135,28 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      window.addEventListener("resize", updatePosition);
-      window.addEventListener("scroll", updatePosition);
+      window.addEventListener('resize', updatePosition);
+      window.addEventListener('scroll', updatePosition);
       
       if (props.tooltip && targetRef.value) {
-        targetRef.value.addEventListener("mouseover", open);
-        targetRef.value.addEventListener("mouseleave", close);
+        targetRef.value.addEventListener('mouseover', open);
+        targetRef.value.addEventListener('mouseleave', close);
       }
 
       // check if component have a class "playground-popover"
-      if (targetRef.value && targetRef.value.parentElement.classList.contains("playground-popover")) {
-        popoverClasses.value.push("playground-popover-content");
+      if (targetRef.value && targetRef.value.parentElement.classList.contains('playground-popover')) {
+        popoverClasses.value.push('playground-popover-content');
       } 
     });
 
     onBeforeUnmount(() => {
-      window.removeEventListener("resize", updatePosition);
-      window.removeEventListener("scroll", updatePosition);
-      window.removeEventListener("click", checkOutsideClick);
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition);
+      window.removeEventListener('click', checkOutsideClick);
       
       if (props.tooltip && targetRef.value) {
-        targetRef.value.removeEventListener("mouseover", open);
-        targetRef.value.removeEventListener("mouseleave", close);
+        targetRef.value.removeEventListener('mouseover', open);
+        targetRef.value.removeEventListener('mouseleave', close);
       }
     });
 

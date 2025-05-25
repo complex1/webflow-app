@@ -15,12 +15,10 @@ import { WebflowService } from '../services/webflow.service';
 import { getResponseToNodeList } from '../utils/workflowUtils';
 import type { WebflowCardProps } from '../components/dashboard/types';
 import type { IEdge } from '../model';
-import type FunctionalNode from '../classes/FunctionalNode';
-import type HttpNode from '../classes/HttpNode';
 
 export default defineComponent({
   components: { workflowHeader, WorkflowPlayground },
-  name: "workflow",
+  name: 'workflow',
   
   setup() {
     const loading = ref<boolean>(true);

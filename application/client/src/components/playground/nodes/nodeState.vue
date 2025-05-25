@@ -12,12 +12,12 @@
 </template>
 
 <script lang="ts">
-import Node, { NodeStatus } from "../../../classes/Node";
+import Node, { NodeStatus } from '../../../classes/Node';
 import JsonEditor from '../../common/code/jsonEditor.vue';
 
 export default {
   components: { JsonEditor },
-  name: "NodeState",
+  name: 'NodeState',
   props: {
     node: {
       type: Node,
@@ -28,22 +28,22 @@ export default {
     return {};
   },
   methods: {
-    getStatusClass(status) {
+    getStatusClass(status: NodeStatus): string {
       switch (status) {
         case NodeStatus.PENDING:
-          return "pending";
+          return 'pending';
         case NodeStatus.IN_PROGRESS:
-          return "in-progress";
+          return 'in-progress';
         case NodeStatus.SUCCESS:
-          return "success";
+          return 'success';
         case NodeStatus.FAILURE:
-          return "failure";
+          return 'failure';
         case NodeStatus.INACTIVE:
-          return "inactive";
+          return 'inactive';
         case NodeStatus.SKIPPED:
-          return "skipped";
+          return 'skipped';
         default:
-          return "";
+          return '';
       }
     },
   },

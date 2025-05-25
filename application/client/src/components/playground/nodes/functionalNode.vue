@@ -28,16 +28,16 @@
 </template>
 
 <script lang="ts">
-import { mapState } from "vuex";
-import FunctionalNode from "../../../classes/FunctionalNode";
-import { Workflow } from "../../../classes/Workflow";
-import ConnectionHandel from "./connectionHandel.vue";
-import NodeHeader from "./nodeHeader.vue";
-import NodeResponse from "./nodeResponse.vue";
-import VariableNode from "./variableNode.vue";
+import { mapState } from 'vuex';
+import FunctionalNode from '../../../classes/FunctionalNode';
+import { Workflow } from '../../../classes/Workflow';
+import ConnectionHandel from './connectionHandel.vue';
+import NodeHeader from './nodeHeader.vue';
+import NodeResponse from './nodeResponse.vue';
+import VariableNode from './variableNode.vue';
 
 export default {
-  name: "FunctionalNode",
+  name: 'FunctionalNode',
   components: {
     ConnectionHandel,
     NodeHeader,
@@ -55,10 +55,10 @@ export default {
   },
   computed: {
     ...mapState({
-      workflow: (state): Workflow => state.workflowModule.workflow,
+      workflow: (state: any): Workflow => state.workflowModule.workflow as Workflow,
     }),
     nodeData(): FunctionalNode {
-      return this.workflow.getNode(this.id);
+      return this.workflow.getNode(this.id) as FunctionalNode;
     },
   },
   methods: {},

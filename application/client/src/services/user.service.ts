@@ -1,4 +1,4 @@
-import { HttpService } from "./http";
+import { HttpService } from './http';
 
 export class UserService {
 

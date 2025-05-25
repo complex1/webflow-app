@@ -1,7 +1,7 @@
-import Edge, { EdgeType } from "./Edge";
-import FunctionalNode from "./FunctionalNode";
-import HttpNode from "./HttpNode";
-import { NodeStatus } from "./Node";
+import Edge, { EdgeType } from './Edge';
+import FunctionalNode from './FunctionalNode';
+import HttpNode from './HttpNode';
+import { NodeStatus } from './Node';
 
 type WorkflowNode = HttpNode | FunctionalNode;
 

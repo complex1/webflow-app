@@ -23,6 +23,11 @@
     "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^22.15.18",
     "@types/uuid": "^9.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-prettier": "^5.4.0",
+    "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
@@ -30,6 +35,8 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "eslint . --ext .js,.ts --fix"
   }
 }

@@ -1,5 +1,5 @@
-import { generateUUID } from "../utils/uuid";
-import ErrorMessage from "./ErrorMessage";
+import { generateUUID } from '../utils/uuid';
+import ErrorMessage from './ErrorMessage';
 
 export default class Variable {
     id: string;
@@ -63,7 +63,7 @@ export default class Variable {
         if (!this.formStore && this.type === 'object' && typeof this.defaultValue !== 'object') {
             errors.push(new ErrorMessage(`${index || ''} ${type} default value must be an object`, 'error'));
         }
-        return errors
+        return errors;
     }
 
     serialized(){

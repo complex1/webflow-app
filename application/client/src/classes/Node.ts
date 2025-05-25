@@ -1,4 +1,4 @@
-import { generateUUID } from "../utils/uuid";
+import { generateUUID } from '../utils/uuid';
 
 export enum NodeType {
     FUNCTIONAL = 'FUNCTIONAL',

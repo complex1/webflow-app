@@ -1,5 +1,5 @@
-import { HttpService } from "./http";
-import type { WebflowDto } from "../model/index";
+import { HttpService } from './http';
+import type { WebflowDto } from '../model/index';
 
 export class WebflowService {
   /**
