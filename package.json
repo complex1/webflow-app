@@ -1,0 +1,18 @@
+{
+  "name": "Apiflux",
+  "version": "1.0.0",
+  "description": "Apiflux is a developer-focused web application designed to help backend developers visually build, test, and debug API flows using a node-based interface. Inspired by tools like React Flow, the platform allows developers to connect API nodes and data transformation nodes into logical pipelines and execute them in a visual playground.",
+  "main": "index.js",
+  "repository": "git@github.com:complex1/webflow-app.git",
+  "author": "shubham <mauryas367@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd application/server && npm run dev",
+    "client": "cd application/client && npm run dev",
+    "build": "cd application/server && npm run build && cd ../client && npm run build"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
