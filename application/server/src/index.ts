@@ -52,18 +52,35 @@ app.use((req, res, next) => {
   next();
 });
 
-// Proxy middleware for non-API requests
-app.use('/', (req, res, next) => {
-  if (req.url.startsWith('/api')) {
-    return next();
-  }
+// Static file serving and client routing handling
+const isDevelopment = process.env.NODE_ENV !== 'production';
+const clientDistPath = path.join(__dirname, '..', 'public');
+
+if (isDevelopment) {
+  // Development mode: proxy non-API requests to the dev server
+  app.use('/', (req, res, next) => {
+    if (req.url.startsWith('/api')) {
+      return next();
+    }
+    
+    createProxyMiddleware({
+      target: 'http://localhost:3001',
+      changeOrigin: true,
+      logLevel: 'warn',
+    })(req, res, next);
+  });
+} else {
+  // Production mode: serve static files and handle client-side routing
+  app.use(express.static(clientDistPath));
   
-  createProxyMiddleware({
-    target: 'http://localhost:3001',
-    changeOrigin: true,
-    logLevel: 'warn',
-  })(req, res, next);
-});
+  // For any other request, send back the index.html file for client-side routing
+  app.get('*', (req, res, next) => {
+    if (req.url.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
 
 // Proper server shutdown handling
 function shutdown() {

@@ -3,7 +3,7 @@
     <span ref="targetRef" class="popover-target" @click="open">
       <slot name="target"></slot>
     </span>
-    <Teleport to="body" :disabled="!isOpen" :key="isOpen">
+    <Teleport to="body" :disabled="!isOpen">
       <div
         v-if="isOpen"
         ref="popoverRef"
@@ -20,8 +20,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, PropType, onMounted, onBeforeUnmount, nextTick } from 'vue';
-import type { PopoverProps } from './types';
+import { defineComponent, ref, reactive, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import type { PropType } from 'vue';
+
 
 type Position = 'top' | 'right' | 'bottom' | 'left';
 
@@ -144,8 +145,8 @@ export default defineComponent({
       }
 
       // check if component have a class "playground-popover"
-      if (targetRef.value && targetRef.value.parentElement.classList.contains('playground-popover')) {
-        popoverClasses.value.push('playground-popover-content');
+      if (targetRef.value && targetRef?.value?.parentElement?.classList?.contains('playground-popover')) {
+        popoverClasses?.value?.push('playground-popover-content');
       } 
     });
 

@@ -27,7 +27,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted, onBeforeUnmount, PropType, watch } from 'vue';
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
+import type { PropType } from 'vue';
+
 import { MonacoEditor } from './monaco';
 
 export default defineComponent({
@@ -113,14 +115,16 @@ export default defineComponent({
             }
           };
 
-          monacoInstance = new MonacoEditor(editorContainer.value, {
+          const config = {
             value: props.value || '',
             language: props.language,
             theme: editorTheme.value,
-            readOnly: props.readOnly,
+            // Note: readOnly is already included in editorOptions
             ...editorOptions.value,
             onChange: handleChange,
-          });
+          };
+
+          monacoInstance = new MonacoEditor(editorContainer.value, config);
         } catch (error) {
           console.error('Error initializing Monaco editor:', error);
         }

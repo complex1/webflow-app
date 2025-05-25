@@ -60,7 +60,7 @@ export default defineComponent({
       if (user.value.name) {
         return user.value.name
           .split(' ')
-          .map((part) => part.charAt(0).toUpperCase())
+          .map((part: string) => part.charAt(0).toUpperCase())
           .join('');
       }
       return user.value.email ? user.value.email.charAt(0).toUpperCase() : 'U';

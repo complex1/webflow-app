@@ -23,7 +23,7 @@ export default class FunctionalNode extends Node {
         this.errorMessage = null;
         const paramsNames = this.parameters.map(param => param.name);
         const paramValues = this.parameters.map(param => param.get(globalStore) || null);
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             try {
                 this.executing = true;
                 const transformFunction = new Function(...paramsNames, this.transform);

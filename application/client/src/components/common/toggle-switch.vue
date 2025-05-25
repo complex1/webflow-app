@@ -1,6 +1,6 @@
 <template>
   <label class="toggle-switch">
-    <input type="checkbox" :checked="modelValue" @change="$emit('update:modelValue', $event.target.checked)" />
+    <input type="checkbox" :checked="modelValue" @change="handleChange" />
     <span class="slider round"></span>
   </label>
 </template>
@@ -17,6 +17,17 @@ export default defineComponent({
     },
   },
   emits: ['update:modelValue'],
+  setup(_, { emit }) {
+    const handleChange = (event: Event) => {
+      // Properly cast the event target to HTMLInputElement
+      const target = event.target as HTMLInputElement;
+      emit('update:modelValue', target.checked);
+    };
+
+    return {
+      handleChange
+    };
+  }
 });
 </script>
 

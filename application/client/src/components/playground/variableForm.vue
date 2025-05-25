@@ -94,7 +94,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, watch } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
+import type { PropType } from 'vue';
 import Variable from '../../classes/Variable';
 import jsonEditor from '../common/code/jsonEditor.vue';
 import wfaInput from '../common/wfa-input.vue';

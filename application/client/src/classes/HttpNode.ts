@@ -90,7 +90,7 @@ export default class HttpNode extends Node {
         }
         const executionStartTime = Date.now();
         this.executionDone = false;
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             proxyService.request(options)
             .then((data:any) => {
                 if (data.error) {

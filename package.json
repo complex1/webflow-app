@@ -10,7 +10,11 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd application/server && npm run dev",
     "client": "cd application/client && npm run dev",
-    "build": "cd application/server && npm run build && cd ../client && npm run build",
+    "build": "npm run build:client && npm run build:server && npm run copy:client",
+    "build:client": "cd application/client && npm run build",
+    "build:server": "cd application/server && npm run build",
+    "copy:client": "mkdir -p application/server/public && cp -r application/client/dist/* application/server/public/",
+    "start:prod": "cd application/server && cross-env NODE_ENV=production node dist/index.js",
     "lint": "concurrently \"cd application/server && npm run lint\" \"cd application/client && npm run lint\"",
     "lint:fix": "concurrently \"cd application/server && npm run lint:fix\" \"cd application/client && npm run lint:fix\""
   },

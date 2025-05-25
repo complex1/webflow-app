@@ -14,9 +14,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue';
+import { defineComponent, computed } from 'vue';
 import type ErrorMessage from '../../classes/ErrorMessage';
-import type { ValidationErrorProps } from './types';
+import type { PropType } from 'vue';
 
 export default defineComponent({
   name: 'ValidationError',

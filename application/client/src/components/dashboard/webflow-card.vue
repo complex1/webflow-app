@@ -45,9 +45,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
 import { useRouter } from 'vue-router';
-import { WebflowCardProps, WebflowCardEmits } from './types';
+import type { WebflowCardProps, WebflowCardEmits } from './types';
 
 export default defineComponent({
   name: 'WebflowCard',

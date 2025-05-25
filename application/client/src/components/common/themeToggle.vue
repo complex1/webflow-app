@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import type { ThemeToggleProps, ThemeToggleEmits } from './types';
 
 export default defineComponent({
   name: 'ThemeToggle',

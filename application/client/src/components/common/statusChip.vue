@@ -6,9 +6,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from 'vue';
+import { defineComponent, computed } from 'vue';
 import { NodeStatus } from '../../classes/Node';
-import type { StatusChipProps } from './types';
+import type { PropType } from 'vue';
+
 
 type SizeType = 'small' | 'medium' | 'large';
 

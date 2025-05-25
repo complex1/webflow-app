@@ -14,8 +14,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue';
-import type { DrawerProps, DrawerEmits } from './types';
+import { defineComponent, computed } from 'vue';
+import type { PropType } from 'vue';
+
 
 export default defineComponent({
   name: 'Drawer',

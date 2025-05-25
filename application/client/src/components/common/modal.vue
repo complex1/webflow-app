@@ -13,8 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, onMounted, onBeforeUnmount } from 'vue';
-import type { ModalProps, ModalEmits } from './types';
+import { defineComponent, onMounted, onBeforeUnmount } from 'vue';
 
 export default defineComponent({
   name: 'Modal',

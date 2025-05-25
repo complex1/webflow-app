@@ -12,7 +12,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch, PropType } from 'vue';
+import { defineComponent, ref, onMounted, watch } from 'vue';
+import type { PropType } from 'vue';
 import monacoEditor from './monacoEditor.vue';
 
 export default defineComponent({

@@ -1,16 +1,16 @@
 <template>
   <div class="bg-white round-2 shadow-2">
-    <connection-handel :id="nodeData.id"></connection-handel>
+    <connection-handel :id="nodeData?.id"></connection-handel>
     <node-header :nodeData="nodeData" />
     <div class="p-m">
       <div class="http-api-container flex-v-center p-s round-1 bg-light mb-m">
         <span
-          :class="`http-method-badge text-s text-center px-xs py-2xs round-1 ${getMethodClass(nodeData.method)}`"
+          :class="`http-method-badge text-s text-center px-xs py-2xs round-1 ${getMethodClass(nodeData?.method || '')}`"
         >
-          {{ nodeData.method }}
+          {{ nodeData?.method }}
         </span>
         <span class="text-s text-primary-bg ml-s text-truncate" style="max-width: 250px">
-          {{ nodeData.baseUrl }}{{ nodeData.url }}
+          {{ nodeData?.baseUrl }}{{ nodeData?.url }}
         </span>
       </div>
 
@@ -19,40 +19,40 @@
           <div class="section-header border-bottom pb-2xs mb-s">
             <div class="text-s text-primary font-600">Request</div>
           </div>
-          
-          <div v-if="nodeData.body" class="mb-m">
+
+          <div v-if="nodeData?.body" class="mb-m">
             <div class="text-xs text-secondary font-500 mb-2xs">Request Body</div>
             <variable-node :variable="nodeData.body"></variable-node>
           </div>
-          
-          <div v-if="nodeData.pathParams && nodeData.pathParams.length" class="mb-m">
+
+          <div v-if="nodeData?.pathParams && nodeData?.pathParams.length" class="mb-m">
             <div class="text-xs text-secondary font-500 mb-2xs">
-              Path Parameters <span class="badge-count">{{ nodeData.pathParams.length }}</span>
+              Path Parameters <span class="badge-count">{{ nodeData?.pathParams?.length }}</span>
             </div>
             <variable-node
-              v-for="(param, index) in nodeData.pathParams"
+              v-for="(param, index) in nodeData?.pathParams"
               :key="`path-${index}`"
               :variable="param"
             ></variable-node>
           </div>
-          
-          <div v-if="nodeData.queryParams && nodeData.queryParams.length" class="mb-m">
+
+          <div v-if="nodeData?.queryParams && nodeData?.queryParams.length" class="mb-m">
             <div class="text-xs text-secondary font-500 mb-2xs">
-              Query Parameters <span class="badge-count">{{ nodeData.queryParams.length }}</span>
+              Query Parameters <span class="badge-count">{{ nodeData?.queryParams?.length }}</span>
             </div>
             <variable-node
-              v-for="(param, index) in nodeData.queryParams"
+              v-for="(param, index) in nodeData?.queryParams"
               :key="`query-${index}`"
               :variable="param"
             ></variable-node>
           </div>
-          
-          <div v-if="nodeData.headers && nodeData.headers.length" class="mb-m">
+
+          <div v-if="nodeData?.headers && nodeData?.headers.length" class="mb-m">
             <div class="text-xs text-secondary font-500 mb-2xs">
-              Headers <span class="badge-count">{{ nodeData.headers.length }}</span>
+              Headers <span class="badge-count">{{ nodeData?.headers?.length }}</span>
             </div>
             <variable-node
-              v-for="(header, index) in nodeData.headers"
+              v-for="(header, index) in nodeData?.headers"
               :key="`header-${index}`"
               :variable="header"
             ></variable-node>
@@ -101,7 +101,7 @@ export default {
     }),
     nodeData(): HttpNode | null {
       if (!this.workflow) return null;
-      return this.workflow.getNode(this.id);
+      return this.workflow.getNode(this.id) as HttpNode | null;
     },
   },
   methods: {

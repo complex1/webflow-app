@@ -60,7 +60,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
+
 
 type InputType = 'text' | 'email' | 'password' | 'number' | 'textarea' | 'select' | 'date' | 'tel' | 'url';
 

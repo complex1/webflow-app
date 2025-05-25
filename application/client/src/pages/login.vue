@@ -115,7 +115,8 @@ import authLayout from '../components/common/authLayout.vue';
 import { UserService } from '../services/user.service';
 import wfaInput from '../components/common/wfa-input.vue';
 import toggleSwitch from '../components/common/toggle-switch.vue';
-import { googleAuthUtil, GoogleCredentialResponse } from '../utils/google-auth';
+import { googleAuthUtil } from '../utils/google-auth';
+import type { GoogleCredentialResponse } from '../utils/google-auth';
 import { verifyGoogleSetup, checkGSIScript } from '../utils/google-auth-verify';
 import { AUTH_CONFIG } from '../config/auth.config';
 

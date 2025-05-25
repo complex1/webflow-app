@@ -10,7 +10,6 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import type { AuthLayoutProps } from './types';
 
 export default defineComponent({
   name: 'AuthLayout',

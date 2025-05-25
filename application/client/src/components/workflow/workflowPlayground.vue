@@ -70,16 +70,19 @@ interface Node {
   positionAbsolute?: NodePosition;
 }
 
+// Define MouseTouchEvent to match Vue Flow's type
+type MouseTouchEvent = MouseEvent | TouchEvent;
+
 interface NodeDragEvent {
   node: Node;
-  event: MouseEvent;
+  event: MouseTouchEvent;
 }
 
 interface ConnectParams {
   source: string;
   target: string;
-  sourceHandle?: string;
-  targetHandle?: string;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
 }
 
 interface ViewportState {
@@ -140,8 +143,8 @@ export default defineComponent({
       store.commit('workflowModule/addEdge', {
         source: params.source,
         target: params.target,
-        sourceHandle: params.sourceHandle,
-        targetHandle: params.targetHandle,
+        sourceHandle: params.sourceHandle ?? undefined,
+        targetHandle: params.targetHandle ?? undefined,
       });
     };
 
@@ -155,12 +158,13 @@ export default defineComponent({
       });
     };
     
-    const onNodeDrag = ({ }: NodeDragEvent) => {
+    const onNodeDrag = () => {
       // We don't log during drag to avoid console spam
       // But you could use this to update a state or UI element
     };
     
-    const onNodeDragStop = ({ node }: NodeDragEvent) => {
+    const onNodeDragStop = (dragEvent: NodeDragEvent) => {
+      const { node } = dragEvent;
       if (!node) return;
       
       // Save the node to our last dragged nodes list
@@ -180,7 +184,8 @@ export default defineComponent({
       }
     };
     
-    const onNodesDragStop = ({ nodes }: { nodes: Node[] }) => {
+    const onNodesDragStop = (event: { nodes: Node[] }) => {
+      const { nodes } = event;
       if (!nodes || nodes.length === 0) return;
       
       // Update all dragged nodes positions in the store
