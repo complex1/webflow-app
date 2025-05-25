@@ -6,6 +6,7 @@
   "repository": "git@github.com:complex1/webflow-app.git",
   "author": "shubham <mauryas367@gmail.com>",
   "license": "MIT",
+   "private": true,
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd application/server && npm run dev",
@@ -24,5 +25,9 @@
   },
   "devDependencies": {
     "prettier": "^3.5.3"
-  }
+  },
+  "workspaces": [
+    "application/client",
+    "application/server"
+  ]
 }
