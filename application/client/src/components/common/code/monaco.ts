@@ -12,8 +12,6 @@ interface MonacoEditorOptions {
   onChange?: (value: string) => void;
   [key: string]: any;
 }
-
-const monaco = window.monaco;
 export class MonacoEditor {
     private editor: any;
     private container: HTMLElement;
@@ -46,7 +44,7 @@ export class MonacoEditor {
         delete editorOptions.onChange;
         
         // Create editor with safe options
-        this.editor = monaco.editor.create(this.container, editorOptions);
+        this.editor = window.monaco.editor.create(this.container, editorOptions);
 
         // Set up the change handler with a try-catch to prevent crashes
         this.editor.onDidChangeModelContent(() => {
@@ -85,7 +83,7 @@ export class MonacoEditor {
     }
 
     public changeTheme(theme: string) {
-        monaco.editor.setTheme(theme);
+        window.monaco.editor.setTheme(theme);
     }
 
     public dispose() {
