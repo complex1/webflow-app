@@ -1,0 +1,400 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <!-- Status Chip Colors -->
+    <linearGradient id="inactive-chip-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0e0e0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#bdbdbd;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="active-chip-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#64b5f6;stop-opacity:1">
+        <animate attributeName="stop-color" values="#64b5f6;#1e88e5;#64b5f6" dur="2s" repeatCount="indefinite" />
+      </stop>
+      <stop offset="100%" style="stop-color:#1e88e5;stop-opacity:1">
+        <animate attributeName="stop-color" values="#1e88e5;#1565c0;#1e88e5" dur="2s" repeatCount="indefinite" />
+      </stop>
+    </linearGradient>
+    <linearGradient id="complete-chip-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#81c784;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#43a047;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Status Icons -->
+    <symbol id="icon-inactive" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="#757575" stroke-width="2" />
+      <path d="M12 8v4l3 3" stroke="#757575" stroke-width="2" fill="none" stroke-linecap="round" />
+    </symbol>
+    
+    <symbol id="icon-running" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="#ffffff" stroke-width="2" />
+      <path d="M12 8v4l3 3" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round">
+        <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 12 12" to="360 12 12" dur="2s" repeatCount="indefinite" />
+      </path>
+    </symbol>
+    
+    <symbol id="icon-complete" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="#ffffff" stroke-width="2" />
+      <path d="M8 12l3 3l5 -5" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" />
+    </symbol>
+    
+    <!-- Data transfer animation -->
+    <circle id="data-packet" r="4" fill="#1e88e5">
+      <animate attributeName="r" values="4;5;4" dur="0.5s" repeatCount="indefinite" />
+    </circle>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="5" />
+      <feOffset dx="2" dy="2" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    
+    <!-- Node Hover Effect Filter -->
+    <filter id="node-hover" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+      <feOffset dx="0" dy="0" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background grid -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#cacaca" stroke-width="1" />
+  </pattern>
+  <rect width="800" height="500" fill="#ffffff" />
+  <rect width="800" height="500" fill="url(#grid)" opacity="0.5" />
+  
+  <!-- Connection Paths - Gray and Dashed -->
+  <g id="connections" transform="translate(0, -30)">
+    <!-- Node 1 to Node 3 -->
+    <path id="path-1-3" d="M 200 200 C 250 200 250 250 300 290" stroke="#9e9e9e" stroke-width="1.5" fill="none" stroke-dasharray="5,3" />
+    
+    <!-- Node 2 to Node 3 -->
+    <path id="path-2-3" d="M 200 380 C 250 380 250 290 300 290" stroke="#9e9e9e" stroke-width="1.5" fill="none" stroke-dasharray="5,3" />
+    
+    <!-- Node 3 to Node 4 - Special connection -->
+    <path id="path-3-4" d="M 420 290 L 540 290" stroke="#9e9e9e" stroke-width="1.5" fill="none" stroke-dasharray="5,3" />
+  </g>
+  
+  <!-- Data Transfer Animations -->
+  <g id="data-transfer" opacity="0" transform="translate(0, -30)">
+    <!-- Data from Node 1 to Node 3 -->
+    <use id="data-1-3" href="#data-packet" x="0" y="0">
+      <animateMotion id="data-motion-1-3" begin="indefinite" dur="1s" fill="freeze"
+        path="M 200 200 C 250 200 250 250 300 290" />
+    </use>
+    
+    <!-- Data from Node 2 to Node 3 -->
+    <use id="data-2-3" href="#data-packet" x="0" y="0">
+      <animateMotion id="data-motion-2-3" begin="indefinite" dur="1s" fill="freeze"
+        path="M 200 380 C 250 380 250 290 300 290" />
+    </use>
+    
+    <!-- Data from Node 3 to Node 4 -->
+    <use id="data-3-4" href="#data-packet" x="0" y="0">
+      <animateMotion id="data-motion-3-4" begin="indefinite" dur="1s" fill="freeze"
+        path="M 420 290 L 540 290" />
+    </use>
+  </g>
+
+  <!-- Nodes with White Background -->
+  <g id="nodes">
+    <!-- Node 1: HTTP Node -->
+    <g id="node1" transform="translate(100, 90)" filter="url(#drop-shadow)">
+      <!-- Node body with white background -->
+      <rect id="node1-body" x="0" y="0" width="100" height="90" rx="8" fill="white" stroke="#e0e0e0" stroke-width="1.5" />
+      
+      <!-- Node header -->
+      <rect x="0" y="0" width="100" height="30" rx="8" ry="8" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="0"/>
+      
+      <!-- Node title - with black text -->
+      <text x="50" y="20" font-family="Arial" font-size="14" text-anchor="middle" fill="#212121" font-weight="500">
+        HTTP Node
+      </text>
+      
+      <!-- Status chip -->
+      <g id="node1-status-chip" transform="translate(50, 60)">
+        <rect id="node1-status-bg" x="-40" y="-12" width="80" height="24" rx="12" fill="url(#inactive-chip-gradient)" />
+        <use id="node1-status-icon" href="#icon-inactive" x="-34" y="-8" width="16" height="16" />
+        <text id="node1-status-text" x="5" y="4" font-family="Arial" font-size="10" text-anchor="middle" fill="#424242">
+          Inactive
+        </text>
+      </g>
+    </g>
+    
+    <!-- Node 2: HTTP Node -->
+    <g id="node2" transform="translate(100, 320)" filter="url(#drop-shadow)">
+      <!-- Node body with white background -->
+      <rect id="node2-body" x="0" y="0" width="100" height="90" rx="8" fill="white" stroke="#e0e0e0" stroke-width="1.5" />
+      
+      <!-- Node header -->
+      <rect x="0" y="0" width="100" height="30" rx="8" ry="8" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="0"/>
+      
+      <!-- Node title - with black text -->
+      <text x="50" y="20" font-family="Arial" font-size="14" text-anchor="middle" fill="#212121" font-weight="500">
+        HTTP Node
+      </text>
+      
+      <!-- Status chip -->
+      <g id="node2-status-chip" transform="translate(50, 60)">
+        <rect id="node2-status-bg" x="-40" y="-12" width="80" height="24" rx="12" fill="url(#inactive-chip-gradient)" />
+        <use id="node2-status-icon" href="#icon-inactive" x="-34" y="-8" width="16" height="16" />
+        <text id="node2-status-text" x="5" y="4" font-family="Arial" font-size="10" text-anchor="middle" fill="#424242">
+          Inactive
+        </text>
+      </g>
+    </g>
+    
+    <!-- Node 3: Functional Node -->
+    <g id="node3" transform="translate(300, 210)" filter="url(#drop-shadow)">
+      <!-- Node body with white background -->
+      <rect id="node3-body" x="0" y="0" width="120" height="90" rx="8" fill="white" stroke="#e0e0e0" stroke-width="1.5" />
+      
+      <!-- Node header -->
+      <rect x="0" y="0" width="120" height="30" rx="8" ry="8" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="0"/>
+      
+      <!-- Node title - with black text -->
+      <text x="60" y="20" font-family="Arial" font-size="14" text-anchor="middle" fill="#212121" font-weight="500">
+        Functional Node
+      </text>
+      
+      <!-- Status chip -->
+      <g id="node3-status-chip" transform="translate(60, 60)">
+        <rect id="node3-status-bg" x="-40" y="-12" width="80" height="24" rx="12" fill="url(#inactive-chip-gradient)" />
+        <use id="node3-status-icon" href="#icon-inactive" x="-34" y="-8" width="16" height="16" />
+        <text id="node3-status-text" x="5" y="4" font-family="Arial" font-size="10" text-anchor="middle" fill="#424242">
+          Inactive
+        </text>
+      </g>
+    </g>
+    
+    <!-- Node 4: Functional Node -->
+    <g id="node4" transform="translate(540, 210)" filter="url(#drop-shadow)">
+      <!-- Node body with white background -->
+      <rect id="node4-body" x="0" y="0" width="120" height="90" rx="8" fill="white" stroke="#e0e0e0" stroke-width="1.5" />
+      
+      <!-- Node header -->
+      <rect x="0" y="0" width="120" height="30" rx="8" ry="8" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="0"/>
+      
+      <!-- Node title - with black text -->
+      <text x="60" y="20" font-family="Arial" font-size="14" text-anchor="middle" fill="#212121" font-weight="500">
+        Functional Node
+      </text>
+      
+      <!-- Status chip -->
+      <g id="node4-status-chip" transform="translate(60, 60)">
+        <rect id="node4-status-bg" x="-40" y="-12" width="80" height="24" rx="12" fill="url(#inactive-chip-gradient)" />
+        <use id="node4-status-icon" href="#icon-inactive" x="-34" y="-8" width="16" height="16" />
+        <text id="node4-status-text" x="5" y="4" font-family="Arial" font-size="10" text-anchor="middle" fill="#424242">
+          Inactive
+        </text>
+      </g>
+    </g>
+  </g>
+  
+  <!-- Animation Script -->
+  <script type="text/javascript"><![CDATA[
+    
+    // Node bodies
+    const node1Body = document.getElementById('node1-body');
+    const node2Body = document.getElementById('node2-body');
+    const node3Body = document.getElementById('node3-body');
+    const node4Body = document.getElementById('node4-body');
+    
+    // Status chips
+    const node1StatusBg = document.getElementById('node1-status-bg');
+    const node2StatusBg = document.getElementById('node2-status-bg');
+    const node3StatusBg = document.getElementById('node3-status-bg');
+    const node4StatusBg = document.getElementById('node4-status-bg');
+    
+    // Status icons
+    const node1StatusIcon = document.getElementById('node1-status-icon');
+    const node2StatusIcon = document.getElementById('node2-status-icon');
+    const node3StatusIcon = document.getElementById('node3-status-icon');
+    const node4StatusIcon = document.getElementById('node4-status-icon');
+    
+    // Status text
+    const node1StatusText = document.getElementById('node1-status-text');
+    const node2StatusText = document.getElementById('node2-status-text');
+    const node3StatusText = document.getElementById('node3-status-text');
+    const node4StatusText = document.getElementById('node4-status-text');
+    
+    // Data transfer
+    const dataTransfer = document.getElementById('data-transfer');
+    const dataMotion13 = document.getElementById('data-motion-1-3');
+    const dataMotion23 = document.getElementById('data-motion-2-3');
+    const dataMotion34 = document.getElementById('data-motion-3-4');
+    
+    // Connection paths
+    const path13 = document.getElementById('path-1-3');
+    const path23 = document.getElementById('path-2-3');
+    const path34 = document.getElementById('path-3-4');
+    
+    // Animation sequence
+    let animationStarted = false;
+    
+    // Helper function to update node status
+    function updateNodeStatus(node, status) {
+      const statusBg = document.getElementById(`${node}-status-bg`);
+      const statusIcon = document.getElementById(`${node}-status-icon`);
+      const statusText = document.getElementById(`${node}-status-text`);
+      
+      switch(status) {
+        case "inactive":
+          statusBg.setAttribute('fill', 'url(#inactive-chip-gradient)');
+          statusIcon.setAttribute('href', '#icon-inactive');
+          statusText.textContent = 'Inactive';
+          statusText.setAttribute('fill', '#424242');
+          break;
+        case "running":
+          statusBg.setAttribute('fill', 'url(#active-chip-gradient)');
+          statusIcon.setAttribute('href', '#icon-running');
+          statusText.textContent = 'Running';
+          statusText.setAttribute('fill', '#ffffff');
+          break;
+        case "complete":
+          statusBg.setAttribute('fill', 'url(#complete-chip-gradient)');
+          statusIcon.setAttribute('href', '#icon-complete');
+          statusText.textContent = 'Complete';
+          statusText.setAttribute('fill', '#ffffff');
+          break;
+      }
+    }
+
+    const play = () => {
+      if (animationStarted) return;
+      animationStarted = true;
+      
+      // Make data transfer visible
+      dataTransfer.setAttribute('opacity', '1');
+      
+      // Step 1: Activate Node 1 and Node 2
+      updateNodeStatus('node1', 'running');
+      updateNodeStatus('node2', 'running');
+      node1Body.setAttribute('stroke', '#1e88e5');
+      node2Body.setAttribute('stroke', '#1e88e5');
+      node1Body.setAttribute('stroke-width', '2');
+      node2Body.setAttribute('stroke-width', '2');
+      
+      // Step 2: After 1 second, complete Node 1 and Node 2, send data to Node 3
+      setTimeout(() => {
+        updateNodeStatus('node1', 'complete');
+        updateNodeStatus('node2', 'complete');
+        node1Body.setAttribute('stroke', '#43a047');
+        node2Body.setAttribute('stroke', '#43a047');
+        
+        // Highlight active connection paths during data transfer
+        path13.setAttribute('stroke', '#1e88e5');
+        path23.setAttribute('stroke', '#1e88e5');
+        path13.setAttribute('stroke-width', '2');
+        path23.setAttribute('stroke-width', '2');
+        path13.setAttribute('stroke-dasharray', '');
+        path23.setAttribute('stroke-dasharray', '');
+        
+        // Animate data transfer to Node 3
+        dataMotion13.beginElement();
+        dataMotion23.beginElement();
+        
+        // Step 3: After data transfer, activate Node 3
+        setTimeout(() => {
+          updateNodeStatus('node3', 'running');
+          node3Body.setAttribute('stroke', '#1e88e5');
+          node3Body.setAttribute('stroke-width', '2');
+          
+          // Return connection paths to default state
+          path13.setAttribute('stroke', '#9e9e9e');
+          path23.setAttribute('stroke', '#9e9e9e');
+          path13.setAttribute('stroke-width', '1.5');
+          path23.setAttribute('stroke-width', '1.5');
+          path13.setAttribute('stroke-dasharray', '5,3');
+          path23.setAttribute('stroke-dasharray', '5,3');
+          
+          // Step 4: After 1 second, complete Node 3 and send data to Node 4
+          setTimeout(() => {
+            updateNodeStatus('node3', 'complete');
+            node3Body.setAttribute('stroke', '#43a047');
+            
+            // Highlight active connection path during data transfer
+            path34.setAttribute('stroke', '#1e88e5');
+            path34.setAttribute('stroke-width', '2');
+            path34.setAttribute('stroke-dasharray', '');
+            
+            // Animate data transfer to Node 4
+            dataMotion34.beginElement();
+            
+            // Step 5: After data transfer, activate Node 4
+            setTimeout(() => {
+              updateNodeStatus('node4', 'running');
+              node4Body.setAttribute('stroke', '#1e88e5');
+              node4Body.setAttribute('stroke-width', '2');
+              
+              // Return connection path to default state
+              path34.setAttribute('stroke', '#9e9e9e');
+              path34.setAttribute('stroke-width', '1.5');
+              path34.setAttribute('stroke-dasharray', '5,3');
+              
+              // Step 6: Complete Node 4
+              setTimeout(() => {
+                updateNodeStatus('node4', 'complete');
+                node4Body.setAttribute('stroke', '#43a047');
+                
+                // Reset animation after 3 seconds
+                setTimeout(() => {
+                  // Reset all nodes
+                  updateNodeStatus('node1', 'inactive');
+                  updateNodeStatus('node2', 'inactive');
+                  updateNodeStatus('node3', 'inactive');
+                  updateNodeStatus('node4', 'inactive');
+                  
+                  node1Body.setAttribute('stroke', '#e0e0e0');
+                  node2Body.setAttribute('stroke', '#e0e0e0');
+                  node3Body.setAttribute('stroke', '#e0e0e0');
+                  node4Body.setAttribute('stroke', '#e0e0e0');
+                  node1Body.setAttribute('stroke-width', '1.5');
+                  node2Body.setAttribute('stroke-width', '1.5');
+                  node3Body.setAttribute('stroke-width', '1.5');
+                  node4Body.setAttribute('stroke-width', '1.5');
+                  
+                  dataTransfer.setAttribute('opacity', '0');
+                  animationStarted = false;
+                  setTimeout(play, 3000); // Allow replay after 3 seconds
+                }, 3000);
+              }, 1500);
+            }, 1000);
+          }, 1500);
+        }, 1000);
+      }, 1500);
+    }
+
+    // Add subtle floating animation to nodes
+    const nodes = document.getElementById('nodes').children;
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+      const delay = i * 0.5; // Stagger the animations
+      
+      // Create and apply floating animation
+      const animateY = document.createElementNS('http://www.w3.org/2000/svg', 'animateTransform');
+      animateY.setAttribute('attributeName', 'transform');
+      animateY.setAttribute('type', 'translate');
+      animateY.setAttribute('values', `${node.transform.baseVal[0].matrix.e} ${node.transform.baseVal[0].matrix.f};${node.transform.baseVal[0].matrix.e} ${node.transform.baseVal[0].matrix.f-5};${node.transform.baseVal[0].matrix.e} ${node.transform.baseVal[0].matrix.f}`);
+      animateY.setAttribute('dur', '3s');
+      animateY.setAttribute('begin', `${delay}s`);
+      animateY.setAttribute('repeatCount', 'indefinite');
+      animateY.setAttribute('additive', 'replace');
+      
+      node.appendChild(animateY);
+    }
+    play()
+  ]]></script>
+</svg>

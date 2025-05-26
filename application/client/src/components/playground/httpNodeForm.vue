@@ -61,6 +61,7 @@
           :variable="body"
           :canRemove="false"
           @update="onUpdateBody($event)"
+          :dataType="'object'"
         ></variable-form>
       </template>
     </expension-panel>
@@ -93,6 +94,7 @@
             :canRemove="true"
             @remove="RemovePathParam(index)"
             @update="onUpdatePathParam(index, $event)"
+            :dataType="'string'"
           ></variable-form>
         </div>
         <div
@@ -132,6 +134,7 @@
             :canRemove="true"
             @remove="RemoveQueryParam(index)"
             @update="onUpdateQueryParam(index, $event)"
+            :dataType="'string'"
           ></variable-form>
         </div>
         <div
@@ -168,6 +171,7 @@
             :canRemove="true"
             @remove="RemoveHeader(index)"
             @update="onUpdateHeader(index, $event)"
+            :dataType="'string'"
           ></variable-form>
         </div>
         <div

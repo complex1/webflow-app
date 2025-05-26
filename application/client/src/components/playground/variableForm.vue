@@ -28,14 +28,7 @@
         </span>
       </div>
     </div>
-    <wfa-input
-      id="description"
-      label="Description"
-      v-model="description"
-      @update:modelValue="update"
-      placeholder="Optional description"
-    />
-    <div v-if="!formStore">
+    <div v-if="hasDefaultValue">
       <wfa-input
         id="type"
         label="Type"
@@ -44,6 +37,7 @@
         @update:modelValue="typeChange"
         :error="typeError"
         required
+        v-if="!dataType"
       >
         <option value="string">String</option>
         <option value="number">Number</option>
@@ -112,6 +106,14 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    hasDefaultValue: {
+      type: Boolean,
+      default: true,
+    },
+    dataType: {
+      type: String as PropType<'string' | 'number' | 'boolean' | 'object' | 'null' | 'undefined'>,
+      default: undefined,
+    },
   },
   emits: ['update', 'remove'],
   setup(props, { emit }) {
@@ -124,7 +126,7 @@ export default defineComponent({
     
     // Reactive state
     const name = ref<string>(props.variable.name);
-    const type = ref<string>(props.variable.type);
+    const type = ref<string>(props.variable.type || props.dataType || 'string');
     const description = ref<string>(props.variable.description);
     const defaultValue = ref<any>(props.variable.defaultValue);
     const required = ref<boolean>(props.variable.required);
@@ -147,6 +149,7 @@ export default defineComponent({
     };
     
     const typeChange = () => {
+      if (!props.dataType) return;
       // Reset default value based on selected type
       if (type.value === 'string') {
         defaultValue.value = '';
