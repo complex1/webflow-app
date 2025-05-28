@@ -219,6 +219,10 @@ export default {
       type: HttpNode,
       required: true,
     },
+    isEdit: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     variableForm,
@@ -246,6 +250,7 @@ export default {
   methods: {
     ...mapMutations({
       addHttpNode: 'workflowModule/addHttpNode',
+      updateHttpNode: 'workflowModule/updateHttpNode',
     }),
     update() {
       this.validateFields();
@@ -389,7 +394,10 @@ export default {
       httpNode.queryParams = this.queryParams;
       httpNode.headers = this.headers;
       httpNode.body = this.body;
-      this.addHttpNode(httpNode);
+      if (this.isEdit && this.node) {
+        httpNode.id = this.node.id; // Preserve the ID for updates
+      }
+      this.isEdit ? this.updateHttpNode(httpNode) : this.addHttpNode(httpNode);
 
       this.resetForm();
       this.$emit('close');
@@ -413,6 +421,19 @@ export default {
       this.baseUrlError = '';
       this.urlError = '';
     },
+  },
+  created() {
+    if (this.isEdit && this.node) {
+      this.name = this.node.name;
+      this.description = this.node.description;
+      this.baseUrl = this.node.baseUrl;
+      this.url = this.node.url;
+      this.method = this.node.method || 'GET';
+      this.pathParams = this.node.pathParams || [];
+      this.queryParams = this.node.queryParams || [];
+      this.headers = this.node.headers || [];
+      this.body = this.node.body || null;
+    }
   },
 };
 </script>

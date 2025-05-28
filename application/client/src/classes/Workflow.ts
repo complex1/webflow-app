@@ -40,6 +40,7 @@ export class Workflow {
 
   removeNode(id: string) {
     this.nodes.delete(id);
+    this.removeUnusedEdges();
   }
   removeEdge(id: string) {
     const edge = this.edges.find((e) => e.id === id);

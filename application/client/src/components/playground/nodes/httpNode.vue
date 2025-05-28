@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white round-2 shadow-2">
     <connection-handel :id="nodeData?.id"></connection-handel>
-    <node-header :nodeData="nodeData" />
+    <node-header :nodeData="nodeData" @edit-node="$emit('edit-node', $event)" @delete-node="$emit('delete-node', $event)" />
     <div class="p-m">
       <div class="http-api-container flex-v-center p-s round-1 bg-light mb-m">
         <span

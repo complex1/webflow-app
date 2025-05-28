@@ -75,15 +75,15 @@ export default {
   methods: {
     editNode() {
       this.$refs.popover.close();
-      this.$emit('edit-node', this.nodeData.id);
+      this.$emit('editNode', this.nodeData.id);
     },
     deleteNode() {
       this.$refs.popover.close();
       DeleteConfirmationPopup(
         'Are you sure you want to delete this node?'
       ).then((result) => {
-        if (result.isConfirmed) {
-          this.$emit('delete-node', this.nodeData.id);
+        if (result) {
+          this.$emit('deleteNode', this.nodeData.id);
         }
       });
     },

@@ -75,6 +75,22 @@ export default {
         console.warn(`Node not found for update: ${node.id}`);
       }
     },
+    updateHttpNode(state: WorkflowState, httpNode: HttpNode) {
+      const nodeIndex = state.viewNodes.findIndex((n) => n.id === httpNode.id);
+      if (nodeIndex > -1) {
+        state.viewNodes[nodeIndex] = {
+          id: httpNode.id,
+          position: {
+            x: state.viewNodes[nodeIndex].position.x,
+            y: state.viewNodes[nodeIndex].position.y,
+          },
+          type: httpNode.type,
+        };
+        state.workflow.updateNode(httpNode);
+      } else {
+        console.warn(`HTTP Node not found for update: ${httpNode.id}`);
+      }
+    },
     removeNode(state: WorkflowState, id: string) {
       const nodeIndex = state.viewNodes.findIndex((n) => n.id === id);
       if (nodeIndex > -1) {

@@ -35,10 +35,10 @@
         <add-node></add-node>
       </Controls>
       <template #node-HTTP="nodeData">
-        <HttpNode :id="nodeData.id" @editNode="editNode" />
+        <HttpNode :id="nodeData.id" @editNode="editNode" @delete-node="deleteNode" />
       </template>
       <template #node-FUNCTIONAL="nodeData">
-        <FunctionalNode :id="nodeData.id" @editNode="editNode" />
+        <FunctionalNode :id="nodeData.id" @editNode="editNode" @delete-node="deleteNode" />
       </template>
     </VueFlow>
     <edit-node :id="editNodeId" :open="openEdit" @close="closeEdit" />
@@ -137,6 +137,10 @@ export default defineComponent({
     const closeEdit = () => {
       openEdit.value = false;
       editNodeId.value = null;
+    };
+
+    const deleteNode = (nodeId: string) => {
+      store.commit('workflowModule/removeNode', nodeId);
     };
 
     const onConnect = (params: ConnectParams) => {
@@ -270,7 +274,8 @@ export default defineComponent({
       onViewportChange,
       onNodesInitialized,
       onEdgesChange,
-      miniMapNodeColor
+      miniMapNodeColor,
+      deleteNode
     };
   }
 });
