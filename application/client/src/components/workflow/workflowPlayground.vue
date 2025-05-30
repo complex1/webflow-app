@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import { VueFlow } from '@vue-flow/core';
 import { MiniMap } from '@vue-flow/minimap';
 import { Background } from '@vue-flow/background';
@@ -131,6 +131,14 @@ export default defineComponent({
     // Computed properties
     const nodes = computed(() => store.state.workflowModule.viewNodes);
     const edges = computed(() => store.state.workflowModule.viewEdges);
+
+    // Watchers
+    // if nodes changes form empty to non-empty, log the positions of all nodes
+    watch(nodes, (newNodes, oldValue) => {
+      if (newNodes.length > 0 && oldValue?.length === 0) {
+        vueFlow?.value?.fitView();
+      }
+    }, { immediate: true });
     
     // Methods
     const editNode = (nodeId: string) => {

@@ -1,4 +1,5 @@
 import { HttpService } from './http';
+import { localProxyFn } from './localhostProxy.service';
 
 /**
  * ProxyService - A service to make API calls through the server proxy
@@ -18,6 +19,13 @@ export const proxyService = {
    * @returns {Promise<any>} - The API response
    */
   async request(options: any) {
+      const localhostRegex = /(localhost|127\.0\.0\.1)/;
+      const isLocalhost = localhostRegex.test(options.url);
+      if (isLocalhost) {
+          // If the request is to localhost, use the local proxy function
+          return localProxyFn(options);
+      }
+
       const httpService = new HttpService();
       httpService.url = '/api/proxy';
       httpService.method = 'POST';

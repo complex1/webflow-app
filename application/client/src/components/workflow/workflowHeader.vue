@@ -62,7 +62,8 @@ import { getPostBody } from '../../utils/workflowUtils';
 import { success, error } from '../../lib/toast';
 import UserAvatar from '../common/userAvatar.vue';
 import { exportWorkflowService } from '../../services/importExport.service';
-import { LoggerInterface, LogType } from '../../classes/logger';
+import { LogType } from '../../classes/logger';
+import type { LoggerInterface } from '../../classes/logger';
 
 export default defineComponent({
   components: { UserAvatar },

@@ -51,7 +51,8 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import JsonViewer from './jsonViewer.vue';
-import { LogEntry, LogType } from '../../classes/logger';
+import type { LogEntry } from '../../classes/logger';
+import { LogType } from '../../classes/logger';
 
 export default defineComponent({
   name: 'LogsViewer',

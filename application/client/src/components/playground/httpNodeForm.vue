@@ -50,6 +50,12 @@
         <option value="PATCH">PATCH</option>
       </wfa-input>
     </div>
+    <div v-if="isLocalhost" class="http-localhost-warning text-s">
+      <i class="pi pi-exclamation-triangle" style="color: var(--color-warning);"></i>
+      <span style="margin-left: var(--spacing-medium);">Using localhost or 127.0.0.1 as the base URL
+        will only work in the <b class="text-warning">local environment</b> and
+        may cause issues with <b class="text-warning">CORS</b>.</span>
+    </div>
     <expension-panel v-if="body" class="mt-m">
       <template #header>
         <div class="flex-v-center flex-space-between pr-l">
@@ -247,6 +253,14 @@ export default {
       urlError: '',
     };
   },
+  computed: {
+    // Computed properties can be added here if needed
+    isLocalhost() {
+      const localhostRegex = /(localhost|127\.0\.0\.1)/;
+      const isLocalhost = localhostRegex.test(this.baseUrl);
+      return isLocalhost;
+    },
+  },
   methods: {
     ...mapMutations({
       addHttpNode: 'workflowModule/addHttpNode',
@@ -438,4 +452,15 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped lang="scss">
+.http-localhost-warning {
+  padding: var(--spacing-large);
+  border: 1px solid var(--color-warning);
+  background-color: rgba(var(--color-warning-rgb), 0.1);
+  color: var(--color-text-primary);
+  border-radius: 4px;
+  margin-top: var(--spacing-large);
+  display: flex;
+  align-items: center;
+}
+</style>

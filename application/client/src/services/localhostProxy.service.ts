@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import type { AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import axios from "axios";
 
 interface ProxyRequestBody {
   url: string;
@@ -10,12 +10,8 @@ interface ProxyRequestBody {
   params?: Record<string, string>;
   timeout?: number;
 }
-
-export const proxyController = {
-  /**
-   * Handle proxy requests by forwarding them to the target API
-   */
-  async handleProxyRequest(req: Request, res: Response): Promise<void> {
+export const localProxyFn = (req: ProxyRequestBody) => {
+  return new Promise<void>(async (resolve: any) => {
     try {
       const {
         url,
@@ -25,18 +21,7 @@ export const proxyController = {
         body,
         params,
         timeout = 30000 // Default 30 seconds timeout
-      } = req.body as ProxyRequestBody;
-      
-      // Basic validation
-      if (!url && !baseUrl) {
-        res.status(400).json({ error: 'Either url or baseUrl is required' });
-        return;
-      }
-      
-      if (!method) {
-        res.status(400).json({ error: 'Method is required' });
-        return;
-      }
+      } = req
       
       // Prepare request config
       const requestConfig: AxiosRequestConfig = {
@@ -65,7 +50,7 @@ export const proxyController = {
       const response: AxiosResponse = await axios(requestConfig);
       
       // Return the response data, status, and headers
-      res.json({
+      resolve({
         data: response.data,
         status: response.status,
         statusText: response.statusText,
@@ -80,7 +65,7 @@ export const proxyController = {
       if (error?.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        res.json({
+        resolve({
           error: error.response.data || 'Unknown error',
           status: error.response.status,
           statusText: error.response.statusText,
@@ -88,17 +73,18 @@ export const proxyController = {
         });
       } else if (error?.request) {
         // The request was made but no response was received
-        res.json({
+        resolve({
           error: 'No response from target server',
           message: 'The request was made but no response was received'
         });
       } else {
         // Something happened in setting up the request that triggered an Error
-        res.json({
+        resolve({
           error: 'Failed to make proxy request',
           message: error?.message || 'Unknown error'
         });
       }
     }
   }
+  );
 };
