@@ -1,18 +1,21 @@
 <template>
   <div class="fh fw">
+    <logs-viewer-demo></logs-viewer-demo>
     <router-view></router-view>
     <toast></toast>
     <theme-toggle/>
+
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import ThemeToggle from './components/common/themeToggle.vue';
+import LogsViewerDemo from './components/logsViewer/logsViewerDemo.vue';
 import toast from './lib/toast.vue';
 
 export default defineComponent({
-  components: { toast, ThemeToggle },
+  components: { toast, ThemeToggle, LogsViewerDemo },
   name: 'App',
 });
 </script>
