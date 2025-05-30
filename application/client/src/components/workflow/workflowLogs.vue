@@ -1,16 +1,17 @@
 <template>
   <div class="logs">
-    <div v-if="!showLogs" class="log-btn" @click="toggleLogs">
-        Show Logs
+    <div v-if="!showLogs" class="log-btn flex-v-center" @click="toggleLogs">
+        <i class="pi pi-list" style="margin-right: var(--spacing-small);"></i>
+        <span>Show Logs</span>
     </div>
     <div v-else class="log-drawer" :style="{
             height: height + 'px',
-            bottom: '30px',
+            bottom: '0',
             left: '0',
             right: '0',
     }">
         <div class="logs-draggable-line" ref="dragHandle" @mousedown="startDrag"></div>
-        <div class="log-content">
+        <div class="log-content fh">
             <logs-viewer :logs="logs" title="Workflow Logs" @close="toggleLogs" />
         </div>
     </div>
@@ -26,7 +27,7 @@ export default {
     data() {
         return {
             showLogs: false,
-            height: 100,
+            height: 200,
         };
     },
     computed: {
@@ -42,7 +43,7 @@ export default {
             const onMouseMove = (e) => {
                 const windowHeight = window.innerHeight;
                 const newHeight = windowHeight - e.clientY;
-                this.height = newHeight;
+                this.height = Math.max(150, newHeight); // Minimum height of 150px and maximum height of window height minus 50px
             };
 
             const onMouseUp = () => {
@@ -58,52 +59,69 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* Using CSS variables from the global application style */
 .logs {
   .log-btn {
     position: fixed;
-    bottom: 20px;
+    bottom: var(--spacing-xlarge);
     right: 50%;
     transform: translateX(50%);
     z-index: 1;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 10px;
+    background-color: var(--color-light);
+    border: 1px solid var(--color-border);
+    padding: var(--spacing-medium);
     cursor: pointer;
     text-align: center;
     border-radius: 5px;
     transition: background-color 0.3s;
+    box-shadow: var(--shadow-drop);
 
     &:hover {
-      background-color: #e0e0e0;
+      background-color: var(--color-background);
     }
   }
     .log-drawer {
         position: fixed;
-        bottom: 30px;
+        bottom: 0;
         right: 0;
         left: 0;
-        background-color: #fff;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        background-color: var(--color-background);
+        box-shadow: 0 -2px 10px var(--mask-color);
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
         overflow-y: auto;
         z-index: 1001;
+        border-top: 1px solid var(--color-border);
 
          .logs-draggable-line{
             position: absolute;
             top: -5px;
             left: 0;
             right: 0;
-            height: 5px;
+            height: 10px;
             background-color: transparent;
             cursor: ns-resize;
+            
+            &:hover {
+              &:after {
+                content: '';
+                position: absolute;
+                top: 4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 40px;
+                height: 2px;
+                background-color: var(--color-border);
+                border-radius: 2px;
+              }
+            }
         }
     
         .log-header {
         display: flex;
         justify-content: space-between;
-        padding: 10px;
-        border-bottom: 1px solid #ccc;
+        padding: var(--spacing-medium);
+        border-bottom: 1px solid var(--color-border);
     
         button {
             background-color: transparent;
@@ -111,7 +129,7 @@ export default {
             cursor: pointer;
     
             &:hover {
-            color: #007bff;
+            color: var(--color-primary);
             }
         }
         }

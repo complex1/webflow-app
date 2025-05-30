@@ -1,38 +1,14 @@
 <template>
-  <div class="logs-viewer">
-    <div class="logs-header flex-v-center">
+  <div class="logs-viewer fh">
+    <div class="logs-header flex-v-center flex-space-between">
       <h2 class="logs-title">{{ title }}</h2>
-      <div class="logs-filter flex-grow">
-        <div class="filter-group">
-          <label class="filter-label" title="Filter log entries">
-            <span class="icon">🔍</span>
-            <input 
-              type="text" 
-              v-model="filterText" 
-              placeholder="Filter logs..." 
-              class="filter-input"
-              @input="filterLogs"
-            />
-          </label>
-        </div>
-        <div class="log-levels">
-          <button 
-            v-for="level in logLevels" 
-            :key="level.type" 
-            class="level-toggle" 
-            :class="{ active: activeLogTypes.includes(level.type) }"
-            @click="toggleLogType(level.type)"
-            v-tooltip="level.title"
-          >
-            <span class="level-icon" :class="level.type">{{ level.icon }}</span>
-          </button>
-        </div>
+      <div class="logs-filter">
         <div class="logs-actions">
           <button @click="clearLogs" class="action-button" title="Clear console">
-            <span class="icon">🗑️</span>
+            <i class="pi pi-trash"></i>
           </button>
           <button @click="copyLogs" class="action-button" title="Copy logs to clipboard">
-            <span class="icon">📋</span>
+            <i class="pi pi-copy"></i>
           </button>
           <button @click="closeLogs" class="action-button" title="Close logs">
             <i class="pi pi-times"></i>
@@ -49,7 +25,7 @@
         :class="log.type"
       >
         <div class="log-timestamp">{{ formatTimestamp(log.timestamp) }}</div>
-        <div class="log-icon">{{ getLogIcon(log.type) }}</div>
+        <div class="log-icon"><i :class="getLogIcon(log.type)"></i></div>
         <div class="log-content">
           <template v-if="isJsonObject(log.message)">
             <json-viewer :json-data="parseJsonMessage(log.message)" :max-expand-depth="1"></json-viewer>
@@ -75,7 +51,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import JsonViewer from './jsonViewer.vue';
-import { LogEntry } from '../../classes/logger';
+import { LogEntry, LogType } from '../../classes/logger';
 
 export default defineComponent({
   name: 'LogsViewer',
@@ -95,44 +71,14 @@ export default defineComponent({
   emits: ['clear', 'close'],
   setup(props, { emit }) {
     const logsContainer = ref<HTMLElement | null>(null);
-    const filterText = ref('');
-    const activeLogTypes = ref<string[]>(['info', 'error', 'warning', 'debug']);
     const autoScroll = ref(true);
 
-    const logLevels = [
-      { type: 'info', icon: 'ℹ️', title: 'Info messages' },
-      { type: 'error', icon: '❌', title: 'Errors' },
-      { type: 'warning', icon: '⚠️', title: 'Warnings' },
-      { type: 'debug', icon: '🔍', title: 'Debug messages' }
-    ];
-
     const filteredLogs = computed(() => {
-      return props.logs.filter(log => {
-        const typeMatches = activeLogTypes.value.includes(log.type);
-        
-        if (!filterText.value) {
-          return typeMatches;
-        }
-        
-        const searchText = filterText.value.toLowerCase();
-        let messageText = '';
-        
-        if (typeof log.message === 'string') {
-          messageText = log.message.toLowerCase();
-        } else {
-          try {
-            messageText = JSON.stringify(log.message).toLowerCase();
-          } catch (e) {
-            messageText = String(log.message).toLowerCase();
-          }
-        }
-        
-        return typeMatches && messageText.includes(searchText);
-      });
+      return props.logs;
     });
 
     const filterActive = computed(() => {
-      return filterText.value !== '' || activeLogTypes.value.length < logLevels.length;
+      return false; // Always false since we don't have filtering now
     });
 
     const scrollToBottom = () => {
@@ -150,22 +96,20 @@ export default defineComponent({
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
     };
 
-    const getLogIcon = (type: string): string => {
-      const level = logLevels.find(l => l.type === type);
-      return level ? level.icon : 'ℹ️';
+    const getLogIcon = (type: LogType): string => {
+      // Map log types to their respective icons
+      const iconMap: Record<LogType, string> = {
+        [LogType.INFO]: 'pi pi-info-circle',
+        [LogType.ERROR]: 'pi pi-exclamation-triangle',
+        [LogType.WARNING]: 'pi pi-exclamation-circle',
+        [LogType.WARN]: 'pi pi-exclamation-circle',
+        [LogType.DEBUG]: 'pi pi-bug',
+        [LogType.SUCCESS]: 'pi pi-check-circle'
+      };
+      return iconMap[type] || 'pi pi-info-circle';
     };
 
-    const toggleLogType = (type: string) => {
-      if (activeLogTypes.value.includes(type)) {
-        activeLogTypes.value = activeLogTypes.value.filter(t => t !== type);
-      } else {
-        activeLogTypes.value.push(type);
-      }
-    };
 
-    const filterLogs = () => {
-      // The filtering is handled by the computed property
-    };
 
     const clearLogs = () => {
       emit('clear');
@@ -258,14 +202,9 @@ export default defineComponent({
     return {
       logsContainer,
       filteredLogs,
-      filterText,
-      activeLogTypes,
-      logLevels,
       filterActive,
       formatTimestamp,
       getLogIcon,
-      toggleLogType,
-      filterLogs,
       clearLogs,
       copyLogs,
       isJsonObject,
@@ -285,6 +224,7 @@ export default defineComponent({
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
   font-size: var(--font-size-small);
   color: var(--color-text-primary);
+  background-color: var(--color-background);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -308,52 +248,6 @@ export default defineComponent({
   gap: var(--spacing-medium);
 }
 
-.filter-group {
-  flex: 1;
-}
-
-.filter-label {
-  display: flex;
-  align-items: center;
-  border-radius: 4px;
-  padding: 0 var(--spacing-medium);
-}
-
-.filter-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: var(--color-text-primary);
-  padding: var(--spacing-small);
-  outline: none;
-  width: 100%;
-}
-
-.log-levels {
-  display: flex;
-  gap: var(--spacing-small);
-}
-
-.level-toggle {
-  background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0.5;
-  transition: opacity 0.2s;
-}
-
-.level-toggle.active {
-  opacity: 1;
-  background-color: var(--color-light);
-  border-color: var(--color-primary);
-}
-
 .logs-actions {
   display: flex;
   gap: var(--spacing-small);
@@ -362,6 +256,7 @@ export default defineComponent({
 .action-button {
   background: transparent;
   border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
   border-radius: 4px;
   width: 28px;
   height: 28px;
@@ -381,35 +276,50 @@ export default defineComponent({
   flex: 1;
   overflow-y: auto;
   padding: 0;
-  max-height: calc(100vh - 50px); /* Adjust based on header height */
+  max-height: calc(100% - 50px); /* Adjust based on header height */
 }
 
 .log-entry {
   display: flex;
   padding: var(--spacing-small) var(--spacing-medium);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border-light, rgba(0,0,0,0.05));
   min-height: 24px;
   align-items: flex-start;
+  transition: all 0.2s ease;
 }
 
 .log-entry:hover {
-  background-color: var(--color-light);
+  filter: brightness(0.95);
 }
 
 .log-entry.info {
   color: var(--color-info);
+  background-color: rgba(var(--color-info-rgb), 0.05);
+  border-left: 3px solid var(--color-info);
 }
 
 .log-entry.error {
   color: var(--color-danger);
+  background-color: rgba(var(--color-danger-rgb), 0.05);
+  border-left: 3px solid var(--color-danger);
 }
 
-.log-entry.warning {
+.log-entry.warning, .log-entry.warn {
   color: var(--color-warning);
+  background-color: rgba(var(--color-warning-rgb), 0.05);
+  border-left: 3px solid var(--color-warning);
 }
 
 .log-entry.debug {
   color: var(--color-success);
+  background-color: rgba(var(--color-success-rgb), 0.05);
+  border-left: 3px solid var(--color-success);
+}
+
+.log-entry.success {
+  color: var(--color-success);
+  background-color: rgba(var(--color-success-rgb), 0.05);
+  border-left: 3px solid var(--color-success);
 }
 
 .log-timestamp {
@@ -465,5 +375,15 @@ export default defineComponent({
 
 .icon {
   font-size: var(--font-size-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* PrimeIcons specific styling */
+.pi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
