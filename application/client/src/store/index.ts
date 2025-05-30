@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import workflowModule from './workflowModule';
+import workflowLoggerModule from './workflowLoggerModule';
 interface State {
   user: {
     id: string | null;
@@ -48,6 +49,7 @@ const store = createStore<State>({
   getters: {},
   modules: {
     workflowModule,
+    workflowLoggerModule
   },
 });
 

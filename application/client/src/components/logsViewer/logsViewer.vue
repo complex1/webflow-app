@@ -1,7 +1,8 @@
 <template>
   <div class="logs-viewer">
-    <div class="logs-header">
-      <div class="logs-filter">
+    <div class="logs-header flex-v-center">
+      <h2 class="logs-title">{{ title }}</h2>
+      <div class="logs-filter flex-grow">
         <div class="filter-group">
           <label class="filter-label" title="Filter log entries">
             <span class="icon">🔍</span>
@@ -21,7 +22,7 @@
             class="level-toggle" 
             :class="{ active: activeLogTypes.includes(level.type) }"
             @click="toggleLogType(level.type)"
-            :title="level.title"
+            v-tooltip="level.title"
           >
             <span class="level-icon" :class="level.type">{{ level.icon }}</span>
           </button>
@@ -32,6 +33,9 @@
           </button>
           <button @click="copyLogs" class="action-button" title="Copy logs to clipboard">
             <span class="icon">📋</span>
+          </button>
+          <button @click="closeLogs" class="action-button" title="Close logs">
+            <i class="pi pi-times"></i>
           </button>
         </div>
       </div>
@@ -71,12 +75,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import JsonViewer from './jsonViewer.vue';
-
-interface LogEntry {
-  timestamp: number;
-  type: 'info' | 'error' | 'warning' | 'debug';
-  message: string | object;
-}
+import { LogEntry } from '../../classes/logger';
 
 export default defineComponent({
   name: 'LogsViewer',
@@ -87,9 +86,13 @@ export default defineComponent({
     logs: {
       type: Array as () => LogEntry[],
       required: true
+    },
+    title: {
+      type: String,
+      default: 'Logs Viewer'
     }
   },
-  emits: ['clear'],
+  emits: ['clear', 'close'],
   setup(props, { emit }) {
     const logsContainer = ref<HTMLElement | null>(null);
     const filterText = ref('');
@@ -239,6 +242,10 @@ export default defineComponent({
       return message.includes('\n') || message.includes('\r');
     };
 
+    const closeLogs = () => {
+      emit('close');
+    };
+
     // Watch for changes to the logs array and scroll to bottom
     watch(() => props.logs.length, () => {
       scrollToBottom();
@@ -263,7 +270,8 @@ export default defineComponent({
       copyLogs,
       isJsonObject,
       parseJsonMessage,
-      containsNewlines
+      containsNewlines,
+      closeLogs
     };
   }
 });
@@ -276,18 +284,22 @@ export default defineComponent({
   height: 100%;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
   font-size: var(--font-size-small);
-  background-color: var(--color-background);
   color: var(--color-text-primary);
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: var(--shadow-drop);
 }
 
 .logs-header {
   padding: var(--spacing-medium);
-  background-color: var(--color-light);
   border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;
+}
+
+.logs-title {
+  font-size: var(--font-size-medium);
+  font-weight: bold;
+  color: var(--color-text-primary);
+  margin: 0;
 }
 
 .logs-filter {
@@ -303,7 +315,6 @@ export default defineComponent({
 .filter-label {
   display: flex;
   align-items: center;
-  background-color: var(--color-background);
   border-radius: 4px;
   padding: 0 var(--spacing-medium);
 }
@@ -370,6 +381,7 @@ export default defineComponent({
   flex: 1;
   overflow-y: auto;
   padding: 0;
+  max-height: calc(100vh - 50px); /* Adjust based on header height */
 }
 
 .log-entry {

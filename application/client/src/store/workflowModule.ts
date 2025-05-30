@@ -4,6 +4,7 @@ import HttpNode from '../classes/HttpNode';
 import { Workflow } from '../classes/Workflow';
 import type { IEdge, INode } from '../model';
 import { warning } from '../lib/toast';
+import type { LoggerInterface } from '../classes/logger';
 export interface WorkflowState {
   workflow: Workflow;
   viewNodes: INode[];
@@ -32,9 +33,9 @@ export default {
       state.workflowName = 'Untitled';
       state.workflowDescription = '';
     },
-    executeWorkflow(state: WorkflowState) {
+    executeWorkflow(state: WorkflowState, logger: LoggerInterface) {
       const { workflow } = state;
-      workflow.execute((w: Workflow) => {
+      workflow.execute(logger, (w: Workflow) => {
         state.workflow = w;
       });
     },

@@ -1,5 +1,5 @@
 import { proxyService } from '../services/proxy.service';
-import type Logger from './logger';
+import type { LoggerInterface } from './logger';
 import Node, { NodeStatus, NodeType } from './Node';
 import Variable from './Variable';
 
@@ -60,8 +60,8 @@ export default class HttpNode extends Node {
         return this.body ? this.body.get(globalStore) : null;
     }
 
-    execute(globalStore: Record<string, any>, logger: Logger): Promise<any> {
-        logger.info(`Executing HTTP Node: ${this.name} (${this.id})`);
+    execute(globalStore: Record<string, any>, logger: LoggerInterface): Promise<any> {
+        logger?.info(`Executing HTTP Node: ${this.name} (${this.id})`);
         this.executing = true;
         this.hasError = false;
         this.errorMessage = null;
@@ -92,7 +92,7 @@ export default class HttpNode extends Node {
         }
         const executionStartTime = Date.now();
         this.executionDone = false;
-        logger.info(`Executing HTTP request to ${url} with method ${this.method}`);
+        logger?.info(`Executing HTTP request to ${url} with method ${this.method}`);
         return new Promise((resolve) => {
             proxyService.request(options)
             .then((data:any) => {
@@ -101,14 +101,14 @@ export default class HttpNode extends Node {
                     this.errorMessage = data.error;
                     this.nodeStatus = NodeStatus.FAILURE;
                     this.nodeData = null;
-                    logger.error(`HTTP request failed: ${data.error}`);
+                    logger?.error(`HTTP request failed: ${data.error}`);
                 } else {
                     this.hasError = false;
                     this.executing = false;
                     this.nodeStatus = NodeStatus.SUCCESS;
                     this.nodeData = data.data;
-                    logger.success(`HTTP request ${url} with method ${this.method} succeeded:`);
-                    logger.info(data.data)
+                    logger?.success(`HTTP request ${url} with method ${this.method} succeeded:`);
+                    logger?.info(data.data)
                 }
                 resolve(undefined);
             })
@@ -118,13 +118,13 @@ export default class HttpNode extends Node {
                 this.errorMessage = error instanceof Error ? error.message : String(error); // set the error message
                 this.nodeStatus = NodeStatus.FAILURE;
                 this.nodeData = null;
-                logger.error(`HTTP request failed: ${this.errorMessage}`);
+                logger?.error(`HTTP request failed: ${this.errorMessage}`);
                 resolve(undefined);
             })
             .finally(() => {
                 this.executionTime = Date.now() - executionStartTime;
                 this.executionDone = true;
-                logger.info(`HTTP Node ${url} with method ${this.method} execution completed in ${this.executionTime} ms`);
+                logger?.info(`HTTP Node ${url} with method ${this.method} execution completed in ${this.executionTime} ms`);
             });
         });
     }

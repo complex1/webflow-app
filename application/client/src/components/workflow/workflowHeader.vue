@@ -62,6 +62,7 @@ import { getPostBody } from '../../utils/workflowUtils';
 import { success, error } from '../../lib/toast';
 import UserAvatar from '../common/userAvatar.vue';
 import { exportWorkflowService } from '../../services/importExport.service';
+import { LoggerInterface, LogType } from '../../classes/logger';
 
 export default defineComponent({
   components: { UserAvatar },
@@ -106,9 +107,38 @@ export default defineComponent({
       store.commit('workflowModule/setWorkflowName', localWorkflowName.value);
     };
     
+    const addWorkFlowLog = (message: string, type: LogType) => {
+          store.commit('workflowLoggerModule/addLog', {
+            message,
+            type,
+            timestamp: new Date().toISOString(),
+        });
+    };
+      const logger: LoggerInterface = {
+        log: (message: string, type: LogType) => {
+          addWorkFlowLog(message, type);
+        },
+        clear: () => {},
+        info: (message: string) => {
+          addWorkFlowLog(message, LogType.INFO);
+        },
+        warn: (message: string) => {
+          addWorkFlowLog(message, LogType.WARN);
+        },
+        error: (message: string) => {
+          addWorkFlowLog(message, LogType.ERROR);
+        },
+        debug: (message: string) => {
+          addWorkFlowLog(message, LogType.DEBUG);
+        },
+        logs: [],
+        success: function(message: any): void {
+          addWorkFlowLog(message, LogType.SUCCESS);
+        }
+      };
+
     const playWorkflow = () => {
-      console.log('Play workflow');
-      store.commit('workflowModule/executeWorkflow');
+      store.commit('workflowModule/executeWorkflow', logger);
     };
     
     const exportWorkflow = () => {

@@ -42,6 +42,7 @@
       </template>
     </VueFlow>
     <edit-node :id="editNodeId" :open="openEdit" @close="closeEdit" />
+    <workflow-logs />
   </div>
 </template>
 
@@ -56,6 +57,7 @@ import AddNode from '../playground/addNode.vue';
 import HttpNode from '../playground/nodes/httpNode.vue';
 import FunctionalNode from '../playground/nodes/functionalNode.vue';
 import EditNode from '../playground/editNode.vue';
+import WorkflowLogs from './workflowLogs.vue';
 
 // Define your interfaces here since there were issues with the external types file
 interface NodePosition {
@@ -108,6 +110,7 @@ export default defineComponent({
     HttpNode,
     FunctionalNode,
     EditNode,
+    WorkflowLogs,
   },
   setup() {
     // Store access
