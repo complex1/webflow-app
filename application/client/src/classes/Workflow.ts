@@ -1,6 +1,7 @@
 import Edge, { EdgeType } from './Edge';
 import FunctionalNode from './FunctionalNode';
 import HttpNode from './HttpNode';
+import Logger from './logger';
 import { NodeStatus } from './Node';
 
 type WorkflowNode = HttpNode | FunctionalNode;
@@ -11,6 +12,7 @@ export class Workflow {
   globalStore: Record<string, any>;
   sourceTargetMap: Map<string, string[]>;
   targetSourceMap: Map<string, string[]>;
+  logger: Logger;
 
   constructor() {
     this.nodes = new Map<string, WorkflowNode>();
@@ -18,6 +20,7 @@ export class Workflow {
     this.globalStore = {};
     this.sourceTargetMap = new Map();
     this.targetSourceMap = new Map();
+    this.logger = new Logger();
   }
 
   getNode(id: string) {
@@ -139,6 +142,7 @@ export class Workflow {
   }
   async execute(callback: (workflow: Workflow) => void) {
     // this.removeUnusedEdges();
+    this.logger.info('Workflow execution started');
     this.setMap();
     this.setOrder();
     this.setAllPending();
@@ -148,9 +152,9 @@ export class Workflow {
       const nodesAtOrder = Array.from(this.nodes.values()).filter((node) => node.getOrder() === i);
       groupedNodes.push(nodesAtOrder);
     }
-
+    this.logger.info('all Setup done, starting execution');
     for (const nodes of groupedNodes) {
-      await Promise.all(nodes.map((node) => node.execute(this.globalStore)));
+      await Promise.all(nodes.map((node) => node.execute(this.globalStore, this.logger)));
       if (nodes.some((node) => node.hasError)) {
         this.setAbortedByInterruption();
         break;
