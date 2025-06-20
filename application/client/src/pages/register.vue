@@ -57,7 +57,13 @@
 
           <div class="text-center text-m mt-m">
             Already have an account?
+            
             <router-link to="/login" class="text-primary-bg">Login</router-link>
+            <br>
+            or
+            <router-link to="/playground-example" class="text-primary-bg"
+            >Try the Playground</router-link
+          >
           </div>
         </form>
       </div>

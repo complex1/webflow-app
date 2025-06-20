@@ -120,6 +120,12 @@ h6, p {
   padding: 0;
 }
 
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
 hr {
   border: none;
   border-top: 0.75pt solid var(--color-border);

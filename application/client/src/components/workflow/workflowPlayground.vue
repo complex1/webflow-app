@@ -8,6 +8,7 @@
       :zoomOnPinch="true"
       :panOnScroll="true"
       :zoom="1"
+      
       @connect="onConnect"
       @nodeDrag="onNodeDrag"
       @nodeDragStop="onNodeDragStop"
@@ -259,7 +260,7 @@ export default defineComponent({
     // Lifecycle hooks
     onMounted(() => {
       // Log initial positions of all nodes when component is mounted
-      setZoomCssVariable(currentZoom.value);
+      vueFlow.value?.fitView();
     });
 
     onBeforeUnmount(() => {

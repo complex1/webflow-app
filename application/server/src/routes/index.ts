@@ -4,6 +4,7 @@ import webflowRoutes from './webflow.routes';
 import proxyRoutes from './proxy.routes';
 import { userController } from '../controllers/user.controller';
 import { googleAuthController } from '../controllers/google-auth.controller';
+import { exampleRoutes } from './example.routes';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.post('/auth/google', googleAuthController.googleLogin);
 router.use('/users', userRoutes);
 router.use('/webflows', webflowRoutes);
 router.use('/proxy', proxyRoutes);
+router.use('/example', exampleRoutes)
 
 export default router;

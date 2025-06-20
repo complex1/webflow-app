@@ -100,6 +100,11 @@
 
         <div class="text-center text-m mt-m">
           Don't have an account?
+          <router-link to="/playground-example" class="text-primary-bg"
+            >Try the Playground</router-link
+          >
+          <br />
+          or
           <router-link to="/register" class="text-primary-bg"
             >Register</router-link
           >

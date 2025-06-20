@@ -11,7 +11,7 @@ import './types/google.d.ts';
 const userService = new UserService();
 
 const path = window.location.pathname;
-const isLoginPage = path === '/login' || path === '/register';
+const isLoginPage = path === '/login' || path === '/register' || path === '/playground-example';
 const renderApp = () => {
   const app = createApp(App);
   app.use(store);

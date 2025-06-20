@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 // Import your pages
 import Playground from '../pages/playground.vue';
+import PlaygroundExample from '../pages/examplePage/playgroundExample.vue';
 import Register from '../pages/register.vue';
 import Login from '../pages/login.vue';
 import Dashboard from '../pages/dashboard.vue';
@@ -23,6 +24,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/playground',
     name: 'Playground',
     component: Playground
+  },
+  {
+    path: '/playground-example',
+    name: 'PlaygroundExample',
+    component: PlaygroundExample
   },
   {
     path: '/register',
