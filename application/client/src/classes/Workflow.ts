@@ -143,6 +143,7 @@ export class Workflow {
     this.setMap();
     this.setOrder();
     this.setAllPending();
+    this.globalStore = {};
     const groupedNodes: WorkflowNode[][] = [];
     const maxOrder = Math.max(...Array.from(this.nodes.values()).map((node) => node.getOrder()));
     for (let i = 1; i <= maxOrder; i++) {

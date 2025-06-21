@@ -7,74 +7,60 @@ const ExampleData =  {
   "data": {
     "edges": [
       {
-        "id": "63ab629f-06e2-43c4-9134-c51b96f5f5c5",
-        "source": "cc1f8fab-13b7-4cd5-b50c-effc9019b5c9",
-        "target": "c1ed3444-5706-4abc-af20-588a33d480b7",
-        "sourceHandle": "cc1f8fab-13b7-4cd5-b50c-effc9019b5c9",
-        "targetHandle": "c1ed3444-5706-4abc-af20-588a33d480b7"
-      },
-      {
-        "id": "2724e96f-6254-4f88-9c42-ff3a105cc73c",
-        "source": "cc1f8fab-13b7-4cd5-b50c-effc9019b5c9",
-        "target": "c1ed3444-5706-4abc-af20-588a33d480b7",
-        "sourceHandle": "data-cc1f8fab-13b7-4cd5-b50c-effc9019b5c9",
-        "targetHandle": "var-b8b2c2a3-2acd-4823-8826-63dcaf4a99ff"
-      },
-      {
-        "id": "b37dad81-9064-4c40-9879-16c523dedd41",
+        "id": "5e36e989-06b1-4152-aa05-a21573b44685",
         "source": "2401a62c-7023-43fa-93f2-8b98df01c950",
         "target": "9e2bbf33-1383-4404-aaaf-b991d21fb416",
         "sourceHandle": "2401a62c-7023-43fa-93f2-8b98df01c950",
         "targetHandle": "9e2bbf33-1383-4404-aaaf-b991d21fb416"
       },
       {
-        "id": "a65b84b3-bfb1-44e6-913a-ce0122ba2654",
+        "id": "a55e1a82-74d7-41de-b513-cfc9ee10e09a",
         "source": "9e2bbf33-1383-4404-aaaf-b991d21fb416",
         "target": "4e135cd1-03da-4c83-a39e-8125a662efd6",
         "sourceHandle": "9e2bbf33-1383-4404-aaaf-b991d21fb416",
         "targetHandle": "4e135cd1-03da-4c83-a39e-8125a662efd6"
       },
       {
-        "id": "d67c9e62-bb69-475a-bf87-47b8d82f90ba",
-        "source": "9e2bbf33-1383-4404-aaaf-b991d21fb416",
-        "target": "4e135cd1-03da-4c83-a39e-8125a662efd6",
-        "sourceHandle": "data-9e2bbf33-1383-4404-aaaf-b991d21fb416",
-        "targetHandle": "var-dea2b367-1e47-459f-9a3e-430d701990ce"
-      },
-      {
-        "id": "d3e916a0-9034-4f49-95ef-9a5e84fe1c50",
+        "id": "d3ec21f5-a54c-4c85-9f6f-f6ae8e100c69",
         "source": "4e135cd1-03da-4c83-a39e-8125a662efd6",
         "target": "a28f4da5-2f7d-41c0-ae60-04c0d3bfdd14",
         "sourceHandle": "4e135cd1-03da-4c83-a39e-8125a662efd6",
         "targetHandle": "a28f4da5-2f7d-41c0-ae60-04c0d3bfdd14"
       },
       {
-        "id": "95c3b390-296e-46b3-9cb2-9f4969eedcd1",
+        "id": "253830c7-46b9-47f3-b01b-f978fc8b772b",
         "source": "4e135cd1-03da-4c83-a39e-8125a662efd6",
         "target": "a28f4da5-2f7d-41c0-ae60-04c0d3bfdd14",
         "sourceHandle": "data-4e135cd1-03da-4c83-a39e-8125a662efd6",
         "targetHandle": "var-c9ae1d66-b131-4dd7-89ad-9c2bd06bda79"
       },
       {
-        "id": "71a664fb-26ea-48b4-9609-65bd4e115cea",
+        "id": "7508359f-dd59-4df7-a736-399529773d3e",
         "source": "c1ed3444-5706-4abc-af20-588a33d480b7",
         "target": "2401a62c-7023-43fa-93f2-8b98df01c950",
         "sourceHandle": "c1ed3444-5706-4abc-af20-588a33d480b7",
         "targetHandle": "2401a62c-7023-43fa-93f2-8b98df01c950"
       },
       {
-        "id": "97676927-97a9-42af-9a22-3ac4394fc608",
+        "id": "adc19f94-d476-4272-8115-0b5578b71a57",
         "source": "c1ed3444-5706-4abc-af20-588a33d480b7",
         "target": "2401a62c-7023-43fa-93f2-8b98df01c950",
         "sourceHandle": "data-c1ed3444-5706-4abc-af20-588a33d480b7",
         "targetHandle": "var-c79ae7b3-0be0-4ce8-bbd9-0f5d1daf0c02"
       },
       {
-        "id": "4289ded0-470e-471c-9834-fec21897d824",
-        "source": "c1ed3444-5706-4abc-af20-588a33d480b7",
+        "id": "29f1eedf-6c63-4325-b68c-f2dcae578657",
+        "source": "cc1f8fab-13b7-4cd5-b50c-effc9019b5c9",
         "target": "9e2bbf33-1383-4404-aaaf-b991d21fb416",
-        "sourceHandle": "c1ed3444-5706-4abc-af20-588a33d480b7",
+        "sourceHandle": "cc1f8fab-13b7-4cd5-b50c-effc9019b5c9",
         "targetHandle": "9e2bbf33-1383-4404-aaaf-b991d21fb416"
+      },
+      {
+        "id": "ce449296-0352-4dd5-96f7-9af43cc8865e",
+        "source": "9e2bbf33-1383-4404-aaaf-b991d21fb416",
+        "target": "4e135cd1-03da-4c83-a39e-8125a662efd6",
+        "sourceHandle": "data-9e2bbf33-1383-4404-aaaf-b991d21fb416",
+        "targetHandle": "var-dea2b367-1e47-459f-9a3e-430d701990ce"
       }
     ],
     "nodes": [
@@ -82,8 +68,8 @@ const ExampleData =  {
         "id": "cc1f8fab-13b7-4cd5-b50c-effc9019b5c9",
         "type": "HTTP",
         "position": {
-          "x": 44,
-          "y": 159.125
+          "x": 101,
+          "y": 55.125
         },
         "data": {
           "id": "cc1f8fab-13b7-4cd5-b50c-effc9019b5c9",
@@ -97,7 +83,7 @@ const ExampleData =  {
           "queryParams": [],
           "headers": [],
           "body": {
-            "id": "var-222fb2e3-41a4-410d-a62d-867014a8a46a",
+            "id": "var-a6d5f086-0595-494b-8ddd-a802b2f7df7a",
             "name": "body",
             "description": "",
             "defaultValue": {
@@ -113,37 +99,10 @@ const ExampleData =  {
         }
       },
       {
-        "id": "c1ed3444-5706-4abc-af20-588a33d480b7",
-        "type": "FUNCTIONAL",
-        "position": {
-          "x": 523,
-          "y": 166.75
-        },
-        "data": {
-          "id": "c1ed3444-5706-4abc-af20-588a33d480b7",
-          "name": "Get Token",
-          "description": "",
-          "type": "FUNCTIONAL",
-          "order": 2,
-          "parameters": [
-            {
-              "id": "var-b8b2c2a3-2acd-4823-8826-63dcaf4a99ff",
-              "name": "res",
-              "description": "",
-              "defaultValue": null,
-              "type": "string",
-              "formStore": true,
-              "required": false
-            }
-          ],
-          "transform": "return {\n    token: res.data.token\n}"
-        }
-      },
-      {
         "id": "9e2bbf33-1383-4404-aaaf-b991d21fb416",
         "type": "HTTP",
         "position": {
-          "x": 1010.0986326913574,
+          "x": 527.0986326913574,
           "y": 161.37967280028658
         },
         "data": {
@@ -151,14 +110,14 @@ const ExampleData =  {
           "name": "User Login",
           "description": "",
           "type": "HTTP",
-          "order": 3,
+          "order": 2,
           "baseUrl": "https://apiflux.in",
           "url": "/api/example/login",
           "pathParams": [],
           "queryParams": [],
           "headers": [],
           "body": {
-            "id": "var-ad36df87-8cde-426f-8f0e-705b44c07b33",
+            "id": "var-2c5fd478-ad6a-4794-a89a-c45b9ff7259c",
             "name": "body",
             "description": "",
             "defaultValue": {
@@ -176,15 +135,15 @@ const ExampleData =  {
         "id": "a28f4da5-2f7d-41c0-ae60-04c0d3bfdd14",
         "type": "HTTP",
         "position": {
-          "x": 2022.548228307331,
-          "y": 159.3709791335363
+          "x": 1390.548228307331,
+          "y": 353.3709791335363
         },
         "data": {
           "id": "a28f4da5-2f7d-41c0-ae60-04c0d3bfdd14",
           "name": "Get User",
           "description": "",
           "type": "HTTP",
-          "order": 5,
+          "order": 4,
           "baseUrl": "https://apiflux.in",
           "url": "/api/example/user",
           "pathParams": [],
@@ -208,15 +167,15 @@ const ExampleData =  {
         "id": "4e135cd1-03da-4c83-a39e-8125a662efd6",
         "type": "FUNCTIONAL",
         "position": {
-          "x": 1502.2399301244275,
-          "y": 172.0598483878587
+          "x": 961.2399301244275,
+          "y": 272.05984838785866
         },
         "data": {
           "id": "4e135cd1-03da-4c83-a39e-8125a662efd6",
           "name": "Get header",
           "description": "",
           "type": "FUNCTIONAL",
-          "order": 4,
+          "order": 3,
           "parameters": [
             {
               "id": "var-dea2b367-1e47-459f-9a3e-430d701990ce",
