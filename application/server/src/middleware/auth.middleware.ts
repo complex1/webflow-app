@@ -20,9 +20,8 @@ export const authMiddleware = {
     try {
       // Get token from Authorization header
       const authHeader = req.headers.authorization;
-      const path = req.path;
       const origin = req.headers.origin;
-      if (path === '/api/proxy' && req.method === 'POST' && (origin === 'http://localhost:3000' || origin === 'https://apiflux.in')) {
+      if (req.baseUrl === '/api/proxy' && req.method === 'POST' && (origin === 'http://localhost:3000' || origin === 'https://apiflux.in')) {
         // Bypass token verification for this route
         return next();
       }
