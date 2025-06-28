@@ -20,6 +20,13 @@
   background-color: var(--color-primary);
 }
 
+.btn-primary:disabled {
+  background-color: var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .btn-secondary {
   background-color: var(--color-secondary);
   color: #fff;
@@ -27,6 +34,13 @@
 
 .btn-secondary:hover {
   background-color: var(--color-secondary);
+}
+
+.btn-secondary:disabled {
+  background-color: var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .btn-outline {
@@ -38,6 +52,19 @@
 .btn-outline:hover {
   background-color: var(--color-primary);
   color: #fff;
+}
+
+.btn-outline:disabled {
+  background-color: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-outline:disabled:hover {
+  background-color: transparent;
+  color: var(--color-text-secondary);
 }
 
 .btn-disabled {
@@ -60,6 +87,16 @@
   background-color: var(--color-background);
 }
 
+.btn-icon:disabled {
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-icon:disabled:hover {
+  background-color: transparent;
+}
+
 .menu-item {
   display: flex;
   align-items: center;
@@ -72,4 +109,14 @@
 
 .menu-item:hover {
   background-color: var(--color-background);
+}
+
+.menu-item:disabled {
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.menu-item:disabled:hover {
+  background-color: transparent;
 }

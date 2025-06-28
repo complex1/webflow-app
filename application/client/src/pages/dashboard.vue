@@ -29,7 +29,7 @@
           <button class="btn btn-primary" @click="openCreateDrawer">
             <i class="pi pi-plus mx-s"></i> Create New Webflow
           </button>
-          <button class="btn btn-secondary fh" @click="askToImportWebflow">
+          <button class="btn btn-secondary fh" style="height: 38px;" @click="askToImportWebflow">
             <i class="pi pi-upload mx-s"></i> Import Webflow
           </button>
           <input type="file" style="display: none;" id="ImportWebflow" @change="importWebflow">
@@ -130,6 +130,34 @@
             </div>
           </div>
 
+          <div class="form-group mb-l">
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                v-model="webflowForm.openApiDocConfig.enabled"
+                class="checkbox-input"
+              />
+              <span class="checkbox-text">Enable OpenAPI Documentation</span>
+            </label>
+          </div>
+
+          <wfa-input
+            v-if="webflowForm.openApiDocConfig.enabled"
+            id="openapi-url"
+            label="OpenAPI Documentation URL"
+            v-model="webflowForm.openApiDocConfig.url"
+            placeholder="https://example.com/api-docs"
+            type="url"
+          />
+          <wfa-input
+            v-if="webflowForm.openApiDocConfig.enabled"
+            id="openapi-base-url"
+            label="Server Base URL"
+            v-model="webflowForm.openApiDocConfig.baseUrl"
+            placeholder="https://example.com/api"
+            type="url"
+          />
+
           <div class="form-actions">
             <button type="button" class="btn btn-outline" @click="closeDrawer">
               Cancel
@@ -204,6 +232,11 @@ export default defineComponent({
       description: '',
       icon: 'pi pi-sitemap',
       tags: [],
+      openApiDocConfig: {
+        enabled: false,
+        url: '',
+        baseUrl: '', // Optional base URL for OpenAPI
+      },
     });
     const nameError = ref('');
     const tagInput = ref('');
@@ -303,6 +336,11 @@ export default defineComponent({
         description: '',
         icon: 'pi pi-sitemap',
         tags: [],
+        openApiDocConfig: {
+          enabled: false,
+          url: '',
+          baseUrl: '',
+        },
       };
       nameError.value = '';
       drawerOpen.value = true;
@@ -316,6 +354,11 @@ export default defineComponent({
         description: webflow.description || '',
         icon: webflow.icon || 'pi pi-sitemap',
         tags: webflow.tags ? [...webflow.tags] : [],
+        openApiDocConfig: {
+          enabled: webflow.openApiDocConfig?.enabled || false,
+          url: webflow.openApiDocConfig?.url || '',
+          baseUrl: webflow.openApiDocConfig?.baseUrl || '', // Optional base URL for OpenAPI
+        },
       };
       nameError.value = '';
       drawerOpen.value = true;
@@ -363,6 +406,7 @@ export default defineComponent({
             description: webflowForm.value.description,
             icon: webflowForm.value.icon,
             tags: webflowForm.value.tags,
+            openApiDocConfig: webflowForm.value.openApiDocConfig,
           });
 
           // Show success message
@@ -374,6 +418,7 @@ export default defineComponent({
             description: webflowForm.value.description,
             icon: webflowForm.value.icon,
             tags: webflowForm.value.tags,
+            openApiDocConfig: webflowForm.value.openApiDocConfig,
           });
 
           // Show success message
@@ -615,6 +660,23 @@ export default defineComponent({
     gap: var(--spacing-medium);
     margin-top: var(--spacing-large);
   }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: var(--spacing-small);
+
+    .checkbox-input {
+      margin-right: var(--spacing-small);
+      cursor: pointer;
+    }
+
+    .checkbox-text {
+      color: var(--color-text-primary);
+      font-size: var(--font-size-base);
+    }
+  }
 }
 
 .delete-confirm {
@@ -657,6 +719,14 @@ export default defineComponent({
     justify-content: flex-end;
     gap: var(--spacing-medium);
 
+    .btn-danger {
+      background-color: var(--color-danger);
+      color: white;
+
+      &:hover {
+        background-color: var(--color-danger);
+      }
+    }
     .btn-danger {
       background-color: var(--color-danger);
       color: white;

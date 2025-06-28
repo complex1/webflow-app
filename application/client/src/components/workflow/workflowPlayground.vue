@@ -33,7 +33,7 @@
         :nodeHeight="50"
       />
       <Controls position="top-right" class="horizontal-controls">
-        <add-node></add-node>
+        <add-node :openApiDocConfig="openApiDocConfig" ></add-node>
       </Controls>
       <template #node-HTTP="nodeData">
         <HttpNode :id="nodeData.id" @editNode="editNode" @delete-node="deleteNode" />
@@ -132,6 +132,7 @@ export default defineComponent({
     // Computed properties
     const nodes = computed(() => store.state.workflowModule.viewNodes);
     const edges = computed(() => store.state.workflowModule.viewEdges);
+    const openApiDocConfig = computed(() => store.state.workflowModule.workflowOpenApiDocConfig);
 
     // Watchers
     // if nodes changes form empty to non-empty, log the positions of all nodes
@@ -276,6 +277,7 @@ export default defineComponent({
       vueFlow,
       openEdit,
       editNodeId,
+      openApiDocConfig,
       editNode,
       closeEdit,
       onConnect,

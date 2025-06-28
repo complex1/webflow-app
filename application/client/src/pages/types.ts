@@ -7,6 +7,12 @@ export interface WebflowForm {
   description: string;
   icon: string;
   tags: string[];
+  openApiDocConfig: {
+    enabled: boolean;
+    url: string;
+    baseUrl?: string; // Optional base URL for OpenAPI
+  };
+  data?: any; // Adjust type as needed
 }
 
 export interface DashboardState {

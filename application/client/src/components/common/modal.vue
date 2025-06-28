@@ -65,7 +65,6 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,7 +72,8 @@ export default defineComponent({
 }
 
 .modal {
-  background: white;
+  background: var(--color-white);
+  color: var(--color-text-primary);
   border-radius: 8px;
   width: 500px;
   max-width: 90%;
@@ -95,6 +95,7 @@ export default defineComponent({
 }
 
 .close-button {
+  color: var(--color-text-primary);
   background: none;
   border: none;
   font-size: 1.5rem;

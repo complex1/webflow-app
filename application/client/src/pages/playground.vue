@@ -37,6 +37,7 @@ export default defineComponent({
           store.commit('workflowModule/setWorkflowId', webflow.id);
           store.commit('workflowModule/setWorkflowName', webflow.name);
           store.commit('workflowModule/setWorkflowDescription', webflow.description || '');
+          store.commit('workflowModule/setWorkflowOpenApiDocConfig', webflow.openApiDocConfig || {});
           
           // If there's workflow data, load it into the workflow state
           if (webflow.data) {

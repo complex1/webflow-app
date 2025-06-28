@@ -31,5 +31,16 @@ export const proxyService = {
       httpService.method = 'POST';
       httpService.body = options;
       return httpService.run();
+  },
+
+  async getOpenApiDoc(openApiDocEndpoint: string) {
+    const options = {
+      url: openApiDocEndpoint,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }
+    return await this.request(options);
   }
 };

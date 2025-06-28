@@ -27,5 +27,10 @@ export interface WebflowDto {
   createdBy: string;
   tags?: string[];
   icon?: string;
+  openApiDocConfig?: {
+    enabled: boolean;
+    url: string;
+    baseUrl?: string; // Optional base URL for OpenAPI
+  };
   data?: any;
 }

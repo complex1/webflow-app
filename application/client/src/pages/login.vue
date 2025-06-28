@@ -194,7 +194,6 @@ export default defineComponent({
           user.password
         )) as { token: string };
         // Handle successful login
-        console.log('Login successful:', response);
         // Store token in localStorage
         localStorage.setItem('token', response.token);
         // Redirect to dashboard after successful login

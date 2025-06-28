@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany, JoinTable } from 'typeorm';
-
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { OpenApiDocConfig } from '../models/webflow.model';
 @Entity('webflows')
 export class Webflow {
   @PrimaryGeneratedColumn('uuid')
@@ -25,4 +25,7 @@ export class Webflow {
 
   @Column('json', { nullable: true })
   data: any;
+
+  @Column('json', { nullable: true })
+  openApiDocConfig: OpenApiDocConfig;
 }

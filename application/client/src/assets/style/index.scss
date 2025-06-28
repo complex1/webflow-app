@@ -47,6 +47,11 @@
   --spacing-large: 12pt; /* 16px */
   --spacing-xlarge: 18pt; /* 24px */
 
+  /* Z-index */
+  --z-100: 100;
+  --z-modal: 1000;
+  --z-tooltip: 1100;
+
   /* Mask */
   --mask-color: rgba(0, 0, 0, 0.2); /* Semi-transparent black */
   --shadow-drop: 0px 1.5pt 3pt rgba(0, 0, 0, 0.1); /* Drop shadow */

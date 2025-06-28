@@ -36,6 +36,11 @@ export const importWorkflowService = async (file: File) => {
       data: workflow.data,
       tags: workflow.tags || [],
       icon: workflow.icon || '',
+      openApiDocConfig: workflow.openApiDocConfig || {
+        enabled: false,
+        url: '',
+        baseUrl: '' // Optional base URL for OpenAPI
+      }
     });
     return newWorkflow;
   } catch (error) {

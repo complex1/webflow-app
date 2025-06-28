@@ -12,6 +12,11 @@ export interface WorkflowState {
   workflowId: string;
   workflowName: string;
   workflowDescription: string;
+  workflowOpenApiDocConfig: {
+    enabled: boolean;
+    url: string;
+    baseUrl?: string; // Optional base URL for OpenAPI
+  };
 }
 export default {
   namespaced: true,
@@ -19,6 +24,11 @@ export default {
     workflowId: '',
     workflowName: 'Untitled',
     workflowDescription: '',
+    workflowOpenApiDocConfig: {
+      enabled: false,
+      url: '',
+      baseUrl: '', // Optional base URL for OpenAPI
+    },
     workflow: new Workflow(),
     viewNodes: [] as INode[], // initialized viewNodes with an empty array
     viewEdges: [] as IEdge[], // initialized viewEdges with an empty array
@@ -47,6 +57,13 @@ export default {
     },
     setWorkflowDescription(state: WorkflowState, description: string) {
       state.workflowDescription = description;
+    },
+    setWorkflowOpenApiDocConfig(state: WorkflowState, config: { enabled: boolean; url: string, baseUrl?: string }) {
+      state.workflowOpenApiDocConfig = {
+        enabled: config.enabled || false,
+        url: config.url || '',
+        baseUrl: config.baseUrl || '',
+      };
     },
     addFunctionalNode(state: WorkflowState, node: FunctionalNode) {
       const viewNodes: INode = {

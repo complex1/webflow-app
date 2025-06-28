@@ -10,6 +10,11 @@ export interface WebflowPublic {
   description?: string;
   icon?: string;
   tags?: string[];
+  openApiDocConfig?: {
+    enabled: boolean;
+    url: string;
+    baseUrl?: string; // Optional base URL for OpenAPI
+  };
   createdAt: Date;
 }
 
@@ -28,6 +33,7 @@ export class WebflowService {
       description: webflow.description,
       icon: webflow.icon,
       tags: webflow.tags,
+      openApiDocConfig: webflow.openApiDocConfig,
       createdAt: webflow.createdAt
     };
   }
