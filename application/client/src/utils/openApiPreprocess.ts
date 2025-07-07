@@ -53,11 +53,12 @@ interface ExtractedField {
 }
 
 interface ExtractedAPI {
-  id: string; // Unique identifier for the API
+  id: string;
   groupName: string;
   name: string;
   url: string;
   method: string;
+  description?: string; // Add description field which is used in filtering
   header?: ExtractedField[];
   pathParam?: ExtractedField[];
   queryParam?: ExtractedField[];
@@ -69,7 +70,6 @@ export type { ExtractedAPI, ExtractedField };
 
 export function extractApiList(openApiDoc: OpenAPIDocument): ExtractedAPI[] {
   const result: ExtractedAPI[] = [];
-  const globalParams = openApiDoc.components?.parameters || {};
 
   for (const [url, methods] of Object.entries(openApiDoc.paths || {})) {
     for (const [method, operation] of Object.entries(methods)) {

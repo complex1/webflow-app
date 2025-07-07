@@ -66,11 +66,17 @@
 <script lang="ts">
 import { proxyService } from '../../../services/proxy.service'
 import { SessionCache } from '../../../lib/caching'
-import { extractApiList } from '../../../utils/openApiPreprocess'
+import { extractApiList, type ExtractedAPI } from '../../../utils/openApiPreprocess'
 import apiCard from './apiCard.vue';
 import { mapMutations } from 'vuex';
 import { extractedOpenApiToHttpNode } from '../../../utils/extractedOpenApiToHttpNode';
 const cache = new SessionCache('openApiDocsCache');
+
+// Define interface for API with ID
+interface ApiWithId extends ExtractedAPI {
+  id: string;
+}
+
 export default {
   components: { apiCard },
   name: 'OpenApiDocsComponent',
@@ -83,28 +89,30 @@ export default {
   data() {
     return {
       loading: false,
-      apiDoc: null,
+      apiDoc: null as ApiWithId[] | null,
       hasError: false,
-      addedApis: [],
+      addedApis: [] as string[],
       filter: '',
       groupName: ''
     }
   },
   computed: {
-    filterByGroup() {
-      return this.groupName.length ? this.apiDoc.filter(api => api.groupName === this.groupName) : this.apiDoc;
+    filterByGroup(): ApiWithId[] {
+      if (!this.apiDoc) return [];
+      return this.groupName.length ? this.apiDoc.filter((api: ApiWithId) => api.groupName === this.groupName) : this.apiDoc;
     },
-    filteredApiDoc() {
-      if (!this.filter ) return this.filterByGroup;
+    filteredApiDoc(): ApiWithId[] {
+      if (!this.filter) return this.filterByGroup;
       const lowerFilter = this.filter.toLowerCase();
-      return this.filterByGroup.filter(api =>
+      return this.filterByGroup.filter((api: ApiWithId) =>
         api.name?.toLowerCase().includes(lowerFilter) ||
         api.url?.toLowerCase().includes(lowerFilter) ||
         (api.description && api.description.toLowerCase().includes(lowerFilter))
       );
     },
-    groupNameList() {
-      return this.apiDoc.reduce((acc, api) => {
+    groupNameList(): string[] {
+      if (!this.apiDoc) return [];
+      return this.apiDoc.reduce((acc: string[], api: ApiWithId) => {
         if (api.groupName && !acc.includes(api.groupName)) {
           acc.push(api.groupName);
         }
@@ -116,7 +124,7 @@ export default {
     ...mapMutations({
       addHttpNode: 'workflowModule/addHttpNode',
     }),
-    toggleApiSelection(apiId) {
+    toggleApiSelection(apiId: string): void {
       const index = this.addedApis.indexOf(apiId);
       if (index > -1) {
         this.addedApis.splice(index, 1);
@@ -124,9 +132,9 @@ export default {
         this.addedApis.push(apiId);
       }
     },
-    async loadApiDoc() {
-      if (cache.has(this.openApiDocConfig.url)) {
-        this.apiDoc = cache.get(this.openApiDocConfig.url);
+    async loadApiDoc(): Promise<void> {
+      if (this.openApiDocConfig.url && cache.has(this.openApiDocConfig.url)) {
+        this.apiDoc = cache.get(this.openApiDocConfig.url) as ApiWithId[];
         return;
       }
       if (!this.openApiDocConfig.url) {
@@ -139,12 +147,23 @@ export default {
 
       try {
         const response = await proxyService.getOpenApiDoc(this.openApiDocConfig.url);
-        if (response.error) {
+        if (response && typeof response === 'object' && 'error' in response && response.error) {
           this.hasError = true;
-        } else {
-          this.apiDoc = extractApiList(response.data);
-          cache.set(this.openApiDocConfig.url, this.apiDoc);
+        } else if (response && typeof response === 'object' && 'data' in response) {
+          // Add type assertion to ensure response.data is treated as OpenAPIDocument
+          const extractedApis = extractApiList(response.data as any);
+          // Add unique ID to each API based on method and URL
+          this.apiDoc = extractedApis.map((api: ExtractedAPI) => ({
+            ...api,
+            id: `${api.method}-${api.url}`
+          }));
+          
+          if (this.openApiDocConfig.url) {
+            cache.set(this.openApiDocConfig.url, this.apiDoc);
+          }
           this.hasError = false;
+        } else {
+          this.hasError = true;
         }
       } catch (error) {
         console.error('Error loading OpenAPI doc:', error);
@@ -154,17 +173,19 @@ export default {
       }
     },
 
-    async retryLoad() {
+    async retryLoad(): Promise<void> {
       await this.loadApiDoc();
     },
 
-    addSelectedApis() {
-      if (this.addedApis.length === 0) {
+    addSelectedApis(): void {
+      if (this.addedApis.length === 0 || !this.apiDoc) {
         return;
       }
-      const baseUrl = this.openApiDocConfig.baseUrl || new URL(this.openApiDocConfig.url).origin;
-      const apiList = this.apiDoc.filter(api => this.addedApis.includes(api.id));
-      apiList.forEach(api => {
+      const baseUrl = (this.openApiDocConfig.baseUrl as string) || 
+                      (this.openApiDocConfig.url ? new URL(this.openApiDocConfig.url as string).origin : '');
+      
+      const apiList = this.apiDoc.filter((api: ApiWithId) => this.addedApis.includes(api.id));
+      apiList.forEach((api: ApiWithId) => {
         try {
           const nodeData = extractedOpenApiToHttpNode(api, baseUrl);
           this.addHttpNode(nodeData);
