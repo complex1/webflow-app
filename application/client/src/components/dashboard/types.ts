@@ -11,6 +11,8 @@ export interface WebflowCardProps {
     enabled: boolean;
     url: string;
     baseUrl?: string; // Optional base URL for OpenAPI
+    fromFile: boolean;
+    fileData?: any;
   };
   // Optional field for createdAt, can be a Date object or a string
   createdAt?: Date | string;

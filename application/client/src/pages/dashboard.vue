@@ -141,22 +141,65 @@
             </label>
           </div>
 
-          <wfa-input
-            v-if="webflowForm.openApiDocConfig.enabled"
-            id="openapi-url"
-            label="OpenAPI Documentation URL"
-            v-model="webflowForm.openApiDocConfig.url"
-            placeholder="https://example.com/api-docs"
-            type="url"
-          />
-          <wfa-input
-            v-if="webflowForm.openApiDocConfig.enabled"
-            id="openapi-base-url"
-            label="Server Base URL"
-            v-model="webflowForm.openApiDocConfig.baseUrl"
-            placeholder="https://example.com/api"
-            type="url"
-          />
+          <div v-if="webflowForm.openApiDocConfig.enabled" class="openapi-config">
+            <div class="form-group mb-m">
+              <label class="radio-group-label">Documentation Source:</label>
+              <div class="radio-group">
+                <label class="radio-label">
+                  <input
+                    type="radio"
+                    :value="false"
+                    v-model="webflowForm.openApiDocConfig.fromFile"
+                    class="radio-input"
+                  />
+                  <span class="radio-text">URL</span>
+                </label>
+                <label class="radio-label">
+                  <input
+                    type="radio"
+                    :value="true"
+                    v-model="webflowForm.openApiDocConfig.fromFile"
+                    class="radio-input"
+                  />
+                  <span class="radio-text">File Upload</span>
+                </label>
+              </div>
+            </div>
+
+            <div v-if="!webflowForm.openApiDocConfig.fromFile">
+              <wfa-input
+                id="openapi-url"
+                label="OpenAPI Documentation URL"
+                v-model="webflowForm.openApiDocConfig.url"
+                placeholder="https://example.com/api-docs"
+                type="url"
+              />
+              <wfa-input
+                id="openapi-base-url"
+                label="Server Base URL"
+                v-model="webflowForm.openApiDocConfig.baseUrl"
+                placeholder="https://example.com/api"
+                type="url"
+              />
+            </div>
+            
+            <div v-else>
+              <div class="form-group mb-m">
+                <label class="wfa-label">OpenAPI Documentation File</label>
+                <file-upload
+                  v-model="webflowForm.openApiDocConfig.fileData"
+                  @error="handleFileError"
+                />
+              </div>
+              <wfa-input
+                id="openapi-base-url-file"
+                label="Server Base URL"
+                v-model="webflowForm.openApiDocConfig.baseUrl"
+                placeholder="https://example.com/api"
+                type="url"
+              />
+            </div>
+          </div>
 
           <div class="form-actions">
             <button type="button" class="btn btn-outline" @click="closeDrawer">
@@ -202,6 +245,7 @@ import drawer from '../components/common/drawer.vue';
 import navbar from '../components/common/navbar.vue';
 import wfaInput from '../components/common/wfa-input.vue';
 import webflowCard from '../components/dashboard/webflow-card.vue';
+import FileUpload from '../components/common/FileUpload.vue';
 import type { WebflowCardProps } from '../components/dashboard/types';
 import type { WebflowForm } from './types';
 import { success, error } from '../lib/toast';
@@ -214,6 +258,7 @@ export default defineComponent({
     navbar,
     wfaInput,
     webflowCard,
+    FileUpload,
   },
   setup() {
     const router = useRouter();
@@ -236,6 +281,8 @@ export default defineComponent({
         enabled: false,
         url: '',
         baseUrl: '', // Optional base URL for OpenAPI
+        fromFile: false,
+        fileData: null,
       },
     });
     const nameError = ref('');
@@ -340,6 +387,8 @@ export default defineComponent({
           enabled: false,
           url: '',
           baseUrl: '',
+          fromFile: false,
+          fileData: null,
         },
       };
       nameError.value = '';
@@ -358,6 +407,8 @@ export default defineComponent({
           enabled: webflow.openApiDocConfig?.enabled || false,
           url: webflow.openApiDocConfig?.url || '',
           baseUrl: webflow.openApiDocConfig?.baseUrl || '', // Optional base URL for OpenAPI
+          fromFile: webflow.openApiDocConfig?.fromFile || false,
+          fileData: webflow.openApiDocConfig?.fileData || null,
         },
       };
       nameError.value = '';
@@ -486,6 +537,10 @@ export default defineComponent({
       // Navigate to the workflow editor page with the selected webflow
       router.push(`/playground?id=${id}`);
     };
+
+    const handleFileError = (errorMessage: string) => {
+      error(errorMessage);
+    };
     
     // Initialize on component creation
     onMounted(async () => {
@@ -519,6 +574,7 @@ export default defineComponent({
       navigateToWorkflow,
       askToImportWebflow,
       importWebflow,
+      handleFileError,
     };
   }
 });
@@ -727,14 +783,50 @@ export default defineComponent({
         background-color: var(--color-danger);
       }
     }
-    .btn-danger {
-      background-color: var(--color-danger);
-      color: white;
-
-      &:hover {
-        background-color: var(--color-danger);
-      }
-    }
   }
+}
+
+/* Radio button and OpenAPI configuration styles */
+.radio-group-label {
+  display: block;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-small);
+}
+
+.radio-group {
+  display: flex;
+  gap: var(--spacing-large);
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: var(--font-size-medium);
+}
+
+.radio-input {
+  margin-right: var(--spacing-small);
+  cursor: pointer;
+}
+
+.radio-text {
+  color: var(--color-text-primary);
+}
+
+.openapi-config {
+  border: 1px solid var(--color-border);
+  border-radius: 8pt;
+  padding: var(--spacing-large);
+  background-color: var(--color-light);
+  margin-top: var(--spacing-medium);
+}
+
+.wfa-label {
+  display: block;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-small);
 }
 </style>

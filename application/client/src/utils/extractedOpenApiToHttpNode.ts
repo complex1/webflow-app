@@ -13,7 +13,7 @@ export const extractedOpenApiToHttpNode = (api: ExtractedAPI, baseUrl: string) =
     bodyVariable.name = "body";
     bodyVariable.description = "Request body";
     bodyVariable.defaultValue = api.body;
-    bodyVariable.type = "json";
+    bodyVariable.type = "object";
     httpNode.body = bodyVariable;
   }
 

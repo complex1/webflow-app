@@ -133,10 +133,34 @@ export default {
       }
     },
     async loadApiDoc(): Promise<void> {
+      // Check if loading from file
+      if (this.openApiDocConfig.fromFile && this.openApiDocConfig.fileData) {
+        try {
+          this.loading = true;
+          this.hasError = false;
+          
+          const extractedApis = extractApiList(this.openApiDocConfig.fileData);
+          this.apiDoc = extractedApis.map((api: ExtractedAPI) => ({
+            ...api,
+            id: `${api.method}-${api.url}`
+          }));
+          
+          this.hasError = false;
+        } catch (error) {
+          console.error('Error processing uploaded file:', error);
+          this.hasError = true;
+        } finally {
+          this.loading = false;
+        }
+        return;
+      }
+      
+      // Check cache for URL-based loading
       if (this.openApiDocConfig.url && cache.has(this.openApiDocConfig.url)) {
         this.apiDoc = cache.get(this.openApiDocConfig.url) as ApiWithId[];
         return;
       }
+      
       if (!this.openApiDocConfig.url) {
         return;
       }
@@ -198,10 +222,23 @@ export default {
     }
   },
   async created() {
-    if (this.openApiDocConfig.url) {
+    if (this.openApiDocConfig.enabled && (this.openApiDocConfig.url || this.openApiDocConfig.fromFile)) {
       await this.loadApiDoc();
     }
   },
+  
+  watch: {
+    'openApiDocConfig.fileData'() {
+      if (this.openApiDocConfig.fromFile && this.openApiDocConfig.fileData) {
+        this.loadApiDoc();
+      }
+    },
+    'openApiDocConfig.url'() {
+      if (!this.openApiDocConfig.fromFile && this.openApiDocConfig.url) {
+        this.loadApiDoc();
+      }
+    }
+  }
 }
 </script>
 

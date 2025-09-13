@@ -17,4 +17,6 @@ export interface OpenApiDocConfig {
   enabled: boolean;
   url: string;
   baseUrl?: string; // Optional base URL for OpenAPI
+  fromFile: boolean;
+  fileData?: any; // Parsed JSON/YAML data
 }

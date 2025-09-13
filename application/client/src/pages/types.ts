@@ -11,6 +11,8 @@ export interface WebflowForm {
     enabled: boolean;
     url: string;
     baseUrl?: string; // Optional base URL for OpenAPI
+    fromFile: boolean;
+    fileData?: any;
   };
   data?: any; // Adjust type as needed
 }

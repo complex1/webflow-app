@@ -16,6 +16,8 @@ export interface WorkflowState {
     enabled: boolean;
     url: string;
     baseUrl?: string; // Optional base URL for OpenAPI
+    fileData?: any;   // Optional file data for OpenAPI
+    fromFile?: boolean; // Optional flag indicating if config is from file
   };
 }
 export default {
@@ -28,6 +30,8 @@ export default {
       enabled: false,
       url: '',
       baseUrl: '', // Optional base URL for OpenAPI
+      fileData: null,   // Optional file data for OpenAPI
+      fromFile: false, // Optional flag indicating if config is from file
     },
     workflow: new Workflow(),
     viewNodes: [] as INode[], // initialized viewNodes with an empty array
@@ -58,11 +62,13 @@ export default {
     setWorkflowDescription(state: WorkflowState, description: string) {
       state.workflowDescription = description;
     },
-    setWorkflowOpenApiDocConfig(state: WorkflowState, config: { enabled: boolean; url: string, baseUrl?: string }) {
+    setWorkflowOpenApiDocConfig(state: WorkflowState, config: { enabled: boolean; url: string, baseUrl?: string, fileData?: any, fromFile: boolean }) {
       state.workflowOpenApiDocConfig = {
         enabled: config.enabled || false,
         url: config.url || '',
         baseUrl: config.baseUrl || '',
+        fileData: config.fileData || null,
+        fromFile: config.fromFile || false,
       };
     },
     addFunctionalNode(state: WorkflowState, node: FunctionalNode) {
