@@ -27,6 +27,8 @@ export interface WebflowDto {
   createdBy: string;
   tags?: string[];
   icon?: string;
+  isFolder?: boolean;
+  parentId?: string; // Optional parentId for hierarchical webflows
   openApiDocConfig?: {
     enabled: boolean;
     url: string;

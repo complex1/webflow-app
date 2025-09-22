@@ -7,6 +7,7 @@ export interface WebflowForm {
   description: string;
   icon: string;
   tags: string[];
+  itemType: 'file' | 'folder'; // Type selection in form
   openApiDocConfig: {
     enabled: boolean;
     url: string;
@@ -15,6 +16,8 @@ export interface WebflowForm {
     fileData?: any;
   };
   data?: any; // Adjust type as needed
+  isFolder: boolean;
+  parentId?: string | null;
 }
 
 export interface DashboardState {

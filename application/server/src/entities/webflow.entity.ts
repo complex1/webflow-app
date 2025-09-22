@@ -28,4 +28,10 @@ export class Webflow {
 
   @Column('json', { nullable: true })
   openApiDocConfig: OpenApiDocConfig;
+
+  @Column({ name: 'parent_folder_id', nullable: true })
+  parentId?: string; // Optional parentId for hierarchical webflows
+
+  @Column({ name: 'is_folder', default: false })
+  isFolder?: boolean; // Flag to indicate if the webflow is a folder
 }

@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { Webflow } from '../entities/webflow.entity';
 import { WebflowDto } from '../models/webflow.model';
 import { AppDataSource } from '../db';
@@ -16,6 +16,8 @@ export interface WebflowPublic {
     baseUrl?: string; // Optional base URL for OpenAPI
   };
   createdAt: Date;
+  parentId?: string; // Optional parentId for hierarchical webflows
+  isFolder?: boolean; // Flag to indicate if the webflow is a folder
 }
 
 export class WebflowService {
@@ -34,7 +36,9 @@ export class WebflowService {
       icon: webflow.icon,
       tags: webflow.tags,
       openApiDocConfig: webflow.openApiDocConfig,
-      createdAt: webflow.createdAt
+      createdAt: webflow.createdAt,
+      parentId: webflow.parentId,
+      isFolder: webflow.isFolder,
     };
   }
 
@@ -50,9 +54,15 @@ export class WebflowService {
     return webflow; // Return the full entity for internal use
   }
 
-  async findByUser(userId: string): Promise<WebflowPublic[]> {
-    const webflows = await this.webflowRepository.find({ where: { createdBy: userId } });
-    
+  async findByUser(userId: string, parentId?: string): Promise<WebflowPublic[]> {
+    // Handle null, undefined, or empty string parentId cases
+    const whereCondition = {
+      createdBy: userId,
+      parentId: !parentId || parentId.trim() === '' ? IsNull() : parentId
+    };
+
+    const webflows = await this.webflowRepository.find({ where: whereCondition });
+
     // Transform entities to public objects, excluding sensitive or unnecessary data
     return webflows.map(webflow => this.toPublic(webflow));
   }
@@ -85,5 +95,27 @@ export class WebflowService {
         return tags.some(tag => webflow.tags.includes(tag));
       })
       .map(webflow => this.toPublic(webflow));
+  }
+
+  async getHierarchy(id: string): Promise<WebflowPublic[]> {
+    const hierarchy: WebflowPublic[] = [];
+    let currentId = id;
+
+    // Backtrack through the hierarchy
+    while (currentId) {
+      const webflow = await this.webflowRepository.findOne({ where: { id: currentId } });
+      
+      if (!webflow) {
+        break; // Item not found, stop backtracking
+      }
+
+      // Add current item to the beginning of the hierarchy array
+      hierarchy.unshift(this.toPublic(webflow));
+      
+      // Move to parent
+      currentId = webflow.parentId || '';
+    }
+
+    return hierarchy;
   }
 }

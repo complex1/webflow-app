@@ -65,6 +65,10 @@ export default defineComponent({
     const router = useRouter();
     
     const navigateToWorkflow = (id: string) => {
+      if (props.webflow.isFolder) {
+        router.push({ path: '/dashboard', query: { id: id } });
+        return;
+      }
       // Navigate to the workflow editor page with the selected webflow
       router.push(`/playground?id=${id}`);
     };

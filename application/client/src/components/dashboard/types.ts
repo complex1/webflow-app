@@ -7,6 +7,8 @@ export interface WebflowCardProps {
   tags?: string[];
   icon?: string;
   data?: any;
+  isFolder?: boolean;
+  parentId?: string | null;
   openApiDocConfig?: {
     enabled: boolean;
     url: string;

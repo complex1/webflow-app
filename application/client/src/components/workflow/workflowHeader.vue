@@ -9,7 +9,7 @@
       >
         <i class="pi pi-arrow-left"></i>
       </button>
-      <div class="workflow-title" @click="editWorkflowName">
+      <div class="workflow-title pr-l" @click="editWorkflowName">
         <input
           v-if="isEditing"
           v-model="_workflowName"
@@ -23,6 +23,7 @@
         />
         <span v-else>{{ workflowName }}</span>
       </div>
+      <hierarchy-breadcrum />
     </div>
     <div class="workflow-actions">
       <button
@@ -64,9 +65,10 @@ import UserAvatar from '../common/userAvatar.vue';
 import { exportWorkflowService } from '../../services/importExport.service';
 import { LogType } from '../../classes/logger';
 import type { LoggerInterface } from '../../classes/logger';
+import HierarchyBreadcrum from '../common/hierarchyBreadcrum.vue';
 
 export default defineComponent({
-  components: { UserAvatar },
+  components: { UserAvatar, HierarchyBreadcrum },
   name: 'WorkflowHeader',
   setup() {
     const store = useStore();

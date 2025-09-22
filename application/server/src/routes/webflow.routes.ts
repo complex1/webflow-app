@@ -17,6 +17,9 @@ router.get('/my', webflowController.getUserWebflows);
 // GET webflows by tags
 router.get('/tags', webflowController.getWebflowsByTags);
 
+// GET hierarchy for a specific webflow/folder
+router.get('/hierarchy', webflowController.getHierarchy);
+
 // GET a specific webflow by ID
 router.get('/:id', webflowController.getWebflowById);
 

@@ -15,10 +15,13 @@ export class WebflowService {
   /**
    * Get current user's webflows
    */
-  getMyWebflows() {
+  getMyWebflows(folderId?: string) {
     const http = new HttpService();
     http.url = '/api/webflows/my';
     http.method = 'GET';
+    if (folderId) {
+      http.url += `?folderId=${folderId}`;
+    }
     return http.run();
   }
 
@@ -76,6 +79,13 @@ export class WebflowService {
   getWebflowsByTags(tags: string[]) {
     const http = new HttpService();
     http.url = `/api/webflows/tags?tags=${JSON.stringify(tags)}`;
+    http.method = 'GET';
+    return http.run();
+  }
+
+  getHierarchy(id: string) {
+    const http = new HttpService();
+    http.url = `/api/webflows/hierarchy?id=${id}`;
     http.method = 'GET';
     return http.run();
   }

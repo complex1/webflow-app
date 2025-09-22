@@ -3,7 +3,11 @@
     <navbar></navbar>
     <div class="dashboard-container">
       <div class="dashboard-header">
-        <h1>My Webflows</h1>
+        <div class="flex-v-center">
+          <h1 class="pr-l" >My Webflows</h1>
+          <!-- Hierarchy Breadcrumb -->
+          <hierarchyBreadcrum />
+        </div>
         <div class="dashboard-filters">
           <div class="search-box">
             <i class="pi pi-search"></i>
@@ -27,10 +31,10 @@
             </wfa-input>
           </div>
           <button class="btn btn-primary" @click="openCreateDrawer">
-            <i class="pi pi-plus mx-s"></i> Create New Webflow
+            <i class="pi pi-plus mx-s"></i> New
           </button>
           <button class="btn btn-secondary fh" style="height: 38px;" @click="askToImportWebflow">
-            <i class="pi pi-upload mx-s"></i> Import Webflow
+            <i class="pi pi-upload mx-s"></i> Import
           </button>
           <input type="file" style="display: none;" id="ImportWebflow" @change="importWebflow">
         </div>
@@ -70,6 +74,7 @@
         @close="closeDrawer"
       >
         <form @submit.prevent="saveWebflow" class="webflow-form">
+          
           <wfa-input
             id="name"
             label="Name"
@@ -78,6 +83,39 @@
             placeholder="Enter webflow name"
             :error="nameError"
           />
+
+          <!-- Type Selection -->
+          <div class="form-group mb-m">
+            <label class="form-label">Type</label>
+            <div class="type-toggle">
+              <label class="radio-group">
+                <input 
+                  type="radio" 
+                  name="itemType" 
+                  value="file" 
+                  v-model="webflowForm.itemType"
+                  @change="onItemTypeChange"
+                />
+                <span class="radio-label">
+                  <i class="pi pi-file"></i>
+                  File
+                </span>
+              </label>
+              <label class="radio-group">
+                <input 
+                  type="radio" 
+                  name="itemType" 
+                  value="folder" 
+                  v-model="webflowForm.itemType"
+                  @change="onItemTypeChange"
+                />
+                <span class="radio-label">
+                  <i class="pi pi-folder"></i>
+                  Folder
+                </span>
+              </label>
+            </div>
+          </div>
 
           <wfa-input
             id="description"
@@ -130,74 +168,76 @@
             </div>
           </div>
 
-          <div class="form-group mb-l">
-            <label class="checkbox-label">
-              <input
-                type="checkbox"
-                v-model="webflowForm.openApiDocConfig.enabled"
-                class="checkbox-input"
-              />
-              <span class="checkbox-text">Enable OpenAPI Documentation</span>
-            </label>
-          </div>
-
-          <div v-if="webflowForm.openApiDocConfig.enabled" class="openapi-config">
-            <div class="form-group mb-m">
-              <label class="radio-group-label">Documentation Source:</label>
-              <div class="radio-group">
-                <label class="radio-label">
-                  <input
-                    type="radio"
-                    :value="false"
-                    v-model="webflowForm.openApiDocConfig.fromFile"
-                    class="radio-input"
-                  />
-                  <span class="radio-text">URL</span>
-                </label>
-                <label class="radio-label">
-                  <input
-                    type="radio"
-                    :value="true"
-                    v-model="webflowForm.openApiDocConfig.fromFile"
-                    class="radio-input"
-                  />
-                  <span class="radio-text">File Upload</span>
-                </label>
-              </div>
+          <div v-if="!webflowForm.isFolder">
+            <div class="form-group mb-l">
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  v-model="webflowForm.openApiDocConfig.enabled"
+                  class="checkbox-input"
+                />
+                <span class="checkbox-text">Enable OpenAPI Documentation</span>
+              </label>
             </div>
 
-            <div v-if="!webflowForm.openApiDocConfig.fromFile">
-              <wfa-input
-                id="openapi-url"
-                label="OpenAPI Documentation URL"
-                v-model="webflowForm.openApiDocConfig.url"
-                placeholder="https://example.com/api-docs"
-                type="url"
-              />
-              <wfa-input
-                id="openapi-base-url"
-                label="Server Base URL"
-                v-model="webflowForm.openApiDocConfig.baseUrl"
-                placeholder="https://example.com/api"
-                type="url"
-              />
-            </div>
-            
-            <div v-else>
+            <div v-if="webflowForm.openApiDocConfig.enabled" class="openapi-config">
               <div class="form-group mb-m">
-                <label class="wfa-label">OpenAPI Documentation File</label>
-                <file-upload
-                  v-model="webflowForm.openApiDocConfig.fileData"
-                  @error="handleFileError"
+                <label class="radio-group-label">Documentation Source:</label>
+                <div class="radio-group">
+                  <label class="radio-label">
+                    <input
+                      type="radio"
+                      :value="false"
+                      v-model="webflowForm.openApiDocConfig.fromFile"
+                      class="radio-input"
+                    />
+                    <span class="radio-text">URL</span>
+                  </label>
+                  <label class="radio-label">
+                    <input
+                      type="radio"
+                      :value="true"
+                      v-model="webflowForm.openApiDocConfig.fromFile"
+                      class="radio-input"
+                    />
+                    <span class="radio-text">File Upload</span>
+                  </label>
+                </div>
+              </div>
+
+              <div v-if="!webflowForm.openApiDocConfig.fromFile">
+                <wfa-input
+                  id="openapi-url"
+                  label="OpenAPI Documentation URL"
+                  v-model="webflowForm.openApiDocConfig.url"
+                  placeholder="https://example.com/api-docs"
+                  type="url"
+                />
+                <wfa-input
+                  id="openapi-base-url"
+                  label="Server Base URL"
+                  v-model="webflowForm.openApiDocConfig.baseUrl"
+                  placeholder="https://example.com/api"
+                  type="url"
                 />
               </div>
-              <wfa-input
-                id="openapi-base-url-file"
-                label="Server Base URL"
-                v-model="webflowForm.openApiDocConfig.baseUrl"
-                placeholder="https://example.com/api"
-                type="url"
-              />
+              
+              <div v-else>
+                <div class="form-group mb-m">
+                  <label class="wfa-label">OpenAPI Documentation File</label>
+                  <file-upload
+                    v-model="webflowForm.openApiDocConfig.fileData"
+                    @error="handleFileError"
+                  />
+                </div>
+                <wfa-input
+                  id="openapi-base-url-file"
+                  label="Server Base URL"
+                  v-model="webflowForm.openApiDocConfig.baseUrl"
+                  placeholder="https://example.com/api"
+                  type="url"
+                />
+              </div>
             </div>
           </div>
 
@@ -238,7 +278,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { WebflowService } from '../services/webflow.service';
 import drawer from '../components/common/drawer.vue';
@@ -246,6 +286,7 @@ import navbar from '../components/common/navbar.vue';
 import wfaInput from '../components/common/wfa-input.vue';
 import webflowCard from '../components/dashboard/webflow-card.vue';
 import FileUpload from '../components/common/FileUpload.vue';
+import hierarchyBreadcrum from '../components/common/hierarchyBreadcrum.vue';
 import type { WebflowCardProps } from '../components/dashboard/types';
 import type { WebflowForm } from './types';
 import { success, error } from '../lib/toast';
@@ -259,6 +300,7 @@ export default defineComponent({
     wfaInput,
     webflowCard,
     FileUpload,
+    hierarchyBreadcrum,
   },
   setup() {
     const router = useRouter();
@@ -277,6 +319,9 @@ export default defineComponent({
       description: '',
       icon: 'pi pi-sitemap',
       tags: [],
+      itemType: 'file', // Default to file
+      isFolder: false,
+      parentId: null,
       openApiDocConfig: {
         enabled: false,
         url: '',
@@ -336,7 +381,8 @@ export default defineComponent({
     const fetchWebflows = async () => {
       try {
         loading.value = true;
-        const result = await webflowService.getMyWebflows();
+        const folderId = router.currentRoute.value.query.id as string | undefined;
+        const result = await webflowService.getMyWebflows(folderId);
         webflows.value = Array.isArray(result) ? result : [];
         filteredWebflows.value = [...webflows.value];
       } catch (error: any) {
@@ -376,6 +422,27 @@ export default defineComponent({
       });
     };
     
+    const onItemTypeChange = () => {
+      console.log('Item type changed to:', webflowForm.value.itemType);
+      // Update isFolder based on selection
+      webflowForm.value.isFolder = webflowForm.value.itemType === 'folder';
+      
+      // You can add additional logic here based on the type
+      if (webflowForm.value.itemType === 'folder') {
+        // Folder-specific logic
+        // Maybe change default icon for folders
+        if (webflowForm.value.icon === 'pi pi-sitemap') {
+          webflowForm.value.icon = 'pi pi-folder';
+        }
+      } else {
+        // File-specific logic
+        // Maybe change default icon for files
+        if (webflowForm.value.icon === 'pi pi-folder') {
+          webflowForm.value.icon = 'pi pi-sitemap';
+        }
+      }
+    };
+    
     const openCreateDrawer = () => {
       isEditing.value = false;
       webflowForm.value = {
@@ -383,6 +450,9 @@ export default defineComponent({
         description: '',
         icon: 'pi pi-sitemap',
         tags: [],
+        itemType: 'file', // Default to file
+        isFolder: false,
+        parentId: null,
         openApiDocConfig: {
           enabled: false,
           url: '',
@@ -403,6 +473,9 @@ export default defineComponent({
         description: webflow.description || '',
         icon: webflow.icon || 'pi pi-sitemap',
         tags: webflow.tags ? [...webflow.tags] : [],
+        itemType: webflow.isFolder ? 'folder' : 'file', // Set based on existing isFolder
+        isFolder: webflow.isFolder || false,
+        parentId: webflow.parentId || null,
         openApiDocConfig: {
           enabled: webflow.openApiDocConfig?.enabled || false,
           url: webflow.openApiDocConfig?.url || '',
@@ -457,6 +530,8 @@ export default defineComponent({
             description: webflowForm.value.description,
             icon: webflowForm.value.icon,
             tags: webflowForm.value.tags,
+            isFolder: webflowForm.value.isFolder,
+            parentId: router.currentRoute.value.query.folderId as string || null,
             openApiDocConfig: webflowForm.value.openApiDocConfig,
           });
 
@@ -469,6 +544,8 @@ export default defineComponent({
             description: webflowForm.value.description,
             icon: webflowForm.value.icon,
             tags: webflowForm.value.tags,
+            isFolder: webflowForm.value.isFolder,
+            parentId: router.currentRoute.value.query.id as string || null,
             openApiDocConfig: webflowForm.value.openApiDocConfig,
           });
 
@@ -546,6 +623,16 @@ export default defineComponent({
     onMounted(async () => {
       await fetchWebflows();
     });
+
+    // Watch for parentId changes and refetch the list
+    watch(
+      () => router.currentRoute.value.query.id,
+      async (newId, oldId) => {
+        if (newId !== oldId) {
+          await fetchWebflows();
+        }
+      }
+    );
     
     return {
       webflows,
@@ -563,6 +650,7 @@ export default defineComponent({
       uniqueTags,
       fetchWebflows,
       filterWebflows,
+      onItemTypeChange,
       openCreateDrawer,
       editWebflow,
       closeDrawer,
@@ -610,6 +698,7 @@ export default defineComponent({
   margin-bottom: var(--spacing-large);
   gap: var(--spacing-medium);
   align-items: stretch;
+  
   .search-box {
     position: relative;
     flex: 1;
@@ -675,6 +764,61 @@ export default defineComponent({
 
 .webflow-form {
   padding: var(--spacing-large);
+
+  .type-toggle {
+    display: flex;
+    background: var(--color-light);
+    border-radius: 6px;
+    padding: 4px;
+    gap: 4px;
+    
+    .radio-group {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      flex: 1;
+      
+      input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      
+      .radio-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: var(--font-size-small);
+        font-weight: 500;
+        color: var(--color-text-secondary);
+        transition: all 0.2s ease;
+        width: 100%;
+        
+        i {
+          font-size: 14px;
+        }
+      }
+      
+      input[type="radio"]:checked + .radio-label {
+        background: var(--color-primary);
+        color: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      
+      &:hover .radio-label {
+        color: var(--color-text-primary);
+      }
+      
+      input[type="radio"]:checked + .radio-label:hover {
+        color: white;
+      }
+    }
+  }
 
   .tag-input {
     .tag-chips {

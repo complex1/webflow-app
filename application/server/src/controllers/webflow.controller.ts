@@ -16,7 +16,7 @@ export class WebflowController {
 
   public getWebflowById = async (req: Request, res: Response): Promise<void> => {
     try {
-      const { id } = req.params;
+      const { id } = req.params || null;
       const webflow = await this.webflowService.findById(id);
       
       if (!webflow) {
@@ -34,7 +34,8 @@ export class WebflowController {
     try {
       // Assuming user ID is available in req.user from auth middleware
       const userId = (req as any).user.id;
-      const webflows = await this.webflowService.findByUser(userId);
+      const folderId = req.query.folderId as string | undefined;
+      const webflows = await this.webflowService.findByUser(userId, folderId);
       res.status(200).json(webflows);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching user webflows', error });
@@ -105,6 +106,22 @@ export class WebflowController {
       res.status(200).json(webflows);
     } catch (error) {
       res.status(500).json({ message: 'Error fetching webflows by tags', error });
+    }
+  };
+
+  public getHierarchy = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id } = req.query;
+      
+      if (!id || typeof id !== 'string') {
+        res.status(400).json({ message: 'ID parameter is required' });
+        return;
+      }
+      
+      const hierarchy = await this.webflowService.getHierarchy(id);
+      res.status(200).json(hierarchy);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching hierarchy', error });
     }
   };
 }
