@@ -531,7 +531,7 @@ export default defineComponent({
             icon: webflowForm.value.icon,
             tags: webflowForm.value.tags,
             isFolder: webflowForm.value.isFolder,
-            parentId: router.currentRoute.value.query.folderId as string || null,
+            parentId: router.currentRoute.value.query.folderId as string || undefined,
             openApiDocConfig: webflowForm.value.openApiDocConfig,
           });
 
@@ -545,7 +545,7 @@ export default defineComponent({
             icon: webflowForm.value.icon,
             tags: webflowForm.value.tags,
             isFolder: webflowForm.value.isFolder,
-            parentId: router.currentRoute.value.query.id as string || null,
+            parentId: router.currentRoute.value.query.id as string || undefined,
             openApiDocConfig: webflowForm.value.openApiDocConfig,
           });
 
