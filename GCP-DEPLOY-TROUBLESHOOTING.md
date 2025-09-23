@@ -4,12 +4,19 @@
 Vite plugin version compatibility error during build on GCP server.
 
 ## Root Cause
-The error occurs due to version mismatches between:
-- Different Vite installations (root vs client folder)
-- Vue plugin and Vite core versions
+The error occurs due to:
+- Version mismatches between different Vite installations (root vs client folder)
+- Vue plugin and Vite core versions incompatibility
+- Vue DevTools trying to import 'vue' from root node_modules where it's not installed
 - Cached node_modules with conflicting dependencies
 
-## Solutions (Try in order)
+## ✅ FIXED SOLUTION
+The main issue was Vue DevTools plugin trying to access Vue from the wrong location. The vite.config.ts has been updated to:
+- Only load Vue DevTools in development mode
+- Skip Vue DevTools completely in production builds
+- Use conditional imports to prevent module resolution errors
+
+## Solutions (Try in order if you encounter similar issues)
 
 ### Solution 1: Use the updated deploy.sh script
 ```bash
@@ -49,7 +56,14 @@ pm2 stop server
 pm2 start server
 ```
 
-### Solution 4: Pin specific versions (if above solutions don't work)
+### Solution 4: Disable Vue DevTools for production (ALREADY IMPLEMENTED)
+The vite.config.ts now conditionally loads Vue DevTools:
+```typescript
+// Only include Vue DevTools in development
+...(VueDevTools && process.env.NODE_ENV === 'development' ? [VueDevTools()] : [])
+```
+
+### Solution 5: Pin specific versions (if above solutions don't work)
 Update `application/client/package.json` to use exact versions:
 
 ```json
@@ -63,7 +77,7 @@ Update `application/client/package.json` to use exact versions:
 }
 ```
 
-### Solution 5: Use legacy peer deps (last resort)
+### Solution 6: Use legacy peer deps (last resort)
 ```bash
 cd application/client
 npm install --legacy-peer-deps
@@ -74,8 +88,9 @@ npm install --legacy-peer-deps
 2. Commit package-lock.json or yarn.lock files
 3. Use exact versions for critical dependencies
 4. Clear caches when switching between environments
+5. Conditionally load development-only plugins
 
-## Notes
-- The error indicates conflicting HotUpdatePluginContext types between different Vite versions
-- This is a common issue when mixing package managers or having multiple Vite installations
-- The updated deploy scripts ensure clean installation to prevent this issue
+## Status
+✅ **RESOLVED**: Build now works correctly with conditional Vue DevTools loading
+✅ **Tested**: yarn build completes successfully
+✅ **Production Ready**: Vue DevTools excluded from production builds
