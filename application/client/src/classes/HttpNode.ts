@@ -38,7 +38,7 @@ export default class HttpNode extends Node {
     getUrl(globalStore: Record<string, any>): string {
         const path = this.pathParams.reduce((acc, param) => {
             const value = param.get(globalStore);
-            return acc.replace(`:${param.name}`, value);
+            return acc.replace(new RegExp(`(:${param.name}|\\{${param.name}\\})`, 'g'), value);
         }, this.url);
 
         const query = this.queryParams.map(param => {
