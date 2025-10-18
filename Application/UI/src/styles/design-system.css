@@ -1,0 +1,830 @@
+/* API Flux Design System */
+
+/* Font Awesome CDN */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css");
+
+/* ===== CSS Variables ===== */
+:root {
+  /* Adobe Photoshop-inspired Modern Color System */
+  --color-primary: #00b4ff;        /* Bright Adobe blue - high contrast */
+  --color-primary-hover: #0099e0;  /* Hover state */
+  --color-primary-light: #e6f7ff;  /* Light variant */
+  --color-primary-dark: #0088cc;   /* Darker variant - better contrast */
+  --color-primary-bright: #33c4ff; /* Brighter for highlights */
+  --color-primary-subtle: rgba(0, 180, 255, 0.1); /* Subtle background */
+
+  /* Secondary/Accent Colors */
+  --color-accent: #ff6b35;         /* Adobe orange accent */
+  --color-accent-hover: #e55a2b;   /* Hover state */
+  --color-accent-bright: #ff8555;  /* Brighter variant */
+  --color-accent-subtle: rgba(255, 107, 53, 0.1); /* Subtle background */
+
+  /* Enhanced Background Colors for Dark Theme */
+  --color-background: #1a1a1a;           /* Main dark background */
+  --color-background-elevated: #252525;  /* Elevated surfaces */
+  --color-background-subtle: #2f2f2f;    /* Subtle backgrounds */
+  --color-background-hover: #333333;     /* Hover states */
+  --color-background-disabled: #1f1f1f;  /* Disabled elements */
+  --color-background-code: #1e1e1e;      /* Code backgrounds */
+
+  /* Enhanced Text Colors */
+  --color-text-primary: #ffffff;    /* High contrast white */
+  --color-text-secondary: #d0d0d0;  /* Secondary text */
+  --color-text-tertiary: #a0a0a0;   /* Tertiary text */
+  --color-text-disabled: #666666;   /* Disabled text */
+  --color-text-inverse: #1a1a1a;    /* Inverse text */
+  --color-text-code: #f8f8f2;       /* Code text */
+
+  /* Enhanced Border Colors */
+  --color-border: #404040;          /* Default borders */
+  --color-border-subtle: #333333;   /* Subtle borders */
+  --color-border-hover: #555555;    /* Hover borders */
+  --color-border-focus: #00b4ff;    /* Focus borders */
+
+  /* Status Colors with Better Contrast */
+  --color-success: #50fa7b;         /* Bright green */
+  --color-success-bright: #70ff9b;  /* Brighter variant */
+  --color-success-subtle: rgba(80, 250, 123, 0.1);
+  
+  --color-warning: #ffb86c;         /* Bright orange */
+  --color-warning-bright: #ffc88c;  /* Brighter variant */
+  --color-warning-subtle: rgba(255, 184, 108, 0.1);
+  
+  --color-danger: #ff5555;          /* Bright red */
+  --color-danger-bright: #ff7575;   /* Brighter variant */
+  --color-danger-subtle: rgba(255, 85, 85, 0.1);
+
+  /* Gradients for Modern Look */
+  --gradient-primary: linear-gradient(135deg, #00b4ff 0%, #0099e0 100%);
+  --gradient-accent: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
+  --gradient-success: linear-gradient(135deg, #50fa7b 0%, #70ff9b 100%);
+  --gradient-warning: linear-gradient(135deg, #ffb86c 0%, #ffc88c 100%);
+  --gradient-danger: linear-gradient(135deg, #ff5555 0%, #ff7575 100%);
+
+  /* Blur Effects */
+  --blur-sm: blur(4px);
+  --blur-md: blur(8px);
+  --blur-lg: blur(12px);
+  --blur-xl: blur(16px);
+
+  /* Legacy Color Compatibility */
+  --color-api-node: var(--color-primary);
+  --color-api-node-light: var(--color-background-elevated);
+  --color-api-node-dark: var(--color-primary-dark);
+
+  --color-function-node: var(--color-accent);
+  --color-function-node-light: var(--color-background-elevated);
+  --color-function-node-dark: var(--color-accent-hover);
+
+  --color-functional-node: var(--color-accent);
+  --color-functional-node-light: var(--color-background-elevated);
+  --color-functional-node-dark: var(--color-accent-hover);
+
+  --color-database-node: #42a5f5;
+  --color-database-node-light: var(--color-background-elevated);
+  --color-database-node-dark: #1e88e5;
+
+  --color-logic-node: #ab47bc;
+  --color-logic-node-light: var(--color-background-elevated);
+  --color-logic-node-dark: #8e24aa;
+
+  --color-integration-node: var(--color-success);
+  --color-integration-node-light: var(--color-background-elevated);
+  --color-integration-node-dark: var(--color-success);
+
+  /* Legacy Status Colors */
+  --color-error: var(--color-danger);
+  --color-error-light: var(--color-danger-subtle);
+  --color-error-dark: var(--color-danger);
+  --color-info: var(--color-primary);
+  --color-info-light: var(--color-primary-subtle);
+  --color-info-dark: var(--color-primary-dark);
+
+  /* Adobe Photoshop Dark Theme Colors */
+  --color-gray-50: #535353;
+  --color-gray-100: #484848;
+  --color-gray-200: #3d3d3d;
+  --color-gray-300: #323232;
+  --color-gray-400: #2a2a2a;
+  --color-gray-500: #252525;
+  --color-gray-600: #202020;
+  --color-gray-700: #1b1b1b;
+  --color-gray-800: #161616;
+  --color-gray-900: #0f0f0f;
+
+  /* APi Method Colors - Enhanced for Dark Theme */
+  --color-get: var(--color-success);     /* Bright green */
+  --color-post: var(--color-primary);    /* Bright blue */
+  --color-put: var(--color-warning);     /* Bright orange */
+  --color-delete: var(--color-danger);   /* Bright red */
+  --color-patch: #bd93f9;                /* Bright purple */
+  --color-head: #8be9fd;                 /* Bright cyan */
+  --color-options: #f1fa8c;              /* Bright yellow */
+
+  /* Enhanced Gray Scale for Dark Theme */
+  --color-gray-50: #6d6d6d;   /* Lightest gray */
+  --color-gray-100: #5a5a5a;  /* Light gray */
+  --color-gray-200: #4a4a4a;  /* Medium-light gray */
+  --color-gray-300: #3a3a3a;  /* Medium gray */
+  --color-gray-400: #2a2a2a;  /* Medium-dark gray */
+  --color-gray-500: #202020;  /* Dark gray */
+  --color-gray-600: #1a1a1a;  /* Darker gray */
+  --color-gray-700: #151515;  /* Very dark gray */
+  --color-gray-800: #101010;  /* Almost black */
+  --color-gray-900: #0a0a0a;  /* Darkest gray */
+
+  /* Legacy Background Colors - Updated */
+  --color-background-secondary: var(--color-background-elevated);
+  --color-background-tertiary: var(--color-background-subtle);
+  --color-background-quaternary: var(--color-background);
+
+  /* Legacy Text Colors - Updated */
+  --color-text-default: var(--color-text-primary);
+
+  /* Typography Scale - Adobe-style */
+  --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --font-family-mono: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", "Source Code Pro", monospace;
+  
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+  --font-size-5xl: 3rem; /* 48px */
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Spacing Scale */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 1rem; /* 16px */
+  --spacing-lg: 1.5rem; /* 24px */
+  --spacing-xl: 2rem; /* 32px */
+  --spacing-2xl: 3rem; /* 48px */
+  --spacing-3xl: 4rem; /* 64px */
+  --spacing-4xl: 6rem; /* 96px */
+
+  /* Border Radius */
+  --radius-sm: 0.25rem; /* 4px */
+  --radius-md: 0.375rem; /* 6px */
+  --radius-lg: 0.5rem; /* 8px */
+  --radius-xl: 0.75rem; /* 12px */
+  --radius-2xl: 1rem; /* 16px */
+  --radius-full: 9999px;
+
+  /* Shadows - Enhanced for Dark Theme with Bright Accents */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 0 6px rgba(0, 180, 255, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 180, 255, 0.15);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 180, 255, 0.2);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 180, 255, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(0, 180, 255, 0.4), 0 0 40px rgba(0, 180, 255, 0.2);
+  --shadow-glow-accent: 0 0 20px rgba(255, 107, 53, 0.4), 0 0 40px rgba(255, 107, 53, 0.2);
+  --shadow-glow-success: 0 0 20px rgba(80, 250, 123, 0.4), 0 0 40px rgba(80, 250, 123, 0.2);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+
+  /* Z-Index Scale - Updated for VueFlow compatibility */
+  --z-dropdown: 10001;       /* Above VueFlow elements */
+  --z-sticky: 10002;
+  --z-fixed: 10003;
+  --z-modal-backdrop: 10004;
+  --z-modal: 10005;
+  --z-popover: 10006;        /* Above dropdown */
+  --z-tooltip: 10007;
+  --z-toast: 10008;
+  --z-alert: 10009;
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* ===== Base Styles ===== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  line-height: var(--line-height-normal);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-system);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  overflow-x: hidden;
+}
+
+/* ===== Light Theme Override ===== */
+body[data-theme="light"] {
+  /* Primary Colors - Adjusted for light background */
+  --color-primary: #0066cc;        /* Darker blue for better contrast on light */
+  --color-primary-hover: #0052a3;  /* Darker hover state */
+  --color-primary-light: #e6f3ff;  /* Very light blue background */
+  --color-primary-dark: #004080;   /* Even darker variant */
+  --color-primary-bright: #0080ff; /* Brighter for highlights */
+  --color-primary-subtle: rgba(0, 102, 204, 0.1); /* Subtle background */
+
+  /* Secondary/Accent Colors */
+  --color-accent: #e6440a;         /* Darker orange for light theme */
+  --color-accent-hover: #cc3a00;   /* Darker hover state */
+  --color-accent-bright: #ff6b35;  /* Brighter variant */
+  --color-accent-subtle: rgba(230, 68, 10, 0.1); /* Subtle background */
+
+  /* Background Colors for Light Theme */
+  --color-background: #ffffff;           /* Pure white background */
+  --color-background-elevated: #f8f9fa;  /* Very light gray for cards */
+  --color-background-subtle: #f1f3f4;    /* Light gray for subtle areas */
+  --color-background-hover: #e9ecef;     /* Light gray for hover states */
+  --color-background-disabled: #f5f5f5;  /* Disabled element background */
+  --color-background-code: #f6f8fa;      /* Light code background */
+
+  /* Text Colors for Light Theme */
+  --color-text-primary: #212529;    /* Dark gray, almost black */
+  --color-text-secondary: #495057;  /* Medium gray */
+  --color-text-tertiary: #6c757d;   /* Light gray */
+  --color-text-disabled: #adb5bd;   /* Very light gray for disabled */
+  --color-text-inverse: #ffffff;    /* White text for dark backgrounds */
+  --color-text-code: #24292e;       /* Dark code text */
+
+  /* Border Colors for Light Theme */
+  --color-border: #dee2e6;          /* Light gray borders */
+  --color-border-subtle: #e9ecef;   /* Very light borders */
+  --color-border-hover: #adb5bd;    /* Darker borders on hover */
+  --color-border-focus: #0066cc;    /* Primary color for focus */
+
+  /* Status Colors with Better Contrast for Light Theme */
+  --color-success: #28a745;         /* Standard green */
+  --color-success-bright: #20c997;  /* Brighter teal-green */
+  --color-success-subtle: rgba(40, 167, 69, 0.1);
+  
+  --color-warning: #ffc107;         /* Standard warning yellow */
+  --color-warning-bright: #ffcd39;  /* Brighter yellow */
+  --color-warning-subtle: rgba(255, 193, 7, 0.1);
+  
+  --color-danger: #dc3545;          /* Standard red */
+  --color-danger-bright: #e85d75;   /* Brighter red */
+  --color-danger-subtle: rgba(220, 53, 69, 0.1);
+
+  /* Gray Scale for Light Theme */
+  --color-gray-50: #f8f9fa;   /* Lightest gray */
+  --color-gray-100: #f1f3f4;  /* Very light gray */
+  --color-gray-200: #e9ecef;  /* Light gray */
+  --color-gray-300: #dee2e6;  /* Medium-light gray */
+  --color-gray-400: #ced4da;  /* Medium gray */
+  --color-gray-500: #adb5bd;  /* Medium-dark gray */
+  --color-gray-600: #6c757d;  /* Dark gray */
+  --color-gray-700: #495057;  /* Very dark gray */
+  --color-gray-800: #343a40;  /* Almost black */
+  --color-gray-900: #212529;  /* Darkest gray */
+
+  /* Legacy Background Colors - Updated for Light Theme */
+  --color-background-secondary: var(--color-background-elevated);
+  --color-background-tertiary: var(--color-background-subtle);
+  --color-background-quaternary: var(--color-background);
+
+  /* Legacy Text Colors - Updated for Light Theme */
+  --color-text-default: var(--color-text-primary);
+
+  /* Shadows for Light Theme - Softer, more subtle */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-glow: 0 0 0 3px rgba(0, 102, 204, 0.1), 0 0 10px rgba(0, 102, 204, 0.1);
+  --shadow-glow-accent: 0 0 0 3px rgba(230, 68, 10, 0.1), 0 0 10px rgba(230, 68, 10, 0.1);
+  --shadow-glow-success: 0 0 0 3px rgba(40, 167, 69, 0.1), 0 0 10px rgba(40, 167, 69, 0.1);
+
+  /* API Method Colors for Light Theme */
+  --color-get: #28a745;     /* Green */
+  --color-post: #007bff;    /* Blue */
+  --color-put: #ffc107;     /* Yellow */
+  --color-delete: #dc3545;  /* Red */
+  --color-patch: #6f42c1;   /* Purple */
+  --color-head: #17a2b8;    /* Cyan */
+  --color-options: #fd7e14;  /* Orange */
+
+  /* Node Colors for Light Theme */
+  --color-api-node: var(--color-primary);
+  --color-api-node-light: var(--color-background-elevated);
+  --color-api-node-dark: var(--color-primary-dark);
+
+  --color-function-node: var(--color-accent);
+  --color-function-node-light: var(--color-background-elevated);
+  --color-function-node-dark: var(--color-accent-hover);
+
+  --color-functional-node: var(--color-accent);
+  --color-functional-node-light: var(--color-background-elevated);
+  --color-functional-node-dark: var(--color-accent-hover);
+
+  --color-database-node: #007bff;
+  --color-database-node-light: var(--color-background-elevated);
+  --color-database-node-dark: #0056b3;
+
+  --color-logic-node: #6f42c1;
+  --color-logic-node-light: var(--color-background-elevated);
+  --color-logic-node-dark: #59359a;
+
+  --color-integration-node: var(--color-success);
+  --color-integration-node-light: var(--color-background-elevated);
+  --color-integration-node-dark: var(--color-success);
+
+  /* Legacy Status Colors for Light Theme */
+  --color-error: var(--color-danger);
+  --color-error-light: var(--color-danger-subtle);
+  --color-error-dark: var(--color-danger);
+  --color-info: var(--color-primary);
+  --color-info-light: var(--color-primary-subtle);
+  --color-info-dark: var(--color-primary-dark);
+
+  /* Gradients for Light Theme */
+  --gradient-primary: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+  --gradient-accent: linear-gradient(135deg, #e6440a 0%, #cc3a00 100%);
+  --gradient-success: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  --gradient-warning: linear-gradient(135deg, #ffc107 0%, #ffcd39 100%);
+  --gradient-danger: linear-gradient(135deg, #dc3545 0%, #e85d75 100%);
+}
+
+/* ===== Base Styles ===== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  line-height: var(--line-height-normal);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-system);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  overflow-x: hidden;
+}
+
+/* ===== Typography ===== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+}
+
+h2 {
+  font-size: var(--font-size-3xl);
+}
+
+h3 {
+  font-size: var(--font-size-2xl);
+}
+
+h4 {
+  font-size: var(--font-size-xl);
+}
+
+h5 {
+  font-size: var(--font-size-lg);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  margin: 0;
+  line-height: var(--line-height-normal);
+  color: var(--color-text-secondary);
+}
+
+/* ===== Utility Classes ===== */
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+.text-sm {
+  font-size: var(--font-size-sm);
+}
+.text-base {
+  font-size: var(--font-size-base);
+}
+.text-lg {
+  font-size: var(--font-size-lg);
+}
+.text-xl {
+  font-size: var(--font-size-xl);
+}
+.text-2xl {
+  font-size: var(--font-size-2xl);
+}
+.text-3xl {
+  font-size: var(--font-size-3xl);
+}
+.text-4xl {
+  font-size: var(--font-size-4xl);
+}
+
+.font-normal {
+  font-weight: var(--font-weight-normal);
+}
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+.text-tertiary {
+  color: var(--color-text-tertiary);
+}
+.text-inverse {
+  color: var(--color-text-inverse);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.bg-secondary {
+  background-color: var(--color-background-secondary);
+}
+.bg-tertiary {
+  background-color: var(--color-background-tertiary);
+}
+
+/* ===== Spacing Utilities ===== */
+.p-xs {
+  padding: var(--spacing-xs);
+}
+.p-sm {
+  padding: var(--spacing-sm);
+}
+.p-md {
+  padding: var(--spacing-md);
+}
+.p-lg {
+  padding: var(--spacing-lg);
+}
+.p-xl {
+  padding: var(--spacing-xl);
+}
+.p-2xl {
+  padding: var(--spacing-2xl);
+}
+
+.px-xs {
+  padding-left: var(--spacing-xs);
+  padding-right: var(--spacing-xs);
+}
+.px-sm {
+  padding-left: var(--spacing-sm);
+  padding-right: var(--spacing-sm);
+}
+.px-md {
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+.px-lg {
+  padding-left: var(--spacing-lg);
+  padding-right: var(--spacing-lg);
+}
+.px-xl {
+  padding-left: var(--spacing-xl);
+  padding-right: var(--spacing-xl);
+}
+
+.py-xs {
+  padding-top: var(--spacing-xs);
+  padding-bottom: var(--spacing-xs);
+}
+.py-sm {
+  padding-top: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
+}
+.py-md {
+  padding-top: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+}
+.py-lg {
+  padding-top: var(--spacing-lg);
+  padding-bottom: var(--spacing-lg);
+}
+.py-xl {
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
+}
+
+.m-xs {
+  margin: var(--spacing-xs);
+}
+.m-sm {
+  margin: var(--spacing-sm);
+}
+.m-md {
+  margin: var(--spacing-md);
+}
+.m-lg {
+  margin: var(--spacing-lg);
+}
+.m-xl {
+  margin: var(--spacing-xl);
+}
+.m-2xl {
+  margin: var(--spacing-2xl);
+}
+
+.mx-xs {
+  margin-left: var(--spacing-xs);
+  margin-right: var(--spacing-xs);
+}
+.mx-sm {
+  margin-left: var(--spacing-sm);
+  margin-right: var(--spacing-sm);
+}
+.mx-md {
+  margin-left: var(--spacing-md);
+  margin-right: var(--spacing-md);
+}
+.mx-lg {
+  margin-left: var(--spacing-lg);
+  margin-right: var(--spacing-lg);
+}
+.mx-xl {
+  margin-left: var(--spacing-xl);
+  margin-right: var(--spacing-xl);
+}
+.mx-2xl {
+  margin-left: var(--spacing-2xl);
+  margin-right: var(--spacing-2xl);
+}
+.my-xs {
+  margin-top: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+}
+.my-sm {
+  margin-top: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+.my-md {
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+.my-lg {
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+.my-xl {
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+.my-2xl {
+  margin-top: var(--spacing-2xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* ===== Border Radius Utilities ===== */
+.rounded-sm {
+  border-radius: var(--radius-sm);
+}
+.rounded-md {
+  border-radius: var(--radius-md);
+}
+.rounded-lg {
+  border-radius: var(--radius-lg);
+}
+.rounded-xl {
+  border-radius: var(--radius-xl);
+}
+.rounded-2xl {
+  border-radius: var(--radius-2xl);
+}
+.rounded-full {
+  border-radius: var(--radius-full);
+}
+
+/* ===== Shadow Utilities ===== */
+.shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+.shadow-xl {
+  box-shadow: var(--shadow-xl);
+}
+
+/* ===== Flexbox Utilities ===== */
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-row {
+  flex-direction: row;
+}
+.items-center {
+  align-items: center;
+}
+.items-start {
+  align-items: flex-start;
+}
+.items-end {
+  align-items: flex-end;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-around {
+  justify-content: space-around;
+}
+
+/* ===== Grid Utilities ===== */
+.grid {
+  display: grid;
+}
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.gap-xs {
+  gap: var(--spacing-xs);
+}
+.gap-sm {
+  gap: var(--spacing-sm);
+}
+.gap-md {
+  gap: var(--spacing-md);
+}
+.gap-lg {
+  gap: var(--spacing-lg);
+}
+.gap-xl {
+  gap: var(--spacing-xl);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--spacing-md) 0;
+}
+
+/* ===== Responsive Design ===== */
+@media (min-width: 640px) {
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sm\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .sm\:flex-row {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .md\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .lg\:grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+/* ===== Focus Styles ===== */
+.focus\:ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+/* ===== Animation Utilities ===== */
+.transition {
+  transition: all var(--transition-normal);
+}
+
+.transition-fast {
+  transition: all var(--transition-fast);
+}
+
+.transition-slow {
+  transition: all var(--transition-slow);
+}
+
+/* ===== Hover Effects ===== */
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+.hover\:shadow-lg:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===== Loading States ===== */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ===== Accessibility ===== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Print Styles ===== */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
