@@ -235,7 +235,7 @@ const copyCurl = async () => {
 }
 
 .parse-btn:hover {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: var(--shadow-glow);
 }
 

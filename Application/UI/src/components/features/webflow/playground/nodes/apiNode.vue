@@ -106,7 +106,7 @@ const onDelete = () => {
 } */
 
 .api-node:hover {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: var(--shadow-xl);
   border-color: var(--color-primary);
 }

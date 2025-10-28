@@ -278,7 +278,7 @@ const isEmpty = computed(() => {
 // Methods
 const getFullUrl = () => {
   try {
-    return props.apiNode.getUrl(props.globalStore || {});
+    return props.apiNode.getUrl(props.globalStore || {}, {});
   } catch (error) {
     return 'Invalid URL configuration';
   }
@@ -295,7 +295,7 @@ const getVariableValue = (variable: any) => {
 
 const getBodyValue = () => {
   try {
-    return props.apiNode.getBody(props.globalStore || {});
+    return props.apiNode.getBody(props.globalStore || {}, {});
   } catch (error) {
     return 'Error getting body';
   }

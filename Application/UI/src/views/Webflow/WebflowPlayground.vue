@@ -273,7 +273,7 @@ watch(
 
 .retry-btn:hover {
   background-color: var(--color-primary-hover);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
   box-shadow: var(--shadow-md);
 }
 

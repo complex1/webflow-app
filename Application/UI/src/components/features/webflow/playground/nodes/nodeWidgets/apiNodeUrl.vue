@@ -83,7 +83,7 @@ const getFullUrl = computed(() => {
 }
 
 .node-method-chip:hover {
-  transform: scale(1.05);
+  /* transform: scale(1.05); */
   box-shadow: var(--shadow-md);
 }
 
@@ -119,6 +119,6 @@ const getFullUrl = computed(() => {
   border-color: var(--color-primary);
   color: var(--color-primary);
   cursor: pointer;
-  transform: translateX(2px);
+  /* transform: translateX(2px); */
 }
 </style>

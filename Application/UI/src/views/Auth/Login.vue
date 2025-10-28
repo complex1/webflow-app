@@ -267,7 +267,7 @@ const handleSocialLogin = () => {
 
 .info-button:hover {
   background: var(--color-background-secondary) !important;
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
 }
 
 /* Right Form Section */

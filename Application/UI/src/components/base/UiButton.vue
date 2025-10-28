@@ -120,7 +120,7 @@ const handleClick = (event: MouseEvent) => {
 }
 
 .ui-button:active {
-  transform: translateY(1px);
+  /* transform: translateY(1px); */
 }
 
 .ui-button:focus {
@@ -133,7 +133,7 @@ const handleClick = (event: MouseEvent) => {
 }
 
 .ui-button:hover:not(:disabled) {
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
   box-shadow: var(--shadow-md);
 }
 

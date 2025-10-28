@@ -117,7 +117,7 @@ const getVariableData = computed(() => {
 .fa.fa-eye:hover {
   background: var(--color-success-subtle);
   color: var(--color-success-bright);
-  transform: scale(1.1);
+  /* transform: scale(1.1); */
 }
 
 .data-content {

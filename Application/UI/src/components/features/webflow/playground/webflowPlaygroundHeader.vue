@@ -399,7 +399,7 @@ onUnmounted(() => {
 .btn-play:hover {
   background-color: var(--color-success);
   filter: brightness(0.9);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
   box-shadow: var(--shadow-md);
 }
 
@@ -410,7 +410,7 @@ onUnmounted(() => {
 
 .btn-add:hover {
   background-color: var(--color-primary-hover);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
   box-shadow: var(--shadow-md);
 }
 
@@ -470,7 +470,7 @@ onUnmounted(() => {
 
 .dropdown-item:hover {
   background-color: var(--color-background-hover);
-  transform: translateX(2px);
+  /* transform: translateX(2px); */
 }
 
 .dropdown-item:focus {

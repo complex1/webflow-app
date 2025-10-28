@@ -224,7 +224,7 @@ onUnmounted(() => {
 .ui-avatar:hover:not(.ui-avatar--disabled) {
   background: linear-gradient(135deg, var(--color-primary-subtle) 0%, var(--color-accent-subtle) 100%);
   border-color: var(--color-primary);
-  transform: scale(1.1);
+  /* transform: scale(1.1); */
   box-shadow: var(--shadow-lg);
 }
 

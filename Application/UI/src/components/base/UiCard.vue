@@ -131,7 +131,7 @@ const handleClick = (event: MouseEvent) => {
 /* Interactive states */
 .ui-card--hoverable:hover {
   box-shadow: var(--shadow-xl);
-  transform: translateY(-4px);
+  /* transform: translateY(-4px); */
   border-color: var(--color-border-hover);
 }
 
@@ -145,7 +145,7 @@ const handleClick = (event: MouseEvent) => {
 }
 
 .ui-card--clickable:active {
-  transform: scale(0.98);
+  /* transform: scale(0.98); */
 }
 
 .ui-card--loading {

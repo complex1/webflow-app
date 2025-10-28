@@ -281,7 +281,7 @@ const onSave = (node: ApiNode) => {
     var(--color-primary-hover),
     var(--color-primary)
   );
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
   box-shadow: var(--shadow-md);
 }
 
@@ -294,7 +294,7 @@ const onSave = (node: ApiNode) => {
 .btn-secondary:hover:not(:disabled) {
   background-color: var(--color-background-hover);
   border-color: var(--color-border-hover);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
   box-shadow: var(--shadow-sm);
 }
 

@@ -328,7 +328,7 @@ watch(() => file.value, () => {
 
 .upload-button:hover:not(:disabled) {
   background: var(--color-primary);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
 }
 
 .upload-button:disabled {

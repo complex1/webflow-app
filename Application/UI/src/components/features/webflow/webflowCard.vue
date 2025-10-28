@@ -191,13 +191,13 @@ onUnmounted(() => {
 
 .webflow-card:hover {
     border-color: var(--color-primary);
-    transform: translateY(-4px);
+    /* transform: translateY(-4px); */
     box-shadow: var(--shadow-xl);
 }
 
 .webflow-card:active {
     border-color: var(--color-primary);
-    transform: translateY(-2px);
+    /* transform: translateY(-2px); */
 }
 
 .card-content {
@@ -225,7 +225,7 @@ onUnmounted(() => {
 }
 
 .card-icon:hover {
-    transform: scale(1.1);
+    /* transform: scale(1.1); */
 }
 
 .card-info {
@@ -281,7 +281,7 @@ onUnmounted(() => {
 }
 
 .tags-list .tag:hover {
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
     box-shadow: var(--shadow-md);
 }
 

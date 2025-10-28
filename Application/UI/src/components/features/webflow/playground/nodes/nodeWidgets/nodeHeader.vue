@@ -171,7 +171,7 @@ onUnmounted(() => {
 
 .node-header:hover {
   background: linear-gradient(135deg, var(--color-background-hover) 0%, var(--color-background-elevated) 100%);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
 }
 .node-header--api {
   border-left: 4px solid var(--color-primary);

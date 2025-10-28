@@ -173,7 +173,7 @@
 .card:hover {
   box-shadow: var(--shadow-lg);
   border-color: var(--color-border-hover);
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
 }
 
 .card-header {

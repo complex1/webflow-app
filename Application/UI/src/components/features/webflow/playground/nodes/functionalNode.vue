@@ -99,7 +99,7 @@ const onView = () => {
 
 .functional-node:hover {
   box-shadow: var(--shadow-xl);
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   border-color: var(--color-functional-node);
 }
 

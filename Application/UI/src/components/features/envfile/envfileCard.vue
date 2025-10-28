@@ -251,7 +251,7 @@ onUnmounted(() => {
 .envfile-card:hover {
   border-color: var(--color-gray-300);
   box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
 }
 
 /* Card Header */
