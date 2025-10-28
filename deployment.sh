@@ -76,8 +76,8 @@ check_node_version() {
     fi
     
     # Check Backend package.json engines
-    if [ -f "application/Backend/package.json" ]; then
-        local backend_engine=$(grep -A 2 '"engines"' application/Backend/package.json | grep '"node"' | sed 's/.*">=\([0-9]*\).*/\1/' | head -1)
+    if [ -f "Application/Backend/package.json" ]; then
+        local backend_engine=$(grep -A 2 '"engines"' Application/Backend/package.json | grep '"node"' | sed 's/.*">=\([0-9]*\).*/\1/' | head -1)
         if [ ! -z "$backend_engine" ]; then
             print_status "Backend requires Node.js >= v$backend_engine"
             if [ "$major_version" -ge "$backend_engine" ]; then
@@ -90,8 +90,8 @@ check_node_version() {
     fi
     
     # Check Frontend package.json engines
-    if [ -f "application/UI/package.json" ]; then
-        local frontend_engine=$(grep -A 2 '"engines"' application/UI/package.json | grep '"node"' | sed 's/.*">=\([0-9]*\).*/\1/' | head -1)
+    if [ -f "Application/UI/package.json" ]; then
+        local frontend_engine=$(grep -A 2 '"engines"' Application/UI/package.json | grep '"node"' | sed 's/.*">=\([0-9]*\).*/\1/' | head -1)
         if [ ! -z "$frontend_engine" ]; then
             print_status "Frontend requires Node.js >= v$frontend_engine"
             if [ "$major_version" -ge "$frontend_engine" ]; then
@@ -115,8 +115,8 @@ install_dependencies() {
     
     # Install Backend dependencies
     print_status "Installing Backend dependencies..."
-    if [ -d "application/Backend" ]; then
-        cd "application/Backend"
+    if [ -d "Application/Backend" ]; then
+        cd "Application/Backend"
         print_status "Changed directory to: $(pwd)"
         
         if [ -f "package.json" ]; then
@@ -142,8 +142,8 @@ install_dependencies() {
     
     # Install Frontend dependencies
     print_status "Installing Frontend dependencies..."
-    if [ -d "application/UI" ]; then
-        cd "application/UI"
+    if [ -d "Application/UI" ]; then
+        cd "Application/UI"
         print_status "Changed directory to: $(pwd)"
         
         if [ -f "package.json" ]; then
@@ -179,8 +179,8 @@ build_and_deploy_ui() {
     
     # Build the UI application
     print_status "Building UI application..."
-    if [ -d "application/UI" ]; then
-        cd "application/UI"
+    if [ -d "Application/UI" ]; then
+        cd "Application/UI"
         print_status "Changed directory to: $(pwd)"
         
         if [ -f "package.json" ]; then
@@ -205,24 +205,24 @@ build_and_deploy_ui() {
             cd "$SCRIPT_DIR"
             
             # Create backend public directory if it doesn't exist
-            mkdir -p "application/Backend/public"
+            mkdir -p "Application/Backend/public"
             print_status "Ensured backend public directory exists"
             
             # Remove old files from backend public directory
-            if [ -d "application/Backend/public" ] && [ "$(ls -A application/Backend/public)" ]; then
+            if [ -d "Application/Backend/public" ] && [ "$(ls -A Application/Backend/public)" ]; then
                 print_status "Removing old files from backend public directory..."
-                rm -rf application/Backend/public/*
+                rm -rf Application/Backend/public/*
             fi
             
             # Copy UI dist files to backend public directory
             print_status "Copying UI build files to backend public directory..."
-            cp -r application/UI/dist/* application/Backend/public/
+            cp -r Application/UI/dist/* Application/Backend/public/
             if [ $? -eq 0 ]; then
                 print_success "UI files copied to backend public directory successfully"
                 
                 # List the copied files for verification
                 print_status "Files in backend public directory:"
-                ls -la application/Backend/public/
+                ls -la Application/Backend/public/
             else
                 print_error "Failed to copy UI files to backend public directory"
                 exit 1
@@ -247,8 +247,8 @@ build_backend() {
     print_status "Step 4: Building Backend application..."
     
     # Build the Backend application
-    if [ -d "application/Backend" ]; then
-        cd "application/Backend"
+    if [ -d "Application/Backend" ]; then
+        cd "Application/Backend"
         print_status "Changed directory to: $(pwd)"
         
         if [ -f "package.json" ]; then
@@ -346,7 +346,7 @@ manage_pm2_server() {
         print_status "Starting new api-flux server..."
         
         # Navigate to backend directory
-        cd "application/Backend"
+        cd "Application/Backend"
         
         # Start new PM2 process
         pm2 start dist/index.js --name api-flux --env NODE_ENV=production
