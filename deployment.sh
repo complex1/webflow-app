@@ -70,6 +70,20 @@ check_node_version() {
         if [ "$current_version" != "$required_version" ]; then
             print_warning "Node.js version mismatch!"
             print_warning "Current: v$current_version, Required: v$required_version"
+            
+            # Ask user if they want to upgrade
+            echo ""
+            print_status "Would you like to upgrade Node.js to the compatible version? (y/N)"
+            read -r response
+            case "$response" in
+                [yY][eE][sS]|[yY])
+                    upgrade_node_version
+                    return
+                    ;;
+                *)
+                    print_status "Continuing with current Node.js version..."
+                    ;;
+            esac
         else
             print_success "Node.js version matches .nvmrc requirement"
         fi
@@ -84,7 +98,21 @@ check_node_version() {
                 print_success "Backend Node.js version requirement satisfied"
             else
                 print_error "Backend requires Node.js >= v$backend_engine, but current is v$current_version"
-                exit 1
+                
+                # Ask user if they want to upgrade
+                echo ""
+                print_status "Would you like to upgrade Node.js to a compatible version? (y/N)"
+                read -r response
+                case "$response" in
+                    [yY][eE][sS]|[yY])
+                        upgrade_node_version
+                        return
+                        ;;
+                    *)
+                        print_error "Cannot continue with incompatible Node.js version"
+                        exit 1
+                        ;;
+                esac
             fi
         fi
     fi
@@ -98,12 +126,137 @@ check_node_version() {
                 print_success "Frontend Node.js version requirement satisfied"
             else
                 print_error "Frontend requires Node.js >= v$frontend_engine, but current is v$current_version"
-                exit 1
+                
+                # Ask user if they want to upgrade
+                echo ""
+                print_status "Would you like to upgrade Node.js to a compatible version? (y/N)"
+                read -r response
+                case "$response" in
+                    [yY][eE][sS]|[yY])
+                        upgrade_node_version
+                        return
+                        ;;
+                    *)
+                        print_error "Cannot continue with incompatible Node.js version"
+                        exit 1
+                        ;;
+                esac
             fi
         fi
     fi
     
     print_success "Node.js version compatibility check passed"
+}
+
+# Function to upgrade Node.js to compatible version
+upgrade_node_version() {
+    print_status "🔄 Starting Node.js upgrade process..."
+    
+    # Determine target version
+    local target_version=""
+    if [ -f ".nvmrc" ]; then
+        target_version=$(cat .nvmrc)
+        print_status "Target version from .nvmrc: v$target_version"
+    else
+        target_version="24.10.0"  # Default to latest stable
+        print_status "Using default target version: v$target_version"
+    fi
+    
+    # Check if Homebrew is available
+    if command_exists brew; then
+        print_status "Using Homebrew to upgrade Node.js..."
+        upgrade_with_homebrew "$target_version"
+    elif command_exists nvm; then
+        print_status "Using nvm to upgrade Node.js..."
+        upgrade_with_nvm "$target_version"
+    else
+        print_warning "Neither Homebrew nor nvm found"
+        print_status "Installing Node.js via Homebrew..."
+        install_homebrew_and_node "$target_version"
+    fi
+    
+    # Verify upgrade
+    local new_version=$(node --version | sed 's/v//')
+    print_status "New Node.js version: v$new_version"
+    
+    if [ "$new_version" = "$target_version" ]; then
+        print_success "✅ Node.js successfully upgraded to v$new_version"
+    else
+        local new_major=$(echo $new_version | cut -d. -f1)
+        local target_major=$(echo $target_version | cut -d. -f1)
+        if [ "$new_major" -ge "$target_major" ]; then
+            print_success "✅ Node.js upgraded to compatible version v$new_version"
+        else
+            print_error "❌ Node.js upgrade failed or insufficient version"
+            exit 1
+        fi
+    fi
+}
+
+# Upgrade Node.js using Homebrew
+upgrade_with_homebrew() {
+    local target_version="$1"
+    
+    print_status "Checking current Homebrew Node.js installation..."
+    
+    # Check if node is installed via Homebrew
+    if brew list node >/dev/null 2>&1; then
+        print_status "Upgrading existing Homebrew Node.js installation..."
+        brew upgrade node
+    else
+        print_status "Installing Node.js via Homebrew..."
+        brew install node
+    fi
+    
+    # Update PATH for current session
+    export PATH="/opt/homebrew/bin:$PATH"
+    
+    print_success "Homebrew Node.js installation/upgrade completed"
+}
+
+# Upgrade Node.js using nvm
+upgrade_with_nvm() {
+    local target_version="$1"
+    
+    print_status "Installing Node.js v$target_version using nvm..."
+    
+    # Source nvm
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    
+    # Install and use target version
+    nvm install "$target_version"
+    nvm use "$target_version"
+    nvm alias default "$target_version"
+    
+    print_success "nvm Node.js installation completed"
+}
+
+# Install Homebrew and Node.js
+install_homebrew_and_node() {
+    local target_version="$1"
+    
+    print_status "Installing Homebrew..."
+    
+    # Install Homebrew
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    
+    # Add Homebrew to PATH
+    if [[ $(uname -m) == "arm64" ]]; then
+        export PATH="/opt/homebrew/bin:$PATH"
+        echo 'export PATH="/opt/homebrew/bin:$PATH"' >> ~/.zshrc
+    else
+        export PATH="/usr/local/bin:$PATH"
+        echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.zshrc
+    fi
+    
+    print_success "Homebrew installed successfully"
+    
+    # Install Node.js
+    print_status "Installing Node.js via Homebrew..."
+    brew install node
+    
+    print_success "Node.js installation completed"
 }
 
 # Run Node.js version check
