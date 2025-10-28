@@ -119,6 +119,25 @@ export const useWebflowPlaygroundStore = defineStore('webflowPlayground', () => 
     ])
   }
 
+  // Update webflow config
+  const updateWebflowConfig = async ( nodes: any[], edges: any[]) => {
+    try {
+      isLoadingConfig.value = true
+      clearError()
+      if (currentWebFlowId.value === null) {
+        throw new Error('No current webflow selected')
+      }
+      const response = await webFlowService.updateConfig(currentWebFlowId.value, nodes, edges)
+      webflowConfig.value = response.config
+      return response
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to update webflow config')
+      throw err
+    } finally {
+      isLoadingConfig.value = false
+    }
+  }
+
   // Reset store
   const reset = () => {
     webflowDetails.value = null
@@ -156,6 +175,7 @@ export const useWebflowPlaygroundStore = defineStore('webflowPlayground', () => 
     loadWebflowConfig,
     loadWebflowEnvLinks,
     loadAll,
+    updateWebflowConfig,
     reset
   }
 })

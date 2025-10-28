@@ -53,7 +53,7 @@ import type {
   Connection,
   EdgeChange,
 } from "@vue-flow/core";
-import { VueFlow } from "@vue-flow/core";
+import { VueFlow, useVueFlow } from "@vue-flow/core";
 import { MiniMap } from "@vue-flow/minimap";
 import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
@@ -79,6 +79,9 @@ const emit = defineEmits<{
   (e: "editNode", node: WebflowNode): void;
   (e: "deleteNode", node: WebflowNode): void;
 }>();
+
+// Get Vue Flow instance for programmatic control
+const { fitView } = useVueFlow();
 
 // Track selected edge
 // const selectedEdgeId = ref<string | null>(null);
@@ -113,6 +116,20 @@ const onEdgeChange = (changes: EdgeChange[]) => {
     }
   });
 };
+
+// Fit view method to center and fit all nodes in view
+const fitToView = (options?: { padding?: number; includeHiddenNodes?: boolean; duration?: number }) => {
+  fitView({
+    padding: options?.padding || 0.1,
+    includeHiddenNodes: options?.includeHiddenNodes || false,
+    duration: options?.duration || 800,
+  });
+};
+
+// Expose methods for parent components
+defineExpose({
+  fitToView,
+});
 
 </script>
 

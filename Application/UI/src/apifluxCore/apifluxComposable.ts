@@ -20,7 +20,7 @@ interface UseApiFluxReturn {
   setEnvironmentVariableMap: (map: Record<string, string>) => void;
   play: () => void;
   getSerializedData: () => any;
-  setWebflowData: (data: { nodes: Node[]; edges: Edge[]; nodeMap: { [key: string]: WebflowNode } }) => void;
+  setWebflowData: (data: any) => void;
 }
 
 const useApiFlux = (): UseApiFluxReturn => {
@@ -101,7 +101,7 @@ const useApiFlux = (): UseApiFluxReturn => {
     return serialized(nodes.value, edges.value, nodeMap.value);
   }
 
-  const setWebflowData = (data: { nodes: Node[]; edges: Edge[]; nodeMap: { [key: string]: WebflowNode } }) => {
+  const setWebflowData = (data: any) => {
     const { nodes: deserializedNodes, edges: deserializedEdges, nodeMap: deserializedNodeMap } = deserialize(data);
     nodes.value = deserializedNodes;
     edges.value = deserializedEdges;

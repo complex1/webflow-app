@@ -33,6 +33,7 @@
       <div class="playground-content">
         <div class="canvas-container">
             <webflow-playground-canvas
+              ref="webflowCanvas"
               :nodes="apiFluxCore.nodes.value"
               :edges="apiFluxCore.edges.value"
               :node-map="apiFluxCore.nodeMap.value"
@@ -90,7 +91,7 @@ import ApiNodeForm from "../../components/features/webflow/playground/forms/apiN
 import useApiFlux from "@/apifluxCore/apifluxComposable";
 import type { WebflowNode } from "@/apifluxCore/types";
 import FunctionalNodeForm from "../../components/features/webflow/playground/forms/functionalNodeForm.vue";
-import { alert } from "@/utils";
+import { alert, toast } from "@/utils";
 import CurlNodeForm from "@/components/features/webflow/playground/forms/curlNodeForm.vue";
 
 const route = useRoute();
@@ -99,6 +100,7 @@ const addNewDrawerVisible = ref(false);
 const addNewNodeType = ref("");
 const apiFluxCore = useApiFlux();
 const nodeForEdit = ref<any | null>(null);
+const webflowCanvas = ref<InstanceType<typeof WebflowPlaygroundCanvas> | null>(null);
 const loadWebflow = async () => {
   const wfid = route.query.wfid as string;
 
@@ -132,13 +134,10 @@ const onSelectEnvFile = (envFileId: number | null) => {
 
 // Event handlers
 const handlePlay = () => {
-  console.log("Playing webflow...");
   apiFluxCore.play();
-  // Implement play functionality
 };
 
 const handleAddNode = (nodeType: string) => {
-  console.log("Adding node of type:", nodeType);
   nodeForEdit.value = null;
   addNewNodeType.value = nodeType;
   addNewDrawerVisible.value = true;
@@ -148,6 +147,7 @@ const saveNode = (nodeData: WebflowNode) => {
   apiFluxCore.addNode(nodeData);
   addNewDrawerVisible.value = false;
   nodeForEdit.value = null;
+  webflowCanvas.value?.fitToView();
 };
 
 const onEditNode = (node: WebflowNode) => {
@@ -164,12 +164,22 @@ const onDeleteNode = (node: WebflowNode) => {
     cancelText: "Cancel",
     onConfirm: () => {
       apiFluxCore.deleteNode(node.id);
+      toast.success(`Node "${node.name}" deleted successfully.`);
+      webflowCanvas.value?.fitToView();
     },
   })
 };
 
 const saveWebflow = () => {
-  console.log("Saving webflow...", apiFluxCore.getSerializedData());
+  const data = apiFluxCore.getSerializedData();
+  playgroundStore.updateWebflowConfig(
+    data.nodes,
+    data.edges
+  ).then(() => {
+    toast.success("Webflow saved successfully!");
+  }).catch((error) => {
+    toast.error(`Failed to save webflow: ${error.message}`);
+  });
 };
 const handleExport = () => {
   console.log("Exporting webflow...");
@@ -190,6 +200,17 @@ watch(
       loadWebflow();
     }
   }
+);
+
+watch(
+  () => playgroundStore.webflowConfig,
+  (newConfig) => {
+    if (newConfig) {
+      apiFluxCore.setWebflowData(newConfig);
+      webflowCanvas.value?.fitToView();
+    }
+  },
+  { immediate: true }
 );
 </script>
 
