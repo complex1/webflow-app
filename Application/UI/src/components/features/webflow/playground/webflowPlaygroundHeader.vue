@@ -43,6 +43,24 @@
                     <span>Play</span>
                 </button>
 
+                <!-- Save button -->
+                <button 
+                    @click="handleSave"
+                    class="btn btn-save"
+                >
+                    <i class="fas fa-save"></i>
+                    <span>Save</span>
+                </button>
+
+                <!-- Export button -->
+                <button 
+                    @click="handleExport"
+                    class="btn btn-export"
+                >
+                    <i class="fas fa-download"></i>
+                    <span>Export</span>
+                </button>
+
                 <!-- Add button with dropdown -->
                 <div class="dropdown-container" ref="dropdownRef">
                     <button 
@@ -158,6 +176,8 @@ const props = defineProps<{
 // Emits
 const emit = defineEmits<{
     play: []
+    save: []
+    export: []
     addNode: [nodeType: string]
     envFileChanged: [envFileId: number | null]
 }>()
@@ -187,6 +207,14 @@ const dropdownStyle = computed(() => ({
 // Methods
 const handlePlay = () => {
     emit('play')
+}
+
+const handleSave = () => {
+    emit('save')
+}
+
+const handleExport = () => {
+    emit('export')
 }
 
 // Environment select change handler
@@ -398,6 +426,30 @@ onUnmounted(() => {
 
 .btn-play:hover {
   background-color: var(--color-success);
+  filter: brightness(0.9);
+  /* transform: translateY(-1px); */
+  box-shadow: var(--shadow-md);
+}
+
+.btn-save {
+  background-color: var(--color-function-node);
+  color: var(--color-text-inverse);
+}
+
+.btn-save:hover {
+  background-color: var(--color-function-node);
+  filter: brightness(0.9);
+  /* transform: translateY(-1px); */
+  box-shadow: var(--shadow-md);
+}
+
+.btn-export {
+  background-color: var(--color-database-node);
+  color: var(--color-text-inverse);
+}
+
+.btn-export:hover {
+  background-color: var(--color-database-node);
   filter: brightness(0.9);
   /* transform: translateY(-1px); */
   box-shadow: var(--shadow-md);

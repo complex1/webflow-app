@@ -170,4 +170,41 @@ export class ApiNode extends Node {
 
         return { valid: errors.length === 0, errors };
     }
+    serialized() {
+        return {
+            ...super.serialized(),
+            baseUrl: this.baseUrl.serialized(),
+            url: this.url.serialized(),
+            pathParams: this.pathParams.map(param => param.serialized()),
+            queryParams: this.queryParams.map(param => param.serialized()),
+            headers: this.headers.map(header => header.serialized()),
+            body: this.body.serialized(),
+            method: this.method
+        }
+    }
+    deserialized(serializedNode: any) {
+        super.deserialized(serializedNode);
+        this.baseUrl = new Variable();
+        this.baseUrl.deserialized(serializedNode.baseUrl);
+        this.url = new Variable();
+        this.url.deserialized(serializedNode.url);
+        this.pathParams = serializedNode.pathParams.map((param: any) => {
+            const variable = new Variable();
+            variable.deserialized(param);
+            return variable;
+        });
+        this.queryParams = serializedNode.queryParams.map((param: any) => {
+            const variable = new Variable();
+            variable.deserialized(param);
+            return variable;
+        });
+        this.headers = serializedNode.headers.map((header: any) => {
+            const variable = new Variable();
+            variable.deserialized(header);
+            return variable;
+        });
+        this.body = new Variable();
+        this.body.deserialized(serializedNode.body);
+        this.method = serializedNode.method;
+    }
 }

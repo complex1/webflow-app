@@ -25,6 +25,8 @@
         @play="handlePlay"
         @add-node="handleAddNode"
         @env-file-changed="onSelectEnvFile"
+        @save="saveWebflow"
+        @export="handleExport"
       />
 
       <!-- Playground Content Area -->
@@ -164,6 +166,14 @@ const onDeleteNode = (node: WebflowNode) => {
       apiFluxCore.deleteNode(node.id);
     },
   })
+};
+
+const saveWebflow = () => {
+  console.log("Saving webflow...", apiFluxCore.getSerializedData());
+};
+const handleExport = () => {
+  console.log("Exporting webflow...");
+  // Implement export functionality
 };
 
 // Load webflow when component mounts

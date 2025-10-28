@@ -3,6 +3,7 @@ import type { VariablePool, WebflowNode } from "./types";
 import type { Connection, Edge, Node, NodeDragEvent } from "@vue-flow/core";
 import { updateNodeByDeepCopying } from "./utils/clone";
 import { executeWebflow } from "./execute/execute";
+import { deserialize, serialized } from "./apifluxExtension";
 
 interface UseApiFluxReturn {
   nodes: Ref<Node[]>;
@@ -18,6 +19,8 @@ interface UseApiFluxReturn {
   deleteEdge: (edgeId: string) => void;
   setEnvironmentVariableMap: (map: Record<string, string>) => void;
   play: () => void;
+  getSerializedData: () => any;
+  setWebflowData: (data: { nodes: Node[]; edges: Edge[]; nodeMap: { [key: string]: WebflowNode } }) => void;
 }
 
 const useApiFlux = (): UseApiFluxReturn => {
@@ -56,9 +59,8 @@ const useApiFlux = (): UseApiFluxReturn => {
     if (exists || (edge.source === edge.target)) return;
     if (!edge.source || !edge.target) return;
     const _edge: Edge = {
-      id: `e-${edge.source}-${edge.target}-${edge.sourceHandle || "default"}-${
-        edge.targetHandle || "default"
-      }`,
+      id: `e-${edge.source}-${edge.target}-${edge.sourceHandle || "default"}-${edge.targetHandle || "default"
+        }`,
       source: edge.source,
       target: edge.target,
       sourceHandle: edge.sourceHandle || undefined,
@@ -95,6 +97,17 @@ const useApiFlux = (): UseApiFluxReturn => {
     envVariableMap.value = Object.assign({}, map);
   };
 
+  const getSerializedData = () => {
+    return serialized(nodes.value, edges.value, nodeMap.value);
+  }
+
+  const setWebflowData = (data: { nodes: Node[]; edges: Edge[]; nodeMap: { [key: string]: WebflowNode } }) => {
+    const { nodes: deserializedNodes, edges: deserializedEdges, nodeMap: deserializedNodeMap } = deserialize(data);
+    nodes.value = deserializedNodes;
+    edges.value = deserializedEdges;
+    nodeMap.value = deserializedNodeMap;
+  }
+
   const envVariablesNames = computed(() => {
     return Array.from(Object.keys(envVariableMap.value));
   });
@@ -122,7 +135,9 @@ const useApiFlux = (): UseApiFluxReturn => {
     deleteNode,
     deleteEdge,
     setEnvironmentVariableMap,
-    play
+    play,
+    getSerializedData,
+    setWebflowData,
   };
 };
 export default useApiFlux;
