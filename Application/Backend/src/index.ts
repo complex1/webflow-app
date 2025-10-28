@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import { swaggerSpec } from './config/swagger';
 
 // Import routes
@@ -159,6 +160,34 @@ app.use('/api/env-files', envFileRoutes);
 app.use('/api/web-flows', webFlowRoutes);
 app.use('/api/files', fileRoutes);
 app.use('/api/proxy', proxyRoutes);
+
+const isDevelopment = process.env.NODE_ENV !== 'production';
+const clientDistPath = path.join(__dirname, '..', 'public');
+
+if (isDevelopment) {
+  // Development mode: proxy non-API requests to the dev server
+  app.use('/', (req, res, next) => {
+    if (req.url.startsWith('/api')) {
+      return next();
+    }
+    
+    createProxyMiddleware({
+      target: 'http://localhost:5173',
+      changeOrigin: true,
+    })(req, res, next);
+  });
+} else {
+  // Production mode: serve static files and handle client-side routing
+  app.use(express.static(clientDistPath));
+  
+  // For any other request, send back the index.html file for client-side routing
+  app.get('*', (req, res, next) => {
+    if (req.url.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
 
 // Development: Remove ETags from all responses (must be after routes)
 if (process.env.NODE_ENV === 'development') {
