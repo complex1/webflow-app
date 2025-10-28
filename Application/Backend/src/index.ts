@@ -12,6 +12,7 @@ import authRoutes from './routes/auth';
 import envFileRoutes from './routes/envFiles';
 import webFlowRoutes from './routes/webFlows';
 import fileRoutes from './routes/files';
+import proxyRoutes from './routes/proxy';
 
 // Import database
 import sequelize from './config/database';
@@ -157,6 +158,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/env-files', envFileRoutes);
 app.use('/api/web-flows', webFlowRoutes);
 app.use('/api/files', fileRoutes);
+app.use('/api/proxy', proxyRoutes);
 
 // Development: Remove ETags from all responses (must be after routes)
 if (process.env.NODE_ENV === 'development') {

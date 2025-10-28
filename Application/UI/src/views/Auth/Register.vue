@@ -126,7 +126,7 @@
 import { ref, computed, reactive } from 'vue'
 import { UiInput, UiButton } from '@/components/base'
 import { userService, type RegisterRequest } from '@/services'
-import { alert } from '@/utils'
+import { toast } from '@/utils'
 import router from '@/router'
 
 interface FormData {
@@ -261,9 +261,9 @@ const handleSubmit = async () => {
     } as RegisterRequest
     const response = await userService.register(registerData)
     if (response.message) {
-      alert.success(response.message)
+      toast.success(response.message)
     } else {
-      alert.error('Registration failed. Please try again.')
+      toast.error('Registration failed. Please try again.')
     }
 
     // Reset form after successful submission
@@ -277,7 +277,7 @@ const handleSubmit = async () => {
     })
     
   } catch (error: any) {
-    alert.error(error?.response?.data?.error || 'Registration failed. Please try again.')
+    toast.error(error?.response?.data?.error || 'Registration failed. Please try again.')
   } finally {
     isSubmitting.value = false
   }

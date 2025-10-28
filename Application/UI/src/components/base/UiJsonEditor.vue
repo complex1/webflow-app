@@ -481,6 +481,7 @@ onUnmounted(() => {
 <style scoped>
 .ui-json-editor {
   width: 100%;
+  background-color: var(--color-background);
 }
 
 .editor-label {

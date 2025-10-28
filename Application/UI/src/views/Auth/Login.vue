@@ -101,7 +101,7 @@
 import { ref, reactive } from 'vue'
 import { UiInput, UiButton } from '@/components/base'
 import { userService, type LoginRequest } from '@/services'
-import { alert } from '@/utils'
+import { toast } from '@/utils'
 import { useUserStore } from '@/stores/user'
 import router from '@/router'
 
@@ -174,16 +174,16 @@ const handleSubmit = async () => {
       // Use the user store to handle login
       userStore.login(response.user, response.token)
       
-      alert.success(response.message)
+      toast.success(response.message)
       
       // Navigate to dashboard or home page
       router.push('/dashboard')
     } else {
-      alert.error('Login failed. Please try again.')
+      toast.error('Login failed. Please try again.')
     }
     
   } catch (error: any) {
-    alert.error(error?.response?.data?.error || 'Login failed. Please check your credentials.')
+    toast.error(error?.response?.data?.error || 'Login failed. Please check your credentials.')
   } finally {
     isSubmitting.value = false
   }
@@ -194,11 +194,11 @@ const navigateToRegister = () => {
 }
 
 const handleForgotPassword = () => {
-  alert.info('Forgot password functionality will be implemented soon.')
+  toast.info('Forgot password functionality will be implemented soon.')
 }
 
 const handleSocialLogin = () => {
-  alert.info('Social login functionality will be implemented soon.')
+  toast.info('Social login functionality will be implemented soon.')
 }
 </script>
 

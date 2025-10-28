@@ -308,7 +308,7 @@ defineExpose({
 /* Icons */
 .ui-input-icon {
   position: absolute;
-  color: var(--color-gray-400);
+  color: var(--color-gray-200);
   pointer-events: none;
 }
 
