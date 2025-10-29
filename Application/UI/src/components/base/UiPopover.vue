@@ -70,35 +70,34 @@ onUnmounted(() => {
   position: absolute;
   z-index: 1000;
   background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
 }
 
 .view-variable-data-popover.top {
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-sm);
 }
 .view-variable-data-popover.bottom {
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 8px;
+  margin-top: var(--spacing-sm);
 }
 .view-variable-data-popover.left {
   right: 100%;
   top: 50%;
   transform: translateY(-50%);
-  margin-right: 8px;
+  margin-right: var(--spacing-sm);
 }
 .view-variable-data-popover.right {
   left: 100%;
   top: 50%;
   transform: translateY(-50%);
-  margin-left: 8px;
+  margin-left: var(--spacing-sm);
 }
 
 

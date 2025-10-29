@@ -197,11 +197,9 @@ defineExpose({
 .ui-input-label {
   display: block;
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 /* Input container */
@@ -209,28 +207,25 @@ defineExpose({
   position: relative;
   display: flex;
   align-items: center;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast);
 }
 
 .ui-input-container--default {
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-background-elevated);
-  backdrop-filter: var(--blur-sm);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
 }
 
 .ui-input-container--filled {
   background: var(--color-background-subtle);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-lg);
-  backdrop-filter: var(--blur-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
 }
 
 .ui-input-container--outlined {
   border: 2px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: transparent;
-  backdrop-filter: var(--blur-sm);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
 }
 
 /* Size variants */
@@ -248,17 +243,16 @@ defineExpose({
 
 /* State variants */
 .ui-input-container--error {
-  border-color: var(--color-error);
+  border-color: var(--color-danger);
 }
 
 .ui-input-container--focused {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  border-color: var(--color-border-focus);
 }
 
 .ui-input-container--disabled {
-  background: var(--color-background-secondary);
-  color: var(--color-text-secondary);
+  background: var(--color-background-disabled);
+  color: var(--color-text-disabled);
   cursor: not-allowed;
 }
 
@@ -281,7 +275,7 @@ defineExpose({
 }
 
 .ui-input::placeholder {
-  color: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
 }
 
 /* Input sizes */
@@ -298,7 +292,7 @@ defineExpose({
 }
 
 .ui-input--error {
-  color: var(--color-error);
+  color: var(--color-danger);
 }
 
 .ui-input--disabled {
@@ -308,7 +302,7 @@ defineExpose({
 /* Icons */
 .ui-input-icon {
   position: absolute;
-  color: var(--color-gray-200);
+  color: var(--color-text-tertiary);
   pointer-events: none;
 }
 
@@ -323,20 +317,19 @@ defineExpose({
 .ui-input-password-toggle {
   position: absolute;
   right: var(--spacing-md);
-  color: var(--color-gray-400);
+  color: var(--color-text-tertiary);
   cursor: pointer;
   transition: color var(--transition-fast);
   border: none;
   background: transparent;
   outline: none;
-  box-shadow: none;
   padding: 0;
   margin: 0;
   height: 100%;
 }
 
 .ui-input-password-toggle:hover {
-  color: var(--color-gray-600);
+  color: var(--color-text-secondary);
 }
 
 /* Helper text */
@@ -348,7 +341,7 @@ defineExpose({
 
 .ui-input-error {
   font-size: var(--font-size-xs);
-  color: var(--color-error);
+  color: var(--color-danger);
   margin-top: var(--spacing-xs);
   display: flex;
   align-items: center;
@@ -365,7 +358,7 @@ defineExpose({
 
 /* Required asterisk */
 .text-error {
-  color: var(--color-error);
+  color: var(--color-danger);
   margin-left: var(--spacing-xs);
 }
 </style>

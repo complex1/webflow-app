@@ -213,24 +213,19 @@ onUnmounted(() => {
   border: 2px solid var(--color-border);
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, var(--color-background-elevated) 0%, var(--color-background-subtle) 100%);
+  background: var(--color-background-elevated);
   color: var(--color-text-primary);
   overflow: hidden;
-  backdrop-filter: var(--blur-sm);
-  box-shadow: var(--shadow-md);
 }
 
 .ui-avatar:hover:not(.ui-avatar--disabled) {
-  background: linear-gradient(135deg, var(--color-primary-subtle) 0%, var(--color-accent-subtle) 100%);
+  background: var(--color-background-hover);
   border-color: var(--color-primary);
-  /* transform: scale(1.1); */
-  box-shadow: var(--shadow-lg);
 }
 
 .ui-avatar:focus {
   outline: none;
-  box-shadow: 0 0 0 3px var(--color-primary-subtle);
+  border-color: var(--color-primary);
 }
 
 .ui-avatar--disabled {
@@ -240,27 +235,27 @@ onUnmounted(() => {
 
 /* Avatar sizes */
 .ui-avatar--sm {
+  width: 28px;
+  height: 28px;
+  font-size: var(--font-size-xs);
+}
+
+.ui-avatar--md {
   width: 32px;
   height: 32px;
   font-size: var(--font-size-sm);
 }
 
-.ui-avatar--md {
+.ui-avatar--lg {
   width: 40px;
   height: 40px;
   font-size: var(--font-size-base);
 }
 
-.ui-avatar--lg {
+.ui-avatar--xl {
   width: 48px;
   height: 48px;
   font-size: var(--font-size-lg);
-}
-
-.ui-avatar--xl {
-  width: 56px;
-  height: 56px;
-  font-size: var(--font-size-xl);
 }
 
 .avatar-image {
@@ -281,25 +276,23 @@ onUnmounted(() => {
   right: 0;
   margin-top: var(--spacing-sm);
   background: var(--color-background);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   overflow: hidden;
   z-index: var(--z-dropdown);
-  min-width: 280px;
-  animation: dropdownFadeIn var(--transition-fast) ease;
-}
-
-.ui-avatar-dropdown--sm {
   min-width: 240px;
 }
 
+.ui-avatar-dropdown--sm {
+  min-width: 200px;
+}
+
 .ui-avatar-dropdown--lg {
-  min-width: 320px;
+  min-width: 280px;
 }
 
 .ui-avatar-dropdown--xl {
-  min-width: 360px;
+  min-width: 320px;
 }
 
 /* User Info Section */
@@ -375,15 +368,14 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
   border: none;
   background: none;
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: background-color var(--transition-fast);
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .menu-item:hover {
@@ -414,54 +406,7 @@ onUnmounted(() => {
   margin: var(--spacing-sm) 0;
 }
 
-/* Animations */
-@keyframes dropdownFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Animations removed for minimal design */
 
-/* Dark theme support */
-[data-theme="dark"] .ui-avatar-dropdown {
-  background: var(--color-gray-800);
-  border-color: var(--color-gray-700);
-}
-
-[data-theme="dark"] .dropdown-user-info {
-  background: var(--color-gray-900);
-  border-color: var(--color-gray-700);
-}
-
-[data-theme="dark"] .user-name {
-  color: var(--color-text-inverse);
-}
-
-[data-theme="dark"] .user-email {
-  color: var(--color-gray-400);
-}
-
-[data-theme="dark"] .user-role {
-  color: var(--color-gray-500);
-}
-
-[data-theme="dark"] .menu-item {
-  color: var(--color-gray-300);
-}
-
-[data-theme="dark"] .menu-item:hover {
-  background: var(--color-gray-700);
-}
-
-[data-theme="dark"] .menu-item i {
-  color: var(--color-gray-400);
-}
-
-[data-theme="dark"] .menu-divider {
-  background: var(--color-gray-700);
-}
+/* Theme support removed for monochromatic design */
 </style>

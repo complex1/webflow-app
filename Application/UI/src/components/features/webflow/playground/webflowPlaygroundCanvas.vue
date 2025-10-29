@@ -4,6 +4,11 @@
       :nodes="nodes"
       :edges="edges"
       :fit-view-on-init="true"
+      max-zoom="1"
+      min-zoom="0"
+      zoom-on-scroll
+      pan-on-scroll
+      pan-on-drag
       @node-drag="onNodeDrag"
       @connect="onConnect"
       @edges-change="onEdgeChange"

@@ -151,7 +151,6 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
 }
 
 .ui-modal-overlay--centered {
@@ -167,44 +166,32 @@ onUnmounted(() => {
 .ui-modal {
   background: var(--color-background-secondary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
+  border-radius: var(--radius-lg);
   max-height: 100%;
   overflow: hidden;
   position: relative;
   z-index: var(--z-modal);
-  backdrop-filter: blur(20px);
-}
-
-.ui-modal::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-function-node), var(--color-database-node));
 }
 
 /* Modal sizes */
 .ui-modal--sm {
   width: 100%;
-  max-width: 384px;
+  max-width: 320px;
 }
 
 .ui-modal--md {
   width: 100%;
-  max-width: 448px;
+  max-width: 380px;
 }
 
 .ui-modal--lg {
   width: 100%;
-  max-width: 512px;
+  max-width: 480px;
 }
 
 .ui-modal--xl {
   width: 100%;
-  max-width: 576px;
+  max-width: 540px;
 }
 
 .ui-modal--full {
@@ -233,7 +220,7 @@ onUnmounted(() => {
 }
 
 .ui-modal-title {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin: 0;
@@ -241,7 +228,6 @@ onUnmounted(() => {
 
 .ui-modal-close {
   color: var(--color-gray-400);
-  transition: color var(--transition-fast);
   padding: var(--spacing-xs);
   border-radius: var(--radius-full);
   background: none;
@@ -269,25 +255,6 @@ onUnmounted(() => {
 }
 
 /* Modal transitions */
-.modal-enter-active,
-.modal-leave-active {
-  transition: all var(--transition-slow);
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-from .ui-modal,
-.modal-leave-to .ui-modal {
-  transform: scale(0.9) translateY(-20px);
-}
-
-.modal-enter-to .ui-modal,
-.modal-leave-from .ui-modal {
-  transform: scale(1) translateY(0);
-}
 
 /* Focus trap styles */
 .ui-modal:focus {
@@ -295,16 +262,4 @@ onUnmounted(() => {
 }
 
 /* Responsive adjustments */
-@media (max-width: 640px) {
-  .ui-modal {
-    margin: 0 var(--spacing-md);
-  }
-  
-  .ui-modal--sm,
-  .ui-modal--md,
-  .ui-modal--lg,
-  .ui-modal--xl {
-    max-width: 100%;
-  }
-}
 </style>

@@ -23,8 +23,8 @@
 }
 
 .app-header {
-  height: 60px;
-  background: var(--color-background-secondary);
+  height: 50px; /* Smaller height */
+  background: var(--color-background-elevated);
   border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
@@ -33,11 +33,10 @@
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  box-shadow: var(--shadow-sm);
 }
 
 .header-brand {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg); /* Smaller */
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
   text-decoration: none;
@@ -50,15 +49,15 @@
 }
 
 .user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 24px; /* Smaller */
+  height: 24px;
   border-radius: var(--radius-full);
   background: var(--color-primary);
   color: var(--color-text-inverse);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -68,16 +67,15 @@
 }
 
 .app-sidebar {
-  width: 50px;
-  background: var(--color-background-tertiary);
+  width: 40px; /* Smaller */
+  background: var(--color-background-elevated);
   border-right: 1px solid var(--color-border);
   padding: var(--spacing-sm);
-  min-height: calc(100vh - 60px - 50px);
+  min-height: calc(100vh - 50px - 40px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  box-shadow: var(--shadow-sm);
 }
 
 .sidebar-nav {
@@ -88,53 +86,49 @@
 }
 
 .sidebar-nav-item {
-  width: 36px;
-  height: 36px;
+  width: 28px; /* Smaller */
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-md);
   color: var(--color-text-secondary);
-  transition: all var(--transition-fast);
   cursor: pointer;
   position: relative;
 }
 
 .sidebar-nav-item:hover {
-  background: var(--color-gray-600);
+  background: var(--color-background-hover);
   color: var(--color-text-primary);
-  box-shadow: var(--shadow-sm);
 }
 
 .sidebar-nav-item.active {
   background: var(--color-primary);
   color: var(--color-text-inverse);
-  box-shadow: var(--shadow-glow);
 }
 
 .sidebar-nav-item i {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm); /* Smaller */
 }
 
 .app-content {
   flex: 1;
   padding: var(--spacing-lg);
   background: var(--color-background);
-  height: calc(100vh - 60px - 50px);
+  height: calc(100vh - 50px - 40px);
   overflow-y: auto;
 }
 
 .app-footer {
-  height: 50px;
-  background: var(--color-background-tertiary);
+  height: 40px; /* Smaller */
+  background: var(--color-background-elevated);
   border-top: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 var(--spacing-lg);
   color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  box-shadow: var(--shadow-sm);
+  font-size: var(--font-size-xs); /* Smaller */
 }
 
 /* ===== Page Layout ===== */
@@ -149,7 +143,7 @@
 }
 
 .page-title {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-xl); /* Smaller */
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
@@ -157,23 +151,18 @@
 
 .page-description {
   color: var(--color-text-secondary);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base); /* Smaller */
 }
 
 /* ===== Card Styles ===== */
 .card {
-  background: var(--color-background-secondary);
+  background: var(--color-background-elevated);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  transition: all var(--transition-normal);
-  backdrop-filter: blur(10px);
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
   border-color: var(--color-border-hover);
-  /* transform: translateY(-2px); */
 }
 
 .card-header {
@@ -188,7 +177,7 @@
 .card-footer {
   padding: var(--spacing-lg);
   border-top: 1px solid var(--color-border);
-  background: var(--color-background-tertiary);
+  background: var(--color-background-subtle);
   border-bottom-left-radius: var(--radius-lg);
   border-bottom-right-radius: var(--radius-lg);
 }
@@ -207,24 +196,22 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
-  transition: all var(--transition-normal);
-  background: var(--color-background-tertiary);
+  background: var(--color-background);
   color: var(--color-text-primary);
 }
 
 .form-input:focus {
   outline: none;
   border-color: var(--color-border-focus);
-  box-shadow: var(--shadow-glow);
-  background: var(--color-background-secondary);
+  background: var(--color-background-elevated);
 }
 
 .form-input:invalid {
-  border-color: var(--color-error);
+  border-color: var(--color-danger);
 }
 
 .form-error {
-  color: var(--color-error);
+  color: var(--color-danger);
   font-size: var(--font-size-sm);
   margin-top: var(--spacing-xs);
 }
@@ -235,22 +222,20 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-sm) var(--spacing-md);
-  border: none;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm); /* Smaller */
   font-weight: var(--font-weight-medium);
   text-decoration: none;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  min-height: 40px;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
+  min-height: 32px; /* Smaller */
+  background: var(--color-background-elevated);
+  color: var(--color-text-primary);
 }
 
 .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  background: var(--color-background-hover);
+  border-color: var(--color-border-hover);
 }
 
 .btn:disabled {
@@ -261,51 +246,35 @@
 .btn-primary {
   background: var(--color-primary);
   color: var(--color-text-inverse);
+  border-color: var(--color-primary);
 }
 
 .btn-primary:hover:not(:disabled) {
   background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .btn-secondary {
-  background: var(--color-background-tertiary);
+  background: var(--color-background-elevated);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: var(--color-gray-600);
+  background: var(--color-background-hover);
   border-color: var(--color-border-hover);
-}
-
-.btn-success {
-  background: var(--color-success);
-  color: var(--color-text-inverse);
-}
-
-.btn-success:hover:not(:disabled) {
-  background: var(--color-success-dark);
-}
-
-.btn-danger {
-  background: var(--color-error);
-  color: var(--color-text-inverse);
-}
-
-.btn-danger:hover:not(:disabled) {
-  background: var(--color-error-dark);
 }
 
 .btn-sm {
   padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: var(--font-size-sm);
-  min-height: 32px;
+  font-size: var(--font-size-xs);
+  min-height: 24px; /* Smaller */
 }
 
 .btn-lg {
   padding: var(--spacing-md) var(--spacing-lg);
-  font-size: var(--font-size-lg);
-  min-height: 48px;
+  font-size: var(--font-size-base);
+  min-height: 40px; /* Smaller */
 }
 
 /* ===== Alert Styles ===== */
@@ -313,48 +282,18 @@
   padding: var(--spacing-md);
   border-radius: var(--radius-md);
   margin-bottom: var(--spacing-md);
-  border: 1px solid;
-}
-
-.alert-success {
-  background: var(--color-success-light);
-  border-color: var(--color-success);
-  color: var(--color-success-dark);
-}
-
-.alert-warning {
-  background: var(--color-warning-light);
-  border-color: var(--color-warning);
-  color: var(--color-warning-dark);
-}
-
-.alert-error {
-  background: var(--color-error-light);
-  border-color: var(--color-error);
-  color: var(--color-error-dark);
-}
-
-.alert-info {
-  background: var(--color-info-light);
-  border-color: var(--color-info);
-  color: var(--color-info-dark);
+  border: 1px solid var(--color-border);
+  background: var(--color-background-elevated);
 }
 
 /* ===== Loading Styles ===== */
 .loading-spinner {
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--color-gray-300);
+  width: 16px; /* Smaller */
+  height: 16px;
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-full);
   border-top-color: var(--color-primary);
-  animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .loading-overlay {
@@ -373,92 +312,49 @@
 /* ===== Empty State Styles ===== */
 .empty-state {
   text-align: center;
-  padding: var(--spacing-4xl) var(--spacing-lg);
+  padding: var(--spacing-2xl) var(--spacing-lg); /* Smaller */
   color: var(--color-text-tertiary);
 }
 
 .empty-state-icon {
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-2xl); /* Smaller */
   margin-bottom: var(--spacing-lg);
   opacity: 0.5;
 }
 
 .empty-state-title {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg); /* Smaller */
   font-weight: var(--font-weight-semibold);
   margin-bottom: var(--spacing-sm);
   color: var(--color-text-secondary);
 }
 
 .empty-state-description {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm); /* Smaller */
   margin-bottom: var(--spacing-lg);
 }
 
-/* ===== Responsive Design ===== */
-@media (max-width: 768px) {
-  .app-sidebar {
-    width: 50px;
-    position: fixed;
-    top: 60px;
-    left: -50px;
-    z-index: var(--z-modal);
-    transition: left var(--transition-normal);
-  }
-
-  .app-sidebar.open {
-    left: 0;
-  }
-
-  .app-content {
-    margin-left: 0;
-    padding: var(--spacing-md);
-  }
-
-  .page-layout {
-    padding: var(--spacing-md);
-  }
-}
-
-/* ===== Dark Mode Support (Future Enhancement) ===== */
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #0f172a;
-    --color-background-secondary: #1e293b;
-    --color-background-tertiary: #334155;
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #cbd5e1;
-    --color-text-tertiary: #94a3b8;
-    --color-border: #334155;
-    --color-border-hover: #475569;
-  }
-} */
-
-/* VueFlow Override Styles - Ensure dropdowns appear above canvas */
+/* VueFlow Override Styles */
 .vue-flow__node,
 .vue-flow__edge,
 .vue-flow__background {
-  /* Ensure VueFlow elements don't interfere with dropdowns */
   z-index: 1 !important;
 }
 
 .vue-flow__controls {
-  /* Keep controls at reasonable z-index */
   z-index: 100 !important;
 }
 
 .vue-flow__minimap {
-  /* Keep minimap at reasonable z-index */
   z-index: 200 !important;
 }
 
 .vue-flow__pane {
-  /* Ensure the main pane doesn't interfere */
   z-index: 1 !important;
 }
 
 /* Force teleported dropdown menus to appear above everything */
 body > .dropdown-menu {
-  z-index: 10001 !important;
+  z-index: 1001 !important;
   position: fixed !important;
 }

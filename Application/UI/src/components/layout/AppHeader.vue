@@ -45,10 +45,8 @@ const handleThemeChange = (theme: string) => {
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-md) var(--spacing-xl);
-  background: var(--color-background-secondary);
+  background: var(--color-background-elevated);
   border-bottom: 1px solid var(--color-border);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(10px);
   position: relative;
 }
 
@@ -58,8 +56,8 @@ const handleThemeChange = (theme: string) => {
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-function-node), var(--color-database-node));
+  height: 1px;
+  background: var(--color-border);
 }
 
 .header-brand {
@@ -69,27 +67,22 @@ const handleThemeChange = (theme: string) => {
 }
 
 .brand-icon {
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  width: 24px; /* Smaller */
+  height: 24px;
+  background: var(--color-primary);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-text-inverse);
-  font-size: var(--font-size-lg);
-  box-shadow: var(--shadow-glow);
+  font-size: var(--font-size-sm); /* Smaller */
 }
 
 .header-brand h1 {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-lg); /* Smaller */
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   margin: 0;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-function-node));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .header-actions {

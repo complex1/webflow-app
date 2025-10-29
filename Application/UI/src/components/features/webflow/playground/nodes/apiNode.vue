@@ -83,32 +83,10 @@ const onDelete = () => {
 <style scoped>
 .api-node {
   border: 1px solid var(--color-border);
-  border-top: 3px solid var(--gradient-primary);
-  border-radius: var(--radius-lg);
-  background: var(--color-background-elevated);
-  backdrop-filter: var(--blur-md);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
   width: 300px;
-  box-shadow: var(--shadow-lg);
-  transition: all 0.3s ease;
   position: relative;
-  /* overflow: hidden; */
-}
-
-/* .api-node::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--gradient-primary);
-  z-index: 1;
-} */
-
-.api-node:hover {
-  /* transform: translateY(-2px); */
-  box-shadow: var(--shadow-xl);
-  border-color: var(--color-primary);
 }
 
 .api-node-property-title {
@@ -123,9 +101,9 @@ const onDelete = () => {
 .api-node-property {
   margin-bottom: var(--spacing-sm);
   padding: var(--spacing-xs);
-  background: var(--color-background-subtle);
+  background: var(--color-background-secondary);
   border-radius: var(--radius-sm);
-  border-left: 3px solid var(--color-accent);
+  border: 1px solid var(--color-border);
 }
 
 .node-content-group {
@@ -137,7 +115,6 @@ const onDelete = () => {
 }
 
 .node-content {
-  /* background: linear-gradient(135deg, var(--color-background-subtle) 0%, transparent 100%); */
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
 }
 </style>

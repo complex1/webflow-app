@@ -156,7 +156,7 @@ const processedItems = computed(() => {
 /* Variant styles */
 .ui-breadcrumb--default {
   background: var(--color-background-secondary);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   padding: var(--spacing-sm) var(--spacing-md);
 }
 
@@ -167,7 +167,7 @@ const processedItems = computed(() => {
 .ui-breadcrumb--pills {
   background: var(--color-background);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   padding: var(--spacing-sm) var(--spacing-md);
 }
 
@@ -196,7 +196,6 @@ const processedItems = computed(() => {
   display: flex;
   align-items: center;
   color: var(--color-text-secondary);
-  transition: color var(--transition-fast);
   text-decoration: none;
   background: none;
   border: none;
@@ -242,51 +241,22 @@ const processedItems = computed(() => {
 .ui-breadcrumb--pills .ui-breadcrumb-link--active {
   background: var(--color-primary);
   color: var(--color-text-inverse);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   padding: var(--spacing-xs) var(--spacing-md);
 }
 
 .ui-breadcrumb--pills .ui-breadcrumb-link--clickable:hover {
   background: var(--color-gray-100);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   padding: var(--spacing-xs) var(--spacing-md);
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .ui-breadcrumb-list {
-    gap: 2px;
-  }
-  
-  .ui-breadcrumb-text {
-    font-size: var(--font-size-sm);
-  }
-  
-  .ui-breadcrumb-separator {
-    margin: 0 var(--spacing-xs);
-  }
 }
 
 /* Focus styles for accessibility */
 .ui-breadcrumb-link:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-primary);
+  border: 2px solid var(--color-primary);
   border-radius: var(--radius-sm);
 }
 
-/* Animation for active state */
-.ui-breadcrumb-link--active {
-  position: relative;
-}
-
-.ui-breadcrumb-link--active::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--color-primary);
-  border-radius: 1px;
-}
+/* Active state styling removed for minimal design */
 </style>

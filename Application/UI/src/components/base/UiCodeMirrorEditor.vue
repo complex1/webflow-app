@@ -428,15 +428,13 @@ defineExpose({
 .editor-container {
   position: relative;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--color-background);
-  transition: border-color var(--transition-fast);
 }
 
 .editor-container:focus-within {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
 }
 
 .ui-codemirror-editor--error .editor-container {
@@ -483,12 +481,6 @@ defineExpose({
   border: 3px solid var(--color-border);
   border-top: 3px solid var(--color-primary);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 .loading-text {
@@ -541,7 +533,6 @@ defineExpose({
   background: var(--color-background);
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -585,37 +576,7 @@ defineExpose({
   border-radius: var(--radius-sm);
 }
 
-/* Dark theme adjustments */
-[data-theme="dark"] .editor-container {
-  background: var(--color-gray-800);
-  border-color: var(--color-gray-700);
-}
+/* Theme support removed for monochromatic design */
 
-[data-theme="dark"] .editor-footer {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
-}
-
-[data-theme="dark"] .format-btn,
-[data-theme="dark"] .fullscreen-btn {
-  background: var(--color-gray-600);
-  border-color: var(--color-gray-500);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .ui-codemirror-editor--fullscreen .codemirror-wrapper {
-    height: calc(100vh - 60px) !important;
-  }
-
-  .editor-footer {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    text-align: center;
-  }
-
-  .footer-info {
-    justify-content: center;
-  }
-}
+/* Responsive adjustments removed for minimal design */
 </style>

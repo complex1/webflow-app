@@ -74,45 +74,31 @@ const handleClick = (event: MouseEvent) => {
 <style scoped>
 /* Base card styles */
 .ui-card {
-  background: var(--color-background-secondary);
+  background: var(--color-background-elevated);
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition: all var(--transition-fast);
-  backdrop-filter: blur(10px);
   position: relative;
-}
-
-.ui-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-function-node), var(--color-database-node));
-  opacity: 0.7;
 }
 
 /* Card variants */
 .ui-card--default {
   border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
 }
 
 .ui-card--elevated {
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
 }
 
 .ui-card--outlined {
   border: 2px solid var(--color-border-hover);
-  background: var(--color-background-tertiary);
+  background: var(--color-background);
 }
 
 .ui-card--filled {
-  background: var(--color-background-tertiary);
+  background: var(--color-background-subtle);
   border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-inner);
 }
 
 /* Card sizes */
@@ -130,22 +116,11 @@ const handleClick = (event: MouseEvent) => {
 
 /* Interactive states */
 .ui-card--hoverable:hover {
-  box-shadow: var(--shadow-xl);
-  /* transform: translateY(-4px); */
   border-color: var(--color-border-hover);
-}
-
-.ui-card--hoverable:hover::before {
-  opacity: 1;
-  height: 2px;
 }
 
 .ui-card--clickable {
   cursor: pointer;
-}
-
-.ui-card--clickable:active {
-  /* transform: scale(0.98); */
 }
 
 .ui-card--loading {
@@ -158,14 +133,13 @@ const handleClick = (event: MouseEvent) => {
   border-bottom: 1px solid var(--color-border);
   padding-bottom: var(--spacing-md);
   margin-bottom: var(--spacing-md);
-  background: rgba(255, 255, 255, 0.02);
   margin: 0 calc(-1 * var(--spacing-md));
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-md);
 }
 
 .ui-card-title {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base); /* Smaller */
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin: 0;
@@ -186,7 +160,6 @@ const handleClick = (event: MouseEvent) => {
   border-top: 1px solid var(--color-border);
   padding-top: var(--spacing-md);
   margin-top: var(--spacing-md);
-  background: rgba(255, 255, 255, 0.02);
   margin-left: calc(-1 * var(--spacing-md));
   margin-right: calc(-1 * var(--spacing-md));
   margin-bottom: calc(-1 * var(--spacing-md));
@@ -204,7 +177,7 @@ const handleClick = (event: MouseEvent) => {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(0, 122, 204, 0.2),
+    rgba(0, 0, 0, 0.1),
     transparent
   );
   animation: shimmer 1.5s infinite;

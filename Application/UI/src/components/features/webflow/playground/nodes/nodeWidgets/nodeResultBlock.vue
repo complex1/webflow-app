@@ -56,11 +56,10 @@ const getVariableData = computed(() => {
 <style scoped>
 .node-result-block {
   width: 120px;
-  background: var(--color-background-subtle);
-  border-radius: var(--radius-md);
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-sm);
   padding: var(--spacing-sm);
-  border: 1px solid var(--color-border-subtle);
-  backdrop-filter: var(--blur-sm);
+  border: 1px solid var(--color-border);
 }
 
 .node-result-header {
@@ -83,48 +82,38 @@ const getVariableData = computed(() => {
   align-items: center;
   gap: var(--spacing-xs);
   padding: var(--spacing-xs);
-  background: var(--color-background-elevated);
+  background: var(--color-background);
   border-radius: var(--radius-sm);
-  border-left: 3px solid var(--color-success);
+  border: 1px solid var(--color-border);
 }
 
 .variable-handle {
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(135deg, var(--color-success) 0%, var(--color-accent) 100%);
-  border: 2px solid var(--color-background);
-  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background: var(--color-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   top: 50%;
-  right: -8px;
-  transform: translateY(-40%);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
-}
-
-.variable-handle:hover {
-  transform: translateY(-40%) scale(1.1);
-  box-shadow: var(--shadow-md);
+  right: -6px;
+  transform: translateY(-50%);
 }
 
 .fa.fa-eye {
   cursor: pointer;
-  color: var(--color-success);
+  color: var(--color-text-secondary);
   padding: var(--spacing-xs);
   border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
 }
 
 .fa.fa-eye:hover {
-  background: var(--color-success-subtle);
-  color: var(--color-success-bright);
-  /* transform: scale(1.1); */
+  color: var(--color-primary);
 }
 
 .data-content {
-  background: var(--color-background-code);
-  color: var(--color-text-code);
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
   padding: var(--spacing-md);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);

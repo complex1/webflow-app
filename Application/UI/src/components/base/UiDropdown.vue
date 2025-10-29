@@ -149,7 +149,6 @@ const handleChange = (event: Event) => {
   font-size: var(--font-size-xs);
   font-family: inherit;
   line-height: var(--line-height-normal);
-  transition: all var(--transition-fast);
   appearance: none;
   cursor: pointer;
 }
@@ -157,7 +156,6 @@ const handleChange = (event: Event) => {
 .dropdown-select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
 }
 
 .dropdown-select:disabled {
@@ -171,7 +169,7 @@ const handleChange = (event: Event) => {
 }
 
 .dropdown-select.error:focus {
-  box-shadow: 0 0 0 3px var(--color-error-light);
+  border-color: var(--color-error);
 }
 
 .dropdown-select.has-left-icon {
@@ -208,7 +206,6 @@ const handleChange = (event: Event) => {
   color: var(--color-text-secondary);
   font-size: var(--font-size-xs);
   pointer-events: none;
-  transition: transform var(--transition-fast);
 }
 
 .dropdown-select:focus + .dropdown-chevron {
@@ -248,54 +245,6 @@ const handleChange = (event: Event) => {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .dropdown-select {
-    padding: var(--spacing-sm);
-    font-size: var(--font-size-sm);
-  }
-  
-  .dropdown-select.has-left-icon {
-    padding-left: 2.25rem;
-  }
-  
-  .dropdown-select.has-right-icon {
-    padding-right: 2.25rem;
-  }
-}
 
-/* Dark Theme Support */
-[data-theme="dark"] .dropdown-select {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
-  color: var(--color-text-inverse);
-}
-
-[data-theme="dark"] .dropdown-select:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-dark);
-}
-
-[data-theme="dark"] .dropdown-select:disabled {
-  background: var(--color-gray-800);
-  color: var(--color-gray-500);
-}
-
-[data-theme="dark"] .dropdown-label {
-  color: var(--color-text-inverse);
-}
-
-[data-theme="dark"] .dropdown-icon,
-[data-theme="dark"] .dropdown-chevron {
-  color: var(--color-gray-400);
-}
-
-[data-theme="dark"] .helper-text {
-  color: var(--color-gray-400);
-}
-
-[data-theme="dark"] .ui-dropdown.disabled .dropdown-label,
-[data-theme="dark"] .ui-dropdown.disabled .dropdown-icon,
-[data-theme="dark"] .ui-dropdown.disabled .dropdown-chevron {
-  color: var(--color-gray-600);
-}
+/* Theme support removed for monochromatic design */
 </style>

@@ -88,43 +88,23 @@ const handleClick = (event: MouseEvent) => {
 /* Base button styles */
 .ui-button {
   position: relative;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: var(--font-weight-medium);
-  border: none;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-fast);
   text-decoration: none;
   outline: none;
   user-select: none;
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(10px);
-}
-
-.ui-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s;
-}
-
-.ui-button:hover::before {
-  left: 100%;
-}
-
-.ui-button:active {
-  /* transform: translateY(1px); */
+  background: var(--color-background-elevated);
+  color: var(--color-text-primary);
 }
 
 .ui-button:focus {
-  box-shadow: var(--shadow-glow);
+  border-color: var(--color-border-focus);
 }
 
 .ui-button:disabled {
@@ -133,8 +113,8 @@ const handleClick = (event: MouseEvent) => {
 }
 
 .ui-button:hover:not(:disabled) {
-  /* transform: translateY(-1px); */
-  box-shadow: var(--shadow-md);
+  background: var(--color-background-hover);
+  border-color: var(--color-border-hover);
 }
 
 /* Size variants */
@@ -170,70 +150,72 @@ const handleClick = (event: MouseEvent) => {
 
 /* Color variants */
 .ui-button--primary {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  background: var(--color-primary);
   color: var(--color-text-inverse);
-  border: 1px solid var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .ui-button--primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--color-primary-hover), var(--color-primary-dark));
+  background: var(--color-primary-hover);
   border-color: var(--color-primary-hover);
 }
 
 .ui-button--secondary {
-  background: var(--color-background-tertiary);
+  background: var(--color-background-elevated);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border);
 }
 
 .ui-button--secondary:hover:not(:disabled) {
-  background: var(--color-gray-600);
+  background: var(--color-background-hover);
   border-color: var(--color-border-hover);
 }
 
 .ui-button--success {
-  background: linear-gradient(135deg, var(--color-success), var(--color-success-dark));
+  background: var(--color-success);
   color: var(--color-text-inverse);
   border: 1px solid var(--color-success);
 }
 
 .ui-button--success:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--color-success-dark), #2e7d32);
-  border-color: var(--color-success-dark);
+  background: var(--color-success);
+  border-color: var(--color-success);
+  opacity: 0.9;
 }
 
 .ui-button--warning {
-  background: linear-gradient(135deg, var(--color-warning), var(--color-warning-dark));
+  background: var(--color-warning);
   color: var(--color-text-inverse);
   border: 1px solid var(--color-warning);
 }
 
 .ui-button--warning:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--color-warning-dark), #ef6c00);
-  border-color: var(--color-warning-dark);
+  background: var(--color-warning);
+  border-color: var(--color-warning);
+  opacity: 0.9;
 }
 
 .ui-button--error {
-  background: linear-gradient(135deg, var(--color-error), var(--color-error-dark));
+  background: var(--color-danger);
   color: var(--color-text-inverse);
-  border: 1px solid var(--color-error);
+  border: 1px solid var(--color-danger);
 }
 
 .ui-button--error:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--color-error-dark), #b71c1c);
-  border-color: var(--color-error-dark);
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  opacity: 0.9;
 }
 
 .ui-button--ghost {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--color-primary);
+  background: transparent;
+  color: var(--color-text-primary);
   border: 1px solid var(--color-border);
-  backdrop-filter: blur(10px);
 }
 
 .ui-button--ghost:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--color-primary);
+  background: var(--color-background-subtle);
+  border-color: var(--color-border-hover);
 }
 
 .ui-button--link {
@@ -242,7 +224,6 @@ const handleClick = (event: MouseEvent) => {
   border: 1px solid transparent;
   padding: 0;
   text-decoration: underline;
-  box-shadow: none;
 }
 
 .ui-button--link:hover:not(:disabled) {

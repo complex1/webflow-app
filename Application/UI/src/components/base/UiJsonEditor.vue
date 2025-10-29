@@ -520,7 +520,6 @@ onUnmounted(() => {
   border: 1px solid var(--color-gray-300);
   color: var(--color-text-primary);
   background: var(--color-background-primary);
-  transition: var(--transition-fast);
   cursor: pointer;
 }
 
@@ -545,7 +544,6 @@ onUnmounted(() => {
   border: 1px solid var(--color-gray-300);
   border-radius: var(--radius-md);
   overflow: hidden;
-  transition: var(--transition-fast);
 }
 
 .editor-container.has-error {
@@ -579,13 +577,7 @@ onUnmounted(() => {
   border: 2px solid var(--color-primary);
   border-top: 2px solid transparent;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
   margin-right: var(--spacing-sm);
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 .loading-text {
@@ -687,6 +679,5 @@ onUnmounted(() => {
 :deep(.cm-tooltip.cm-tooltip-lint) {
   background: var(--color-background-primary) !important;
   border: 1px solid var(--color-gray-300) !important;
-  box-shadow: var(--shadow-md) !important;
 }
 </style>

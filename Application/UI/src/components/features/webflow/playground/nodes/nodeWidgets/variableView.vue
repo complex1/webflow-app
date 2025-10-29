@@ -58,34 +58,21 @@ const getVariableData = computed(() => {
   font-size: var(--font-size-sm);
   width: 160px;
   padding: var(--spacing-xs);
-  background: var(--color-background-elevated);
+  background: var(--color-background-secondary);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-subtle);
+  border: 1px solid var(--color-border);
   margin-bottom: var(--spacing-xs);
-  transition: all 0.2s ease;
-}
-
-.variable-view:hover {
-  background: var(--color-background-hover);
-  border-color: var(--color-primary);
 }
 
 .variable-handle {
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  border: 2px solid var(--color-background);
-  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background: var(--color-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   top: 50%;
-  left: -8px;
-  transform: translateY(-40%);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
-}
-
-.variable-handle:hover {
-  transform: translateY(-40%) scale(1.1);
-  box-shadow: var(--shadow-md);
+  left: -6px;
+  transform: translateY(-50%);
 }
 
 .variable-name {
@@ -109,16 +96,14 @@ const getVariableData = computed(() => {
 }
 
 .fa.fa-eye:hover {
-  background: var(--color-primary-subtle);
-  color: var(--color-primary-bright);
-  /* transform: scale(1.1); */
+  color: var(--color-primary);
 }
 
 .data-content {
-  background: var(--color-background-code);
-  color: var(--color-text-code);
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
   padding: var(--spacing-md);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);

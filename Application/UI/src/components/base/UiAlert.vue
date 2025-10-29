@@ -105,11 +105,8 @@ if (props.autoClose) {
 .ui-alert {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: 1px solid;
-  backdrop-filter: var(--blur-md);
-  box-shadow: var(--shadow-lg);
-  transition: all 0.3s ease;
 }
 
 .ui-alert::before {
@@ -129,7 +126,7 @@ if (props.autoClose) {
 
 .ui-alert--filled {
   color: var(--color-text-inverse);
-  background: linear-gradient(135deg, var(--current-alert-color) 0%, transparent 100%);
+  background: var(--color-gray-800);
 }
 
 .ui-alert--outlined {
@@ -139,30 +136,30 @@ if (props.autoClose) {
 
 /* Alert sizes */
 .ui-alert--sm {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-sm);
+}
+
+.ui-alert--md {
   font-size: var(--font-size-sm);
   padding: var(--spacing-md);
 }
 
-.ui-alert--md {
+.ui-alert--lg {
   font-size: var(--font-size-base);
   padding: var(--spacing-lg);
-}
-
-.ui-alert--lg {
-  font-size: var(--font-size-lg);
-  padding: var(--spacing-xl);
 }
 
 /* Type-specific styles */
 .ui-alert--info {
   --current-alert-color: var(--color-primary);
   border-color: var(--color-primary);
-  background: linear-gradient(135deg, var(--color-primary-subtle) 0%, var(--color-background-elevated) 100%);
+  background: var(--color-background-elevated);
   color: var(--color-primary);
 }
 
 .ui-alert--info.ui-alert--filled {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  background: var(--color-primary);
   border-color: var(--color-primary);
   color: var(--color-text-inverse);
 }
@@ -176,12 +173,12 @@ if (props.autoClose) {
 .ui-alert--success {
   --current-alert-color: var(--color-success);
   border-color: var(--color-success);
-  background: linear-gradient(135deg, var(--color-success-subtle) 0%, var(--color-background-elevated) 100%);
+  background: var(--color-background-elevated);
   color: var(--color-success);
 }
 
 .ui-alert--success.ui-alert--filled {
-  background: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-bright) 100%);
+  background: var(--color-success);
   border-color: var(--color-success);
   color: var(--color-text-inverse);
 }
@@ -195,12 +192,12 @@ if (props.autoClose) {
 .ui-alert--warning {
   --current-alert-color: var(--color-warning);
   border-color: var(--color-warning);
-  background: linear-gradient(135deg, var(--color-warning-subtle) 0%, var(--color-background-elevated) 100%);
+  background: var(--color-background-elevated);
   color: var(--color-warning);
 }
 
 .ui-alert--warning.ui-alert--filled {
-  background: linear-gradient(135deg, var(--color-warning) 0%, var(--color-warning-bright) 100%);
+  background: var(--color-warning);
   border-color: var(--color-warning);
   color: var(--color-text-inverse);
 }
@@ -214,12 +211,12 @@ if (props.autoClose) {
 .ui-alert--error {
   --current-alert-color: var(--color-danger);
   border-color: var(--color-danger);
-  background: linear-gradient(135deg, var(--color-danger-subtle) 0%, var(--color-background-elevated) 100%);
+  background: var(--color-background-elevated);
   color: var(--color-danger);
 }
 
 .ui-alert--error.ui-alert--filled {
-  background: linear-gradient(135deg, var(--color-danger) 0%, var(--color-danger-bright) 100%);
+  background: var(--color-danger);
   border-color: var(--color-danger);
   color: var(--color-text-inverse);
 }
@@ -260,7 +257,6 @@ if (props.autoClose) {
   margin-left: var(--spacing-md);
   color: currentColor;
   opacity: 0.7;
-  transition: opacity var(--transition-fast);
   background: none;
   border: none;
   cursor: pointer;
@@ -271,34 +267,5 @@ if (props.autoClose) {
   opacity: 1;
 }
 
-/* Animation for dismiss */
-.ui-alert {
-  animation: slideIn var(--transition-slow) ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.ui-alert.dismissing {
-  animation: slideOut var(--transition-slow) ease-in forwards;
-}
-
-@keyframes slideOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-}
+/* Animation removed for minimal design */
 </style>

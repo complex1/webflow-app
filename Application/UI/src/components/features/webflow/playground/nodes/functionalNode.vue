@@ -79,28 +79,10 @@ const onView = () => {
 <style scoped>
 .functional-node {
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-background-secondary);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
   width: 300px;
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(10px);
   position: relative;
-}
-
-/* .functional-node::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-functional-node), var(--color-functional-node-dark));
-} */
-
-.functional-node:hover {
-  box-shadow: var(--shadow-xl);
-  /* transform: translateY(-2px); */
-  border-color: var(--color-functional-node);
 }
 
 .functional-node-property-title {

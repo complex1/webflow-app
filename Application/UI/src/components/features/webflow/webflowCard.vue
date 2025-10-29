@@ -152,16 +152,13 @@ onUnmounted(() => {
 .webflow-card {
     background: var(--color-background-elevated);
     border: 1px solid var(--color-border);
-    border-top: 3px solid var(--gradient-primary);
-    border-radius: var(--radius-lg);
+    border-top: 3px solid var(--color-primary);
+    border-radius: var(--radius-md);
     padding: var(--spacing-lg);
     cursor: pointer;
-    transition: all 0.3s ease;
     width: 300px;
     height: 140px;
     position: relative;
-    backdrop-filter: var(--blur-md);
-    box-shadow: var(--shadow-lg);
 }
 
 .webflow-card::before {
@@ -171,7 +168,7 @@ onUnmounted(() => {
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--gradient-primary);
+    background: var(--color-primary);
     z-index: 1;
 }
 
@@ -182,7 +179,7 @@ onUnmounted(() => {
 }
 
 .folder-card::before {
-    background: var(--gradient-accent);
+    background: var(--color-accent);
 }
 
 .webflow-card-item {
@@ -191,13 +188,10 @@ onUnmounted(() => {
 
 .webflow-card:hover {
     border-color: var(--color-primary);
-    /* transform: translateY(-4px); */
-    box-shadow: var(--shadow-xl);
 }
 
 .webflow-card:active {
     border-color: var(--color-primary);
-    /* transform: translateY(-2px); */
 }
 
 .card-content {
@@ -217,15 +211,10 @@ onUnmounted(() => {
 .card-icon {
     font-size: var(--font-size-xl);
     color: var(--color-primary);
-    transition: all 0.2s ease;
 }
 
 .folder-card .card-icon {
     color: var(--color-accent);
-}
-
-.card-icon:hover {
-    /* transform: scale(1.1); */
 }
 
 .card-info {
@@ -237,17 +226,10 @@ onUnmounted(() => {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-base);
     font-weight: 600;
     color: var(--color-text-primary);
     margin: 0;
-}
-
-.card-tag-section {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-xs) 0;
 }
 
 .tag-icon {

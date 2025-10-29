@@ -83,12 +83,7 @@ const handleAddClick = () => {
   border-radius: var(--radius-md);
   background: var(--color-background);
   overflow: hidden;
-  transition: all var(--transition-normal);
   margin-bottom: var(--spacing-md);
-}
-
-.ui-expansion-panel:hover {
-  border-color: var(--color-primary-dark);
 }
 
 /* Panel Header */
@@ -100,12 +95,7 @@ const handleAddClick = () => {
   cursor: pointer;
   background: var(--color-gray-50);
   border-bottom: 1px solid transparent;
-  transition: all var(--transition-fast);
   user-select: none;
-}
-
-.panel-header:hover {
-  background: var(--color-gray-100);
 }
 
 .panel-header.expanded {
@@ -126,7 +116,7 @@ const handleAddClick = () => {
 }
 
 .panel-title {
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
 }
@@ -140,7 +130,6 @@ const handleAddClick = () => {
 .expand-icon {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  transition: transform var(--transition-fast);
 }
 
 .expand-icon.rotated {
@@ -165,17 +154,6 @@ const handleAddClick = () => {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.add-button:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-
-.add-button:active {
-  transform: translateY(0);
 }
 
 .add-button i {
@@ -186,7 +164,6 @@ const handleAddClick = () => {
 .panel-content {
   max-height: 0;
   overflow: hidden;
-  transition: max-height var(--transition-normal) ease-in-out;
 }
 
 .panel-content.expanded {
@@ -199,52 +176,6 @@ const handleAddClick = () => {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .panel-header {
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
 
-  .content-wrapper {
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
-
-  .panel-title {
-    font-size: var(--font-size-sm);
-  }
-
-  .add-button {
-    padding: var(--spacing-xs);
-    font-size: var(--font-size-xs);
-  }
-}
-
-/* Dark Theme Support */
-[data-theme="dark"] .ui-expansion-panel {
-  background: var(--color-gray-800);
-  border-color: var(--color-gray-700);
-}
-
-[data-theme="dark"] .panel-header {
-  background: var(--color-gray-700);
-}
-
-[data-theme="dark"] .panel-header:hover {
-  background: var(--color-gray-600);
-}
-
-[data-theme="dark"] .panel-header.expanded {
-  background: var(--color-primary-dark);
-}
-
-[data-theme="dark"] .panel-title {
-  color: var(--color-text-inverse);
-}
-
-[data-theme="dark"] .panel-count {
-  color: var(--color-gray-400);
-}
-
-[data-theme="dark"] .expand-icon {
-  color: var(--color-gray-400);
-}
+/* Theme support removed for monochromatic design */
 </style>

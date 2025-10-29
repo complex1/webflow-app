@@ -303,11 +303,9 @@ onUnmounted(() => {
 /* Playground Header Styles using Design System */
 
 .playground-header {
-  background: var(--color-background-secondary);
+  background: var(--color-background-elevated);
   border-bottom: 1px solid var(--color-border);
   padding: var(--spacing-lg) var(--spacing-xl);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(10px);
   position: relative;
 }
 
@@ -317,8 +315,8 @@ onUnmounted(() => {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-function-node), var(--color-database-node), var(--color-logic-node));
+  height: 1px;
+  background: var(--color-border);
 }
 
 .header-content {
@@ -342,11 +340,11 @@ onUnmounted(() => {
 
 .title-icon {
   color: var(--color-primary);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm); /* Smaller */
 }
 
 .title {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg); /* Smaller */
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin: 0;
@@ -372,21 +370,20 @@ onUnmounted(() => {
 .env-select {
   padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background-color: var(--color-background-elevated);
+  border-radius: var(--radius-md);
+  background-color: var(--color-background);
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: all var(--transition-fast);
   outline: none;
-  min-width: 180px;
+  min-width: 160px; /* Smaller */
 }
 
 .env-select:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
-  background-color: var(--color-background-secondary);
+  border-color: var(--color-border-focus);
+  background-color: var(--color-background-elevated);
 }
 
 .env-select:hover {
@@ -395,7 +392,7 @@ onUnmounted(() => {
 }
 
 .env-select option {
-  background-color: var(--color-background-elevated);
+  background-color: var(--color-background);
   color: var(--color-text-primary);
   padding: var(--spacing-sm);
 }
@@ -406,53 +403,52 @@ onUnmounted(() => {
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
-  border: none;
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: all var(--transition-fast);
   outline: none;
+  background: var(--color-background-elevated);
+  color: var(--color-text-primary);
 }
 
 .btn:focus {
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  border-color: var(--color-border-focus);
 }
 
 .btn-play {
-  background-color: var(--color-success);
+  background-color: var(--color-primary);
   color: var(--color-text-inverse);
+  border-color: var(--color-primary);
 }
 
 .btn-play:hover {
-  background-color: var(--color-success);
-  filter: brightness(0.9);
-  /* transform: translateY(-1px); */
-  box-shadow: var(--shadow-md);
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .btn-save {
-  background-color: var(--color-function-node);
+  background-color: var(--color-accent);
   color: var(--color-text-inverse);
+  border-color: var(--color-accent);
 }
 
 .btn-save:hover {
-  background-color: var(--color-function-node);
-  filter: brightness(0.9);
-  /* transform: translateY(-1px); */
-  box-shadow: var(--shadow-md);
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 .btn-export {
   background-color: var(--color-database-node);
   color: var(--color-text-inverse);
+  border-color: var(--color-database-node);
 }
 
 .btn-export:hover {
   background-color: var(--color-database-node);
   filter: brightness(0.9);
-  /* transform: translateY(-1px); */
-  box-shadow: var(--shadow-md);
 }
 
 .btn-add {
@@ -462,14 +458,11 @@ onUnmounted(() => {
 
 .btn-add:hover {
   background-color: var(--color-primary-hover);
-  /* transform: translateY(-1px); */
-  box-shadow: var(--shadow-md);
 }
 
 .dropdown-chevron {
   font-size: var(--font-size-xs);
   margin-left: var(--spacing-xs);
-  transition: transform var(--transition-fast);
 }
 
 .btn-add:hover .dropdown-chevron {
@@ -487,11 +480,6 @@ onUnmounted(() => {
   background-color: var(--color-background-elevated);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  backdrop-filter: var(--blur-md);
-  opacity: 1;
-  transform: translateY(0);
-  /* transition: all var(--transition-fast); */
   /* Force above VueFlow elements */
   z-index: 10001 !important;
   /* Prevent any transform issues */
@@ -517,12 +505,10 @@ onUnmounted(() => {
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   cursor: pointer;
-  transition: background-color var(--transition-fast);
 }
 
 .dropdown-item:hover {
   background-color: var(--color-background-hover);
-  /* transform: translateX(2px); */
 }
 
 .dropdown-item:focus {
@@ -566,16 +552,6 @@ onUnmounted(() => {
 }
 
 /* Animation for dropdown */
-.dropdown-enter-active,
-.dropdown-leave-active {
-  transition: all var(--transition-fast);
-}
-
-.dropdown-enter-from,
-.dropdown-leave-to {
-  opacity: 0;
-  transform: translateY(-0.5rem);
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {

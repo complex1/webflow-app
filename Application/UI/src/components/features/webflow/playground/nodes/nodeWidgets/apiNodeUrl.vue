@@ -71,30 +71,21 @@ const getFullUrl = computed(() => {
   display: flex;
   align-items: center;
   padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   width: fit-content;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  backdrop-filter: var(--blur-sm);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
-  background: linear-gradient(135deg, var(--color-background-elevated) 0%, transparent 100%);
-}
-
-.node-method-chip:hover {
-  /* transform: scale(1.05); */
-  box-shadow: var(--shadow-md);
+  background: var(--color-background-secondary);
 }
 
 .node-header {
   display: flex;
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border);
   padding: var(--spacing-md);
   gap: var(--spacing-md);
   align-items: center;
-  background: linear-gradient(135deg, var(--color-background-subtle) 0%, transparent 100%);
-  backdrop-filter: var(--blur-sm);
+  background: var(--color-background-secondary);
 }
 
 .node-url {
@@ -108,17 +99,8 @@ const getFullUrl = computed(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
   padding: var(--spacing-xs) var(--spacing-sm);
-  background: var(--color-background-code);
+  background: var(--color-background);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-subtle);
-  transition: all 0.2s ease;
-}
-
-.node-url:hover {
-  background: var(--color-background-hover);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  cursor: pointer;
-  /* transform: translateX(2px); */
+  border: 1px solid var(--color-border);
 }
 </style>
