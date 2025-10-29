@@ -39,7 +39,7 @@ const PORT = process.env.PORT || 3000;
 // Development-specific: Disable all caching and ETags
 if (process.env.NODE_ENV === 'development') {
   console.log('🔧 Development mode: Disabling all caching and ETags');
-  
+
   // Disable ETags completely
   app.set('etag', false);
 }
@@ -55,12 +55,12 @@ app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
+
     // In development, allow all origins
     if (process.env.NODE_ENV === 'development') {
       return callback(null, true);
     }
-    
+
     // In production, check against allowed origins
     const allowedOrigins = [
       process.env.CORS_ORIGIN || 'http://localhost:5173',
@@ -70,11 +70,11 @@ app.use(cors({
       'http://127.0.0.1:5173',
       'http://127.0.0.1:3000'
     ];
-    
+
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    
+
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
@@ -114,13 +114,13 @@ app.get('/api/debug/db', async (req, res) => {
   try {
     const User = require('./models/User').default;
     const userCount = await User.count();
-    res.json({ 
+    res.json({
       message: 'Database connection working',
       userCount,
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Database error',
       details: error instanceof Error ? error.message : 'Unknown error',
       timestamp: new Date().toISOString()
@@ -133,19 +133,19 @@ app.get('/api/debug/user', async (req, res) => {
   try {
     const User = require('./models/User').default;
     const bcrypt = require('bcryptjs');
-    
+
     // Test bcrypt
     const testPassword = 'test123';
     const hashedPassword = await bcrypt.hash(testPassword, 12);
     const isValid = await bcrypt.compare(testPassword, hashedPassword);
-    
-    res.json({ 
+
+    res.json({
       message: 'User model and bcrypt working',
       bcryptTest: { hashed: !!hashedPassword, isValid },
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'User model error',
       details: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
@@ -170,7 +170,7 @@ if (isDevelopment) {
     if (req.url.startsWith('/api')) {
       return next();
     }
-    
+
     createProxyMiddleware({
       target: 'http://localhost:5173',
       changeOrigin: true,
@@ -179,13 +179,19 @@ if (isDevelopment) {
 } else {
   // Production mode: serve static files and handle client-side routing
   app.use(express.static(clientDistPath));
-  
-  // For any other request, send back the index.html file for client-side routing
-  app.get('*', (req, res, next) => {
+
+  // For any other request that's not an API route, send back the index.html file
+  app.use((req, res, next) => {
     if (req.url.startsWith('/api')) {
       return next();
     }
-    res.sendFile(path.join(clientDistPath, 'index.html'));
+
+    // Only handle GET requests for HTML pages
+    if (req.method === 'GET' && !req.url.includes('.')) {
+      res.sendFile(path.join(clientDistPath, 'index.html'));
+    } else {
+      next();
+    }
   });
 }
 
@@ -194,7 +200,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
     // Override the end method to remove ETags before sending
     const originalEnd = res.end;
-    res.end = function(chunk?: any, encoding?: any, cb?: any) {
+    res.end = function (chunk?: any, encoding?: any, cb?: any) {
       // Remove ETag and set no-cache headers
       this.removeHeader('ETag');
       this.removeHeader('Last-Modified');
@@ -203,11 +209,11 @@ if (process.env.NODE_ENV === 'development') {
         'Pragma': 'no-cache',
         'Expires': '0'
       });
-      
+
       console.log(`🚫 Cache disabled for: ${req.method} ${req.path}`);
       return originalEnd.call(this, chunk, encoding, cb);
     };
-    
+
     next();
   });
 }
@@ -242,15 +248,15 @@ app.get('/api/health', (req, res) => {
   // Force remove ETag and set no-cache headers
   res.removeHeader('ETag');
   res.removeHeader('Last-Modified');
-  
+
   res.set({
     'Cache-Control': 'no-cache, no-store, must-revalidate, private',
     'Pragma': 'no-cache',
     'Expires': '0'
   });
-  
-  res.json({ 
-    status: 'OK', 
+
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development'
   });
@@ -260,14 +266,14 @@ app.get('/api/health', (req, res) => {
 app.get('/api/test-no-cache', (req, res) => {
   res.removeHeader('ETag');
   res.removeHeader('Last-Modified');
-  
+
   res.set({
     'Cache-Control': 'no-cache, no-store, must-revalidate, private',
     'Pragma': 'no-cache',
     'Expires': '0'
   });
-  
-  res.json({ 
+
+  res.json({
     message: 'No cache test',
     timestamp: new Date().toISOString(),
     random: Math.random()
@@ -278,7 +284,7 @@ app.get('/api/test-no-cache', (req, res) => {
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('Error:', err);
-  res.status(500).json({ 
+  res.status(500).json({
     error: 'Internal server error',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
   });
@@ -299,10 +305,10 @@ const startServer = async () => {
     // Sync database (create tables if they don't exist)
     // For development, we'll use force: false to preserve data, alter: false to avoid SQLite issues
     // If you need to reset the database, change force to true temporarily
-    const syncOptions = process.env.NODE_ENV === 'development' 
-      ? { force: false, alter: false } 
+    const syncOptions = process.env.NODE_ENV === 'development'
+      ? { force: false, alter: false }
       : { force: false, alter: false };
-    
+
     await sequelize.sync(syncOptions);
     console.log('Database synchronized successfully.');
 
