@@ -15,7 +15,7 @@
             v-model="searchQuery"
             placeholder="Search environment files..."
             left-icon="search"
-            size="md"
+            size="sm"
             class="search-input"
             @input="handleSearch"
             @clear="handleSearchClear"
@@ -25,7 +25,7 @@
         <!-- Add Button -->
         <UiButton
           variant="primary"
-          size="md"
+          size="sm"
           icon="plus"
           @click="handleAdd"
           class="add-button"
@@ -94,7 +94,7 @@ defineExpose({
 .envfile-header {
   background: var(--color-background);
   border-bottom: 1px solid var(--color-border);
-  padding: var(--spacing-lg) var(--spacing-xl);
+  padding: var(--spacing-sm) var(--spacing-sm);
   box-shadow: var(--shadow-sm);
 }
 
@@ -111,7 +111,7 @@ defineExpose({
 }
 
 .title {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary-dark);
   margin: 0 0 var(--spacing-xs) 0;

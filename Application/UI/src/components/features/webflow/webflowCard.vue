@@ -1,66 +1,73 @@
 <template>
-  <!-- Card with horizontal layout -->
-  <div class="webflow-card" :class="{ 'folder-card': webFlow.isFolder, 'webflow-card-item': !webFlow.isFolder }" @click="handleOpen">
-    <div class="card-content">
-      <!-- Icon and Name Section -->
-      <div class="card-main">
-        <div class="card-icon">
-          <i v-if="!webFlow.isFolder" :class="webFlow.icon"></i>
-          <i v-else class="fas fa-folder"></i>
-        </div>
-        <span>:</span>
-        <div class="card-info">
+  <div class="webflow-card" :class="{ 'folder-card': webFlow.isFolder }" @click="handleOpen">
+    <!-- Card Header -->
+    <div class="card-header">
+      <div class="card-title-section">
+        <div class="title-with-icon">
+          <div class="card-icon">
+            <i v-if="!webFlow.isFolder" :class="webFlow.icon || 'fas fa-code'"></i>
+            <i v-else class="fas fa-folder"></i>
+          </div>
           <h3 class="card-title">{{ webFlow.name }}</h3>
         </div>
       </div>
-
-      <!-- Tag Section -->
-      <div v-if="!webFlow.isFolder && webFlow.tags  && webFlow.tags.length > 0" class="card-tag-section">
-        <div class="tag-icon">
-          <i class="fas fa-tag"></i>
-        </div>
-        <div class="tag-content">
-          <span class="tag-label">:</span>
-          <div class="tags-list">
-            <span v-for="tag in webFlow.tags.slice(0, 2)" :key="tag" class="tag">
-              {{ tag }}
-            </span>
-            <span v-if="webFlow.tags.length > 2" class="tag-more">
-              +{{ webFlow.tags.length - 2 }}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Date Section -->
-      <div class="card-date-section" v-if="!webFlow.isFolder">
-        <div class="date-icon">
-          <i class="fas fa-calendar"></i>
-        </div>
-        <div class="date-content">
-          <span class="date-label">:</span>
-          <span class="date-value">{{ formatDate(webFlow.updatedAt) }}</span>
-        </div>
-      </div>
-
-      <!-- Actions Menu -->
+      
       <div class="card-actions" ref="menuRef">
-        <button class="menu-trigger" @click.stop="toggleMenu" aria-label="More options">
+        <button 
+          class="menu-trigger"
+          @click.stop="toggleMenu"
+          :class="{ active: showMenu }"
+          aria-label="More options"
+        >
           <i class="fas fa-ellipsis-v"></i>
         </button>
+        
+        <!-- Dropdown Menu -->
         <div v-if="showMenu" class="dropdown-menu">
           <button v-if="!webFlow.isFolder" class="menu-item" @click.stop="handleOpen">
-            <i class="fas fa-eye"></i> View Details
+            <i class="fas fa-eye"></i>
+            <span>View Details</span>
           </button>
           <button v-if="!webFlow.isFolder" class="menu-item" @click.stop="linkEnvFileDialogVisible = true">
-            <i class="fas fa-link"></i> Link to Env File
+            <i class="fas fa-link"></i>
+            <span>Link to Env File</span>
           </button>
           <button class="menu-item" @click.stop="handleEdit">
-            <i class="fas fa-edit"></i> Edit Details
+            <i class="fas fa-edit"></i>
+            <span>Edit Details</span>
           </button>
-          <button class="menu-item menu-item--danger" @click.stop="handleDelete">
-            <i class="fas fa-trash"></i> Delete
+          <div class="menu-divider"></div>
+          <button class="menu-item menu-item-danger" @click.stop="handleDelete">
+            <i class="fas fa-trash"></i>
+            <span>Delete</span>
           </button>
+        </div>
+      </div>
+    </div>
+
+<!-- Card Footer -->
+    <div class="card-footer" v-if="!webFlow.isFolder">
+      <div class="card-meta">
+        <span class="last-updated">
+          <i class="fas fa-clock"></i>
+          <span>:</span>
+          {{ formatDate(webFlow.updatedAt) }}
+        </span>
+      </div>
+    </div>
+    <!-- Card Content -->
+    <div class="card-content" v-if="!webFlow.isFolder">
+      <!-- Tags Section -->
+      <i class="fa fa-tag"></i>
+      <span>:</span>
+      <div v-if="webFlow.tags && webFlow.tags.length > 0" class="tags-summary">
+        <div class="tags-list">
+          <span v-for="tag in webFlow.tags.slice(0, 2)" :key="tag" class="tag">
+            {{ tag }}
+          </span>
+          <span v-if="webFlow.tags.length > 2" class="tag-more">
+            +{{ webFlow.tags.length - 2 }}
+          </span>
         </div>
       </div>
     </div>
@@ -71,12 +78,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, defineAsyncComponent } from 'vue'
 import { toast } from '@/utils'
 import type { WebFlow } from '@/services/webflow'
 import router from '@/router';
-import WebflowEnvFileManager from './webflowEnvFileManager.vue'
 import { UiDrawer } from '@/components/base'
+
+// Dynamic import for the env file manager
+const WebflowEnvFileManager = defineAsyncComponent(() => import('./webflowEnvFileManager.vue'))
 
 interface Props {
   webFlow: WebFlow
@@ -111,7 +120,7 @@ const handleClickOutside = (event: Event) => {
 const handleOpen = () => {
   showMenu.value = false
   if (props.webFlow.isFolder) {
-    router.push({ name: 'Dashboard', query: { wfid: props.webFlow.id } })
+    router.push({ name: 'Webflow', query: { wfid: props.webFlow.id } })
     return
   } else {
     router.push({ name: 'WebflowPlayground', query: { wfid: props.webFlow.id } })
@@ -133,7 +142,8 @@ const formatDate = (dateString: string): string => {
   const date = new Date(dateString)
   return date.toLocaleDateString('en-US', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
+    year: 'numeric'
   })
 }
 
@@ -149,225 +159,242 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* Glass Card Container */
 .webflow-card {
-    background: var(--color-background-elevated);
-    border: 1px solid var(--color-border);
-    border-top: 3px solid var(--color-primary);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-lg);
-    cursor: pointer;
-    width: 300px;
-    height: 140px;
-    position: relative;
-}
-
-.webflow-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--color-primary);
-    z-index: 1;
-}
-
-.folder-card {
-    height: 80px;
-    background: var(--color-background-subtle);
-    border-top-color: var(--color-accent);
-}
-
-.folder-card::before {
-    background: var(--color-accent);
-}
-
-.webflow-card-item {
-    height: 140px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
+  cursor: pointer;
+  transition: all var(--transition-spring);
+  box-shadow: var(--shadow-sm);
+  z-index: 1;
 }
 
 .webflow-card:hover {
-    border-color: var(--color-primary);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--glass-border-hover);
 }
 
-.webflow-card:active {
-    border-color: var(--color-primary);
+
+.folder-card .card-icon {
+  color: var(--color-flow-amber);
 }
 
-.card-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    position: relative;
-    z-index: 2;
+.card-header {
+  background: transparent;
+  border-bottom: none;
+  max-width: 300px;
 }
 
-.card-main {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
+/* Card Header */
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  padding: var(--spacing-sm);
+}
+
+
+.card-title-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.title-with-icon {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
 .card-icon {
-    font-size: var(--font-size-xl);
-    color: var(--color-primary);
-}
-
-.folder-card .card-icon {
-    color: var(--color-accent);
-}
-
-.card-info {
-    width: 180px;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  flex-shrink: 0;
 }
 
 .card-title {
-    width: 200px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    font-size: var(--font-size-base);
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin: 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-dark);
+  margin: 0 0 var(--spacing-xs) 0;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--gradient-flow-blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.tag-icon {
-    font-size: var(--font-size-sm);
-    color: var(--color-primary);
+.card-description {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.tag-content {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+/* Card Actions */
+.card-actions {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.menu-trigger {
+  background: var(--glass-bg);
+  border:none;
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-xs);
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: all var(--transition-spring);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--spacing-sm);
+  background: var(--color-background);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  z-index: var(--z-dropdown);
+  min-width: 200px;
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-sm);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  background: none;
+  border: none;
+  background: none;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  gap: var(--spacing-sm);
+  transition: all var(--transition-spring);
+}
+
+.menu-item:hover {
+  background: var(--glass-bg-hover);
+  color: var(--text-primary);
+  transform: translateX(2px);
+}
+
+.menu-item i {
+  width: 16px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-spring);
+}
+
+.menu-item:hover i {
+  color: var(--color-flow-blue);
+}
+
+.menu-item-danger {
+  color: var(--color-danger);
+}
+
+.menu-item-danger:hover {
+  background: var(--glass-bg-subtle);
+  color: var(--color-danger);
+}
+
+.menu-item-danger i {
+  color: var(--color-danger);
+}
+
+.menu-divider {
+  height: 1px;
+  background: var(--glass-border);
+  margin: var(--spacing-sm) 0;
+}
+
+/* Card Content */
+.card-content {
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  grid-gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+}
+
+.card-content i {
+  color: var(--color-text-secondary);
+}
+
+.tags-summary {
+  margin-bottom: var(--spacing-sm);
 }
 
 .tags-list {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
 }
 
-.tags-list .tag {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-    color: var(--color-text-inverse);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
+.tag {
+  background: var(--color-accent-cyan);
+  padding: 0 var(--spacing-md);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-wide);
 }
 
-.tags-list .tag:hover {
-    /* transform: scale(1.05); */
-    box-shadow: var(--shadow-md);
+.tag-more {
+  background: var(--color-bg-light);
+  padding: 0 var(--spacing-md);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-wide);
+  border: 1px solid var(--color-border);
 }
 
-.tags-list .tag-more {
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-xs);
-    font-weight: 500;
-    background: var(--color-background-subtle);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--radius-full);
-    border: 1px solid var(--color-border);
+/* Card Footer */
+.card-footer {
+  background: transparent;
+  border-top: none;
+  padding: var(--spacing-sm);
 }
 
-.tags-list .tag-more:hover {
-    color: var(--color-primary);
-    border-color: var(--color-primary);
-    background: var(--color-primary-subtle);
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }
 
-.card-date-section {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+.last-updated {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-weight: var(--font-medium);
 }
 
-.date-icon {
-    font-size: var(--font-size-base);
-    color: var(--color-text-secondary);
+.last-updated i {
+  color: var(--text-tertiary);
 }
 
-.date-content {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-}
-
-.date-label {
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-}
-
-.date-value {
-    color: var(--color-text-primary);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-}
-
-.card-actions {
-    position: absolute;
-    top: 4px;
-    right: var(--spacing-sm);
-}
-
-.card-actions .menu-trigger {
-    border: none;
-    background: none;
-    font-size: var(--font-size-base);
-    color: var(--color-text-secondary);
-    cursor: pointer;
-}
-
-.card-actions .menu-trigger:hover {
-    color: var(--color-text-primary);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-}
-
-.card-actions .dropdown-menu {
-    position: absolute;
-    width: 200px;
-    top: 100%;
-    right: 0;
-    background: var(--color-background);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-sm);
-    box-shadow: var(--shadow-md);
-    z-index: var(--z-dropdown);
-}
-
-.card-actions .dropdown-menu .menu-item {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    cursor: pointer;
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
-    background: var(--color-background);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-sm);
-    border: none;
-}
-
-.card-actions .dropdown-menu .menu-item:hover {
-    color: var(--color-text-primary);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-}
-
-.card-actions .dropdown-menu .menu-item--danger {
-    color: var(--color-error);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-}
 </style>

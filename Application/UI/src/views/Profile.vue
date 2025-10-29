@@ -1,4 +1,5 @@
 <template>
+  <app-layout>
   <div class="profile-page">
     <div class="profile-container">
       <div class="profile-header">
@@ -43,12 +44,14 @@
       </div>
     </div>
   </div>
+  </app-layout>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { UiCard, UiAvatar } from '@/components/base'
 import { useUserStore } from '@/stores/user'
+import AppLayout from '@/components/layout/AppLayout.vue'
 
 const userStore = useUserStore()
 const user = computed(() => userStore.currentUser)

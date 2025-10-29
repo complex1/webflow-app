@@ -16,7 +16,7 @@
             v-model="searchQuery"
             placeholder="Search web flows..."
             left-icon="search"
-            size="md"
+            size="sm"
             class="search-input"
             @input="handleSearch"
             @clear="handleSearchClear"
@@ -26,7 +26,7 @@
         <!-- Add Button -->
         <UiButton
           variant="primary"
-          size="md"
+          size="sm"
           icon="plus"
           @click="handleAdd"
           class="add-button"
@@ -40,8 +40,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { UiInput, UiButton } from '@/components/base'
-import UiWebflowBreadcrumb from '@/components/base/UiWebflowBreadcrumb.vue';
+import { UiInput, UiButton, UiWebflowBreadcrumb } from '@/components/base'
 
 interface Props {
   initialSearch?: string
@@ -91,7 +90,7 @@ defineExpose({
 .webflow-header {
   background: var(--color-background);
   border-bottom: 1px solid var(--color-border);
-  padding: var(--spacing-lg) var(--spacing-xl);
+  padding: var(--spacing-sm) var(--spacing-sm);
   box-shadow: var(--shadow-sm);
 }
 
@@ -108,7 +107,7 @@ defineExpose({
 }
 
 .title {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary-dark);
   margin: 0 0 var(--spacing-xs) 0;

@@ -50,14 +50,6 @@
           <span>Profile</span>
         </button>
 
-        <button 
-          class="menu-item"
-          @click="toggleTheme"
-        >
-          <i :class="themeIconClass"></i>
-          <span>{{ themeText }}</span>
-        </button>
-
         <div class="menu-divider"></div>
 
         <button 
@@ -91,14 +83,12 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   profile: []
   logout: []
-  themeChange: [theme: string]
 }>()
 
 const userStore = useUserStore()
 const avatarContainer = ref<HTMLElement>()
 const showDropdown = ref(false)
 const imageError = ref(false)
-const currentTheme = ref(localStorage.getItem('theme') || 'light')
 
 const user = computed(() => userStore.currentUser)
 
@@ -121,14 +111,6 @@ const avatarIconClass = computed(() => {
   return 'fas fa-user'
 })
 
-const themeIconClass = computed(() => {
-  return currentTheme.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'
-})
-
-const themeText = computed(() => {
-  return currentTheme.value === 'dark' ? 'Light Mode' : 'Dark Mode'
-})
-
 const formatUserRole = (role?: string) => {
   if (!role) return 'User'
   return role.charAt(0).toUpperCase() + role.slice(1)
@@ -147,18 +129,6 @@ const navigateToProfile = () => {
   showDropdown.value = false
   emit('profile')
   router.push('/profile')
-}
-
-const toggleTheme = () => {
-  const newTheme = currentTheme.value === 'dark' ? 'light' : 'dark'
-  currentTheme.value = newTheme
-  localStorage.setItem('theme', newTheme)
-  
-  // Apply theme to document
-  document.documentElement.setAttribute('data-theme', newTheme)
-  
-  emit('themeChange', newTheme)
-  showDropdown.value = false
 }
 
 const handleLogout = async () => {
@@ -188,9 +158,6 @@ const handleClickOutside = (event: Event) => {
 }
 
 onMounted(() => {
-  // Apply saved theme
-  document.documentElement.setAttribute('data-theme', currentTheme.value)
-  
   // Add click outside listener
   document.addEventListener('click', handleClickOutside)
 })

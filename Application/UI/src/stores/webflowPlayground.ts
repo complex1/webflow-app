@@ -114,9 +114,8 @@ export const useWebflowPlaygroundStore = defineStore('webflowPlayground', () => 
       
       const response = await webFlowService.getOpenApiDocs(webFlowId)
       openapiApis.value = response.openApiDocs as ExtractedAPI[]
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to load webflow OpenAPI documents')
-      throw err
+    } catch {
+      openapiApis.value = []
     }
   }
 

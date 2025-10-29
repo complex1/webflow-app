@@ -15,5 +15,6 @@ export { default as UiJsonEditor } from './UiJsonEditor.vue'
 export { default as UiExpansionPanel } from './UiExpansionPanel.vue'
 export { default as UiDropdown } from './UiDropdown.vue'
 export { default as UiPopover } from './UiPopover.vue'
+export { default as UiFixedPopover } from './UiFixedPopover.vue'
 // Alias for backward compatibility
 export { default as UiMonacoEditor } from './UiCodeMirrorEditor.vue'

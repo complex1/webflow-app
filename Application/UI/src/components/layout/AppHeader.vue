@@ -1,18 +1,17 @@
 <template>
   <header class="app-header">
-    <div class="header-brand">
-      <div class="brand-icon">
-        <i class="fas fa-bolt"></i>
-      </div>
-      <h1>API Flux</h1>
-    </div>
+    <router-link to="/" class="header-brand">
+      API Flux
+    </router-link>
     <div class="header-actions">
-      <UiAvatar 
-        size="md"
-        @profile="handleProfile"
-        @logout="handleLogout"
-        @theme-change="handleThemeChange"
-      />
+      <div class="header-user">
+        <UiAvatar 
+          :user="userStore.user"
+          size="md"
+          @profile="handleProfile"
+          @logout="handleLogout"
+        />
+      </div>
     </div>
   </header>
 </template>
@@ -26,68 +25,51 @@ import router from '@/router'
 const userStore = useUserStore()
 
 const handleProfile = () => {
-  console.log('Navigate to profile')
+  router.push('/profile')
 }
 
 const handleLogout = () => {
-  console.log('User logged out')
+  userStore.logout()
+  router.push('/auth/login')
+  alert.success('Successfully logged out')
 }
 
-const handleThemeChange = (theme: string) => {
-  console.log('Theme changed to:', theme)
-  alert.success(`Switched to ${theme} mode`)
-}
 </script>
 
 <style scoped>
-.app-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-md) var(--spacing-xl);
-  background: var(--color-background-elevated);
-  border-bottom: 1px solid var(--color-border);
-  position: relative;
-}
-
-.app-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--color-border);
-}
-
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.brand-icon {
-  width: 24px; /* Smaller */
-  height: 24px;
-  background: var(--color-primary);
+.env-select {
+  padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-inverse);
-  font-size: var(--font-size-sm); /* Smaller */
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--color-text-primary);
+  transition: all var(--transition-normal);
+  cursor: pointer;
 }
 
-.header-brand h1 {
-  font-size: var(--font-size-lg); /* Smaller */
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  margin: 0;
+.env-select:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--color-border-hover);
+}
+
+.env-select:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-lg);
+}
+
+.environment-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 </style>

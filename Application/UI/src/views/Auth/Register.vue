@@ -3,16 +3,12 @@
     <div class="register-container">
       <!-- Left Information Section -->
       <div class="info-section">
-        <h1 class="info-title">INFORMATION</h1>
+        <h1 class="info-title">Why Register?</h1>
         <div class="info-content">
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-            exercitation ullamco laboris.
-          </p>
-          <p>
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
-            fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+            Welcome to API Flux! Join our community of developers and unlock the full potential of API integrations. 
+            Register now to access powerful tools, seamless workflows, and comprehensive documentation designed to 
+            elevate your development experience.
           </p>
         </div>
         <UiButton 
@@ -65,12 +61,6 @@
               required
               :error="errors.password"
             />
-            <div class="password-strength">
-              <div 
-                class="strength-indicator"
-                :class="passwordStrengthClass"
-              ></div>
-            </div>
           </div>
 
           <div class="password-field">
@@ -82,13 +72,6 @@
               required
               :error="errors.confirmPassword"
             />
-            <div class="password-match">
-              <i 
-                v-if="formData.confirmPassword"
-                :class="passwordMatchIcon"
-                :style="{ color: passwordMatchColor }"
-              ></i>
-            </div>
           </div>
 
           <div class="terms-section">
@@ -262,6 +245,7 @@ const handleSubmit = async () => {
     const response = await userService.register(registerData)
     if (response.message) {
       toast.success(response.message)
+      router.push('/login')
     } else {
       toast.error('Registration failed. Please try again.')
     }
@@ -336,6 +320,7 @@ const navigateToLogin = () => {
 
 .info-content p {
   font-size: var(--font-size-base);
+  color: var(--color-text-inverse);
   line-height: 1.6;
   margin-bottom: var(--spacing-lg);
   opacity: 0.9;
@@ -442,7 +427,7 @@ const navigateToLogin = () => {
 .checkmark {
   width: 20px;
   height: 20px;
-  border: 2px solid var(--color-gray-300);
+  border: 2px solid var(--color-border-focus);
   border-radius: var(--radius-sm);
   margin-right: var(--spacing-md);
   position: relative;
@@ -457,8 +442,8 @@ const navigateToLogin = () => {
 .terms-checkbox input[type="checkbox"]:checked + .checkmark::after {
   content: '';
   position: absolute;
-  left: 6px;
-  top: 2px;
+  left: 4px;
+  top: 1px;
   width: 6px;
   height: 10px;
   border: solid white;

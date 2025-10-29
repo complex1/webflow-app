@@ -1,5 +1,4 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios'
-import { useUserStore } from '@/stores/user'
 
 // Create axios instance
 const http: AxiosInstance = axios.create({
@@ -13,9 +12,9 @@ const http: AxiosInstance = axios.create({
 // Request interceptor to add auth token
 http.interceptors.request.use(
   (config) => {
-    const userStore = useUserStore()
-    if (userStore.token) {
-      config.headers.Authorization = `Bearer ${userStore.token}`
+    const token = localStorage.getItem('auth_token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
     }
     return config
   },
@@ -32,8 +31,8 @@ http.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Token expired or invalid
-      const userStore = useUserStore()
-      userStore.logout()
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('user_data')
       // Redirect to login page
       window.location.href = '/login'
     }

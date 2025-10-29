@@ -2,7 +2,7 @@
   <div class="ui-input-wrapper" :class="wrapperClasses">
     <label v-if="label" :for="inputId" class="ui-input-label">
       {{ label }}
-      <span v-if="required" class="text-error ml-1">*</span>
+      <span v-if="required" class="required-asterisk">*</span>
     </label>
     
     <div class="ui-input-container" :class="containerClasses">
@@ -41,15 +41,22 @@
         type="button"
         class="ui-input-password-toggle"
         @click="togglePasswordVisibility"
+        tabindex="-1"
       >
         <i :class="passwordIconClass"></i>
       </button>
+      
+      <!-- Glass shine effect on focus -->
+      <div v-if="isFocused" class="input-shine"></div>
     </div>
     
-    <div v-if="hint" class="ui-input-hint">{{ hint }}</div>
+    <div v-if="hint && !error" class="ui-input-hint">
+      <i class="fas fa-info-circle"></i>
+      {{ hint }}
+    </div>
     
     <div v-if="error" class="ui-input-error">
-      <i class="fas fa-exclamation-circle mr-1"></i>
+      <i class="fas fa-exclamation-triangle"></i>
       {{ error }}
     </div>
   </div>
@@ -68,8 +75,8 @@ interface Props {
   disabled?: boolean
   readonly?: boolean
   required?: boolean
-  size?: 'sm' | 'md' | 'lg'
-  variant?: 'default' | 'filled' | 'outlined'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  variant?: 'glass' | 'outlined' | 'filled' | 'minimal'
   leftIcon?: string
   rightIcon?: string
   min?: number
@@ -85,7 +92,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   type: 'text',
   size: 'md',
-  variant: 'default',
+  variant: 'glass',
   disabled: false,
   readonly: false,
   required: false,
@@ -119,7 +126,7 @@ const inputType = computed(() => {
 })
 
 const wrapperClasses = computed(() => [
-  'ui-input-wrapper',
+  `ui-input-wrapper--${props.size}`,
   {
     'ui-input-wrapper--error': props.error,
     'ui-input-wrapper--disabled': props.disabled,
@@ -135,6 +142,7 @@ const containerClasses = computed(() => [
     'ui-input-container--error': props.error,
     'ui-input-container--disabled': props.disabled,
     'ui-input-container--focused': isFocused.value,
+    'ui-input-container--readonly': props.readonly,
     'ui-input-container--with-left-icon': props.leftIcon,
     'ui-input-container--with-right-icon': props.rightIcon || props.type === 'password'
   }
@@ -189,9 +197,10 @@ defineExpose({
 </script>
 
 <style scoped>
-/* Input wrapper */
+/* Neo-Systemic Input Wrapper */
 .ui-input-wrapper {
   width: 100%;
+  position: relative;
 }
 
 .ui-input-label {
@@ -200,103 +209,150 @@ defineExpose({
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
+  transition: all var(--transition-normal);
 }
 
-/* Input container */
+.required-asterisk {
+  color: var(--color-danger);
+  margin-left: var(--spacing-xs);
+}
+
+/* Glass Input Container */
 .ui-input-container {
   position: relative;
   display: flex;
   align-items: center;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-spring);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
-.ui-input-container--default {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+/* Container Variants */
+.ui-input-container--glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.ui-input-container--outlined {
   background: var(--color-background);
+  border: 2px solid var(--color-border);
+  box-shadow: none;
 }
 
 .ui-input-container--filled {
   background: var(--color-background-subtle);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-inner);
 }
 
-.ui-input-container--outlined {
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-background);
+.ui-input-container--minimal {
+  background: transparent;
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: none;
 }
 
-/* Size variants */
+/* Container Sizes */
 .ui-input-container--sm {
-  font-size: var(--font-size-sm);
+  min-height: 36px;
+  border-radius: var(--radius-md);
 }
 
 .ui-input-container--md {
-  font-size: var(--font-size-base);
+  min-height: 44px;
+  border-radius: var(--radius-lg);
 }
 
 .ui-input-container--lg {
-  font-size: var(--font-size-lg);
+  min-height: 52px;
+  border-radius: var(--radius-lg);
 }
 
-/* State variants */
-.ui-input-container--error {
-  border-color: var(--color-danger);
+.ui-input-container--xl {
+  min-height: 60px;
+  border-radius: var(--radius-xl);
 }
 
+/* Container States */
 .ui-input-container--focused {
   border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+  transform: translateY(-1px);
+}
+
+.ui-input-container--error {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px var(--color-danger-subtle);
 }
 
 .ui-input-container--disabled {
   background: var(--color-background-disabled);
-  color: var(--color-text-disabled);
+  border-color: var(--color-border-subtle);
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
-/* Icon spacing */
+.ui-input-container--readonly {
+  background: var(--color-background-subtle);
+  border-color: var(--color-border-subtle);
+}
+
+/* Icon Spacing */
 .ui-input-container--with-left-icon .ui-input {
-  padding-left: var(--spacing-2xl);
+  padding-left: 3rem;
 }
 
 .ui-input-container--with-right-icon .ui-input {
-  padding-right: var(--spacing-2xl);
+  padding-right: 3rem;
 }
 
-/* Input field */
+/* Input Field */
 .ui-input {
   width: 100%;
   border: none;
   background: transparent;
   outline: none;
   color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-normal);
+  transition: all var(--transition-normal);
 }
 
 .ui-input::placeholder {
   color: var(--color-text-tertiary);
+  opacity: 0.7;
 }
 
-/* Input sizes */
+.ui-input:disabled {
+  cursor: not-allowed;
+  color: var(--color-text-disabled);
+}
+
+/* Input Sizes */
 .ui-input--sm {
   padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
 }
 
 .ui-input--md {
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-md);
 }
 
 .ui-input--lg {
-  padding: var(--spacing-md) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-lg);
 }
 
-.ui-input--error {
-  color: var(--color-danger);
-}
-
-.ui-input--disabled {
-  cursor: not-allowed;
+.ui-input--xl {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: var(--font-size-lg);
 }
 
 /* Icons */
@@ -304,61 +360,146 @@ defineExpose({
   position: absolute;
   color: var(--color-text-tertiary);
   pointer-events: none;
+  transition: all var(--transition-normal);
+  z-index: 2;
 }
 
 .ui-input-icon-left {
-  left: var(--spacing-md);
+  left: var(--spacing-lg);
 }
 
 .ui-input-icon-right {
-  right: var(--spacing-md);
+  right: var(--spacing-lg);
 }
 
+.ui-input-container--focused .ui-input-icon {
+  color: var(--color-primary);
+}
+
+.ui-input-container--error .ui-input-icon {
+  color: var(--color-danger);
+}
+
+/* Password Toggle Button */
 .ui-input-password-toggle {
   position: absolute;
-  right: var(--spacing-md);
+  right: var(--spacing-lg);
   color: var(--color-text-tertiary);
   cursor: pointer;
-  transition: color var(--transition-fast);
+  transition: all var(--transition-normal);
   border: none;
   background: transparent;
   outline: none;
-  padding: 0;
-  margin: 0;
-  height: 100%;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 }
 
 .ui-input-password-toggle:hover {
-  color: var(--color-text-secondary);
+  color: var(--color-primary);
+  background: var(--color-background-hover);
 }
 
-/* Helper text */
+.ui-input-password-toggle:focus {
+  color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+/* Glass Shine Effect */
+.input-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shine 0.6s ease-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Helper Text */
 .ui-input-hint {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
-  margin-top: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  opacity: 0.8;
 }
 
 .ui-input-error {
   font-size: var(--font-size-xs);
   color: var(--color-danger);
-  margin-top: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
   display: flex;
   align-items: center;
+  gap: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
 }
 
-.ui-input-error i {
-  margin-right: var(--spacing-xs);
-}
-
-/* Focused state for icons */
-.ui-input-container--focused .ui-input-icon {
+/* Label Focus Animation */
+.ui-input-wrapper--focused .ui-input-label {
   color: var(--color-primary);
+  transform: translateY(-1px);
 }
 
-/* Required asterisk */
-.text-error {
+.ui-input-wrapper--error .ui-input-label {
   color: var(--color-danger);
-  margin-left: var(--spacing-xs);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ui-input-container--xl {
+    min-height: 52px;
+  }
+  
+  .ui-input--xl {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-md);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .ui-input-container {
+    border-width: 2px;
+  }
+  
+  .ui-input-container--focused {
+    box-shadow: 0 0 0 4px var(--color-primary-light);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .ui-input-container,
+  .ui-input-icon,
+  .ui-input-password-toggle,
+  .ui-input-label {
+    transition: none;
+  }
+  
+  .input-shine {
+    display: none;
+  }
 }
 </style>

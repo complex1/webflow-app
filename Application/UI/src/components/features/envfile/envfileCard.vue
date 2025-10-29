@@ -4,20 +4,22 @@
     <div class="card-header">
       <div class="card-title-section">
         <h3 class="card-title">{{ envFile.name }}</h3>
-        <p class="card-description">{{ envFile.description || 'No description' }}</p>
+        <p class="card-description">
+          {{ envFile.description || "No description" }}
+        </p>
       </div>
-      
+
       <div class="card-actions" ref="menuRef">
-        <button 
+        <button
           class="menu-trigger"
           @click="toggleMenu"
           :class="{ active: showMenu }"
         >
           <i class="fas fa-ellipsis-v"></i>
         </button>
-        
+
         <!-- Dropdown Menu -->
-        <div v-if="showMenu" class="dropdown-menu" >
+        <div v-if="showMenu" class="dropdown-menu">
           <button class="menu-item" @click="handleView">
             <i class="fas fa-eye"></i>
             <span>View Details</span>
@@ -44,7 +46,11 @@
       <div class="configs-summary">
         <div class="config-count">
           <i class="fas fa-cog"></i>
-          <span>{{ envFile.configs?.length || 0 }} environment variables</span>
+          <span
+            >{{ envFile.configs?.length || 0 }} environment variable{{
+              envFile.configs?.length === 1 ? "" : "s"
+            }}
+          </span>
         </div>
       </div>
     </div>
@@ -77,7 +83,9 @@
             </div>
             <div class="detail-item">
               <label>Description:</label>
-              <span>{{ envFile.description || 'No description provided' }}</span>
+              <span>{{
+                envFile.description || "No description provided"
+              }}</span>
             </div>
             <div class="detail-item">
               <label>Created:</label>
@@ -95,15 +103,18 @@
           <h4 class="section-title">
             Environment Variables ({{ envFile.configs?.length || 0 }})
           </h4>
-          <div v-if="envFile.configs && envFile.configs.length > 0" class="configs-detail">
-            <div 
-              v-for="(config, index) in envFile.configs" 
+          <div
+            v-if="envFile.configs && envFile.configs.length > 0"
+            class="configs-detail"
+          >
+            <div
+              v-for="(config, index) in envFile.configs"
               :key="config.id || index"
               class="config-detail-item"
             >
               <div class="config-header">
                 <span class="config-key">{{ config.key }}</span>
-                <button 
+                <button
                   class="copy-value-btn"
                   @click="copyToClipboard(config.value)"
                   title="Copy value"
@@ -139,101 +150,101 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import { UiModal, UiButton } from '@/components/base'
-import { toast } from '@/utils'
-import type { EnvFile } from '@/services'
+import { ref, onMounted, onUnmounted } from "vue";
+import { UiModal, UiButton } from "@/components/base";
+import { toast } from "@/utils";
+import type { EnvFile } from "@/services";
 
 interface Props {
-  envFile: EnvFile
+  envFile: EnvFile;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  view: [envFile: EnvFile]
-  edit: [envFile: EnvFile]
-  duplicate: [envFile: EnvFile]
-  delete: [envFile: EnvFile]
-}>()
+  view: [envFile: EnvFile];
+  edit: [envFile: EnvFile];
+  duplicate: [envFile: EnvFile];
+  delete: [envFile: EnvFile];
+}>();
 
-const showMenu = ref(false)
-const showDetailModal = ref(false)
-const menuRef = ref<HTMLElement>()
+const showMenu = ref(false);
+const showDetailModal = ref(false);
+const menuRef = ref<HTMLElement>();
 
 const formatDate = (dateString: string) => {
-  if (!dateString) return 'Never'
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-}
+  if (!dateString) return "Never";
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
 const toggleMenu = () => {
-  showMenu.value = !showMenu.value
-}
+  showMenu.value = !showMenu.value;
+};
 
 const closeMenu = () => {
-  showMenu.value = false
-}
+  showMenu.value = false;
+};
 
 const handleView = () => {
-  closeMenu()
-  showDetailModal.value = true
-  emit('view', props.envFile)
-}
+  closeMenu();
+  showDetailModal.value = true;
+  emit("view", props.envFile);
+};
 
 const handleEdit = () => {
-  closeMenu()
-  emit('edit', props.envFile)
-}
+  closeMenu();
+  emit("edit", props.envFile);
+};
 
 const handleDuplicate = () => {
-  closeMenu()
-  emit('duplicate', props.envFile)
-}
+  closeMenu();
+  emit("duplicate", props.envFile);
+};
 
 const handleDelete = () => {
-  closeMenu()
-  emit('delete', props.envFile)
-}
+  closeMenu();
+  emit("delete", props.envFile);
+};
 
 const handleEditFromModal = () => {
-  showDetailModal.value = false
-  emit('edit', props.envFile)
-}
+  showDetailModal.value = false;
+  emit("edit", props.envFile);
+};
 
 const closeDetailModal = () => {
-  showDetailModal.value = false
-}
+  showDetailModal.value = false;
+};
 
 const copyToClipboard = async (text: string) => {
   try {
-    await navigator.clipboard.writeText(text)
-    toast.success('Value copied to clipboard')
+    await navigator.clipboard.writeText(text);
+    toast.success("Value copied to clipboard");
   } catch (error) {
-    console.error('Failed to copy:', error)
-    toast.error('Failed to copy to clipboard')
+    console.error("Failed to copy:", error);
+    toast.error("Failed to copy to clipboard");
   }
-}
+};
 
 const handleClickOutside = (event: Event) => {
   if (menuRef.value && !menuRef.value.contains(event.target as Node)) {
-    closeMenu()
+    closeMenu();
   }
-}
+};
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
+  document.addEventListener("click", handleClickOutside);
+});
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+  document.removeEventListener("click", handleClickOutside);
+});
 </script>
 
 <style scoped>
@@ -241,7 +252,7 @@ onUnmounted(() => {
   background: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
   cursor: pointer;
   position: relative;
   max-width: 300px;
@@ -252,7 +263,7 @@ onUnmounted(() => {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
 }
 
 .card-title-section {
@@ -318,7 +329,9 @@ onUnmounted(() => {
   right: 0;
   margin-top: var(--spacing-sm);
   background: var(--color-background);
-  border: 1px solid var(--color-border);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   z-index: var(--z-dropdown);
   min-width: 160px;
@@ -339,7 +352,9 @@ onUnmounted(() => {
 }
 
 .menu-item:hover {
-  background: var(--color-background-secondary);
+  background: var(--glass-bg-hover);
+  color: var(--text-primary);
+  transform: translateX(2px);
 }
 
 .menu-item i {
@@ -349,15 +364,16 @@ onUnmounted(() => {
 }
 
 .menu-item-danger {
-  color: var(--color-error);
+  color: var(--color-danger);
 }
 
 .menu-item-danger:hover {
-  background: var(--color-error-light);
+   background: var(--glass-bg-subtle);
+   color: var(--color-danger);
 }
 
 .menu-item-danger i {
-  color: var(--color-error);
+  color: var(--color-danger);
 }
 
 .menu-divider {
@@ -401,7 +417,7 @@ onUnmounted(() => {
 /* Card Footer */
 .card-footer {
   border-top: 1px solid var(--color-gray-100);
-  padding-top: var(--spacing-sm);
+  padding: var(--spacing-sm);
 }
 
 .card-meta {
@@ -414,7 +430,7 @@ onUnmounted(() => {
 
 .last-updated {
   display: flex;
-  align-items: center;
+  align-items: left;
   gap: var(--spacing-xs);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -492,7 +508,7 @@ onUnmounted(() => {
 .config-key {
   font-weight: var(--font-weight-semibold);
   color: var(--color-primary-dark);
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: var(--font-size-sm);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -520,7 +536,7 @@ onUnmounted(() => {
 }
 
 .config-value {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   background: var(--color-background);
@@ -563,6 +579,4 @@ onUnmounted(() => {
   justify-content: flex-end;
   gap: var(--spacing-md);
 }
-
-
 </style>

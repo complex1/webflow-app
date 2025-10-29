@@ -15,6 +15,11 @@ const router = createRouter({
     },
     {
       path: '/dashboard',
+      name: 'Dashboard',
+      component: () => import('@/views/Webflow/Webflow.vue')
+    },
+    {
+      path: '/webflow',
       name: 'Webflow',
       component: () => import('@/views/Webflow/Webflow.vue')
     },

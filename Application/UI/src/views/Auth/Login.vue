@@ -177,7 +177,7 @@ const handleSubmit = async () => {
       toast.success(response.message)
       
       // Navigate to dashboard or home page
-      router.push('/dashboard')
+      router.push('/webflow')
     } else {
       toast.error('Login failed. Please try again.')
     }
@@ -253,6 +253,7 @@ const handleSocialLogin = () => {
   line-height: var(--line-height-relaxed);
   margin-bottom: var(--spacing-lg);
   opacity: 0.9;
+  color: var(--color-text-inverse);
 }
 
 .info-button {
@@ -319,7 +320,7 @@ const handleSocialLogin = () => {
 .remember-checkbox .checkmark {
   width: 18px;
   height: 18px;
-  border: 2px solid var(--color-gray-300);
+  border: 2px solid var(--color-border-focus);
   border-radius: var(--radius-sm);
   margin-right: var(--spacing-sm);
   position: relative;
@@ -334,8 +335,8 @@ const handleSocialLogin = () => {
 .remember-checkbox input[type="checkbox"]:checked + .checkmark::after {
   content: '';
   position: absolute;
-  left: 5px;
-  top: 2px;
+  left: 4px;
+  top: 1px;
   width: 4px;
   height: 8px;
   border: solid var(--color-text-inverse);

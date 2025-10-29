@@ -14,11 +14,19 @@ import { toast, alert } from './utils'
 import { userService } from './services'
 import { useUserStore } from './stores/user'
 
-const renderApp = () => {
+const renderApp = (token?: string, user?: any) => {
   const app = createApp(App)
+  const pinia = createPinia()
+  const userStore = useUserStore(pinia)
+
+  // If token and user are provided, set them in the store
+  if (token && user) {
+    userStore.login(user, token)
+    userStore.setLoading(false)
+  }
 
   // Use Pinia and Router
-  app.use(createPinia())
+  app.use(pinia)
   app.use(router)
 
   // Register directives
@@ -60,22 +68,11 @@ const checkAuthentication = async () => {
   }
 
   try {
-    // Create Pinia instance to access store
-    const pinia = createPinia()
-    const tempApp = createApp({})
-    tempApp.use(pinia)
-    
-    const userStore = useUserStore()
-    userStore.setToken(token)
-    userStore.setLoading(true)
-
     // Fetch user profile
     const response = await userService.getProfile()
     
     if (response.user) {
-      userStore.setUser(response.user)
-      userStore.setLoading(false)
-      renderApp()
+      renderApp(token, response.user)
     } else {
       throw new Error('No user data received')
     }

@@ -1,58 +1,72 @@
 <template>
     <header class="playground-header">
         <div class="header-content">
-            <!-- Left side - Title -->
+            <!-- Left side - Enhanced Title with Flow Lab branding -->
             <div class="title-section">
                 <div class="title-container">
-                    <i :class="props.webflowDetails?.icon || 'fas fa-play'" class="title-icon"></i>
-                    <h1 class="title">
-                        {{ props.webflowDetails?.name || 'Webflow Playground' }}
-                    </h1>
+                    <div class="flow-lab-brand">
+                        <i class="fas fa-project-diagram flow-brand-icon"></i>
+                        <span class="flow-brand-text">Flow Lab</span>
+                    </div>
+                    <div class="title-divider"></div>
+                    <div class="playground-title">
+                        <i :class="props.webflowDetails?.icon || 'fas fa-play'" class="title-icon"></i>
+                        <h1 class="title">
+                            {{ props.webflowDetails?.name || 'Webflow Playground' }}
+                        </h1>
+                    </div>
                 </div>
                 <ui-webflow-breadcrumb
                     :is-last-item-active="true"
+                    class="neo-breadcrumb"
                 />
             </div>
 
-            <!-- Right side - Action buttons -->
+            <!-- Right side - Enhanced Action buttons -->
             <div class="actions-section">
-                <!-- Environment File Selector -->
+                <!-- Enhanced Environment File Selector -->
                 <div class="env-selector" v-if="envFiles.length > 0">
-                    <select 
-                        v-model="selectedEnvFile"
-                        @change="handleEnvFileChange"
-                        class="env-select"
-                    >
-                        <option >Default Environment</option>
-                        <option 
-                            v-for="envFile in envFiles"
-                            :key="envFile.id"
-                            :value="envFile.id"
+                    <div class="env-selector-container">
+                        <i class="fas fa-layer-group env-icon"></i>
+                        <select 
+                            v-model="selectedEnvFile"
+                            @change="handleEnvFileChange"
+                            class="env-select"
                         >
-                            {{ envFile.name }}
-                        </option>
-                    </select>
+                            <option value="">Default Environment</option>
+                            <option 
+                                v-for="envFile in envFiles"
+                                :key="envFile.id"
+                                :value="envFile.id"
+                            >
+                                {{ envFile.name }}
+                            </option>
+                        </select>
+                        <i class="fas fa-chevron-down env-chevron"></i>
+                    </div>
                 </div>
 
-                <!-- Play button -->
+                <!-- Enhanced Play button -->
                 <button 
                     @click="handlePlay"
                     class="btn btn-play"
+                    :disabled="isExecuting"
                 >
-                    <i class="fas fa-play"></i>
-                    <span>Play</span>
+                    <i :class="isExecuting ? 'fas fa-spinner fa-spin' : 'fas fa-play'"></i>
+                    <span>{{ isExecuting ? 'Running' : 'Execute' }}</span>
                 </button>
 
-                <!-- Save button -->
+                <!-- Enhanced Save button -->
                 <button 
                     @click="handleSave"
                     class="btn btn-save"
+                    :disabled="!hasUnsavedChanges"
                 >
                     <i class="fas fa-save"></i>
                     <span>Save</span>
                 </button>
 
-                <!-- Export button -->
+                <!-- Enhanced Export button -->
                 <button 
                     @click="handleExport"
                     class="btn btn-export"
@@ -61,7 +75,7 @@
                     <span>Export</span>
                 </button>
 
-                <!-- Add button with dropdown -->
+                <!-- Enhanced Add button with dropdown -->
                 <div class="dropdown-container" ref="dropdownRef">
                     <button 
                         @click="toggleDropdown"
@@ -69,54 +83,83 @@
                         ref="addButtonRef"
                     >
                         <i class="fas fa-plus"></i>
-                        <span>Add</span>
-                        <i class="fas fa-chevron-down dropdown-chevron"></i>
+                        <span>Add Node</span>
+                        <i class="fas fa-chevron-down dropdown-chevron" :class="{ 'rotated': showDropdown }"></i>
                     </button>
 
-                    <!-- Dropdown menu -->
+                    <!-- Enhanced Dropdown menu -->
                     <Teleport to="body">
                         <div 
                             v-if="showDropdown"
-                            class="dropdown-menu"
+                            class="dropdown-menu neo-dropdown"
                             :style="dropdownStyle"
                         >
                             <div class="dropdown-content">
+                                <div class="dropdown-header">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>Add New Node</span>
+                                </div>
+                                
                                 <!-- API Node -->
                                 <button 
                                     @click="addNode('API')"
-                                    class="dropdown-item"
+                                    class="dropdown-item api-item"
                                 >
-                                    <i class="fas fa-globe node-icon node-icon-blue"></i>
-                                    <span>API Node</span>
+                                    <div class="item-icon">
+                                        <i class="fas fa-globe"></i>
+                                    </div>
+                                    <div class="item-content">
+                                        <span class="item-title">API Node</span>
+                                        <span class="item-description">Make HTTP requests</span>
+                                    </div>
+                                    <div class="item-badge api-badge">API</div>
                                 </button>
 
                                 <!-- Open API Node (conditional) -->
                                 <button 
                                     v-if="props.webflowDetails?.hasOpenApiConfig"
                                     @click="addNode('OPENAPI')"
-                                    class="dropdown-item"
+                                    class="dropdown-item openapi-item"
                                 >
-                                    <i class="fas fa-file-code node-icon node-icon-green"></i>
-                                    <span>Open API Node</span>
+                                    <div class="item-icon">
+                                        <i class="fas fa-file-code"></i>
+                                    </div>
+                                    <div class="item-content">
+                                        <span class="item-title">OpenAPI Node</span>
+                                        <span class="item-description">From OpenAPI spec</span>
+                                    </div>
+                                    <div class="item-badge openapi-badge">SPEC</div>
                                 </button>
 
                                 <!-- Postman Node (conditional) -->
                                 <button 
                                     v-if="props.webflowDetails?.hasPostmanCollection"
                                     @click="addNode('POSTMAN')"
-                                    class="dropdown-item"
+                                    class="dropdown-item postman-item"
                                 >
-                                    <i class="fas fa-rocket node-icon node-icon-orange"></i>
-                                    <span>Postman Node</span>
+                                    <div class="item-icon">
+                                        <i class="fas fa-rocket"></i>
+                                    </div>
+                                    <div class="item-content">
+                                        <span class="item-title">Postman Node</span>
+                                        <span class="item-description">From collection</span>
+                                    </div>
+                                    <div class="item-badge postman-badge">POST</div>
                                 </button>
 
                                 <!-- Functional Node -->
                                 <button 
                                     @click="addNode('FUNCTIONAL')"
-                                    class="dropdown-item"
+                                    class="dropdown-item functional-item"
                                 >
-                                    <i class="fas fa-code node-icon node-icon-purple"></i>
-                                    <span>Functional Node</span>
+                                    <div class="item-icon">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                    <div class="item-content">
+                                        <span class="item-title">Transform Node</span>
+                                        <span class="item-description">Process & transform data</span>
+                                    </div>
+                                    <div class="item-badge functional-badge">FUNC</div>
                                 </button>
 
                                 <!-- CURL Node -->
@@ -191,6 +234,8 @@ const dropdownRef = ref<HTMLElement>()
 const addButtonRef = ref<HTMLElement>()
 const dropdownPosition = ref({ top: 0, left: 0, width: 0 })
 const selectedEnvFile = ref<number | null>(null)
+const isExecuting = ref(false)
+const hasUnsavedChanges = ref(false)
 
 // Computed properties
 const envFiles = computed(() => webflowStore.webflowEnvLinks || [])
@@ -300,13 +345,16 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Playground Header Styles using Design System */
+/* Neo-Systemic Playground Header */
 
 .playground-header {
-  background: var(--color-background-elevated);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border-bottom: 1px solid var(--glass-border);
   padding: var(--spacing-lg) var(--spacing-xl);
   position: relative;
+  box-shadow: var(--shadow-sm);
 }
 
 .playground-header::before {
@@ -316,23 +364,64 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   height: 1px;
-  background: var(--color-border);
+  background: linear-gradient(90deg, 
+    var(--color-primary-light) 0%, 
+    var(--color-primary) 20%, 
+    var(--color-primary-light) 100%);
 }
 
 .header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--spacing-lg);
 }
 
-/* Title Section */
+/* Enhanced Title Section */
 .title-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex: 1;
+}
+
+.title-container {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
 }
 
-.title-container {
+/* Flow Lab Branding */
+.flow-lab-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--gradient-flow-blue);
+  color: white;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.flow-brand-icon {
+  font-size: var(--font-size-md);
+}
+
+.flow-brand-text {
+  letter-spacing: 0.025em;
+}
+
+.title-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--color-border);
+  margin: 0 var(--spacing-sm);
+}
+
+/* Playground Title */
+.playground-title {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -340,19 +429,23 @@ onUnmounted(() => {
 
 .title-icon {
   color: var(--color-primary);
-  font-size: var(--font-size-sm); /* Smaller */
+  font-size: var(--font-size-md);
 }
 
 .title {
-  font-size: var(--font-size-lg); /* Smaller */
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   margin: 0;
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.description {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+/* Enhanced Breadcrumb */
+.neo-breadcrumb {
+  margin-left: var(--spacing-md);
 }
 
 /* Actions Section */
@@ -362,196 +455,288 @@ onUnmounted(() => {
   gap: var(--spacing-md);
 }
 
-/* Environment Selector */
+/* Enhanced Environment Selector */
 .env-selector {
   position: relative;
 }
 
-.env-select {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: 1px solid var(--color-border);
+.env-selector-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
+  padding: 0 var(--spacing-sm);
+  min-width: 200px;
   transition: all var(--transition-fast);
-  outline: none;
-  min-width: 160px; /* Smaller */
 }
 
-.env-select:focus {
-  border-color: var(--color-border-focus);
-  background-color: var(--color-background-elevated);
-}
-
-.env-select:hover {
+.env-selector-container:hover {
   border-color: var(--color-border-hover);
-  background-color: var(--color-background-hover);
+  background: var(--color-background-hover);
 }
 
-.env-select option {
-  background-color: var(--color-background);
+.env-icon {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin-right: var(--spacing-xs);
+}
+
+.env-select {
+  background: transparent;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
   color: var(--color-text-primary);
-  padding: var(--spacing-sm);
+  cursor: pointer;
+  flex: 1;
+  appearance: none;
+  outline: none;
 }
 
-/* Button Styles */
+.env-chevron {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  pointer-events: none;
+  margin-left: var(--spacing-xs);
+}
+
+/* Enhanced Buttons */
 .btn {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
   padding: var(--spacing-sm) var(--spacing-md);
-  border: 1px solid var(--color-border);
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all var(--transition-fast);
-  outline: none;
-  background: var(--color-background-elevated);
-  color: var(--color-text-primary);
+  transition: all var(--transition-spring);
+  position: relative;
+  overflow: hidden;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-.btn:focus {
-  border-color: var(--color-border-focus);
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
+.btn:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.btn:not(:disabled):active {
+  transform: translateY(0);
+}
+
+/* Play Button */
 .btn-play {
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
+  background: var(--gradient-success);
+  color: white;
+  border-color: var(--color-success);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-play:not(:disabled):hover {
+  box-shadow: var(--shadow-md), 0 0 20px var(--color-success-light);
+  border-color: var(--color-success-hover);
+}
+
+/* Save Button */
+.btn-save {
+  background: var(--glass-bg);
+  color: var(--color-text-primary);
+  border-color: var(--glass-border);
+}
+
+.btn-save:not(:disabled):hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
   border-color: var(--color-primary);
 }
 
-.btn-play:hover {
-  background-color: var(--color-primary-hover);
-  border-color: var(--color-primary-hover);
+.btn-save:disabled {
+  color: var(--color-text-disabled);
 }
 
-.btn-save {
-  background-color: var(--color-accent);
-  color: var(--color-text-inverse);
-  border-color: var(--color-accent);
-}
-
-.btn-save:hover {
-  background-color: var(--color-accent-hover);
-  border-color: var(--color-accent-hover);
-}
-
+/* Export Button */
 .btn-export {
-  background-color: var(--color-database-node);
-  color: var(--color-text-inverse);
-  border-color: var(--color-database-node);
+  background: var(--glass-bg);
+  color: var(--color-text-primary);
+  border-color: var(--glass-border);
 }
 
 .btn-export:hover {
-  background-color: var(--color-database-node);
-  filter: brightness(0.9);
+  background: var(--color-info-light);
+  color: var(--color-info);
+  border-color: var(--color-info);
 }
 
+/* Add Button */
 .btn-add {
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
+  background: var(--gradient-primary);
+  color: white;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-add:hover {
-  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md), 0 0 20px var(--color-primary-light);
+  border-color: var(--color-primary-hover);
 }
 
 .dropdown-chevron {
   font-size: var(--font-size-xs);
-  margin-left: var(--spacing-xs);
+  transition: transform var(--transition-fast);
 }
 
-.btn-add:hover .dropdown-chevron {
+.dropdown-chevron.rotated {
   transform: rotate(180deg);
 }
 
-/* Dropdown Styles */
-.dropdown-container {
-  position: relative;
-  z-index: var(--z-dropdown);
-}
-
-/* Teleported dropdown menu styles */
-.dropdown-menu {
-  background-color: var(--color-background-elevated);
-  border: 1px solid var(--color-border);
+/* Enhanced Dropdown */
+.neo-dropdown {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  /* Force above VueFlow elements */
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-sm);
+  min-width: 280px;
+  animation: dropdown-appear 0.2s var(--easing-spring);
   z-index: 10001 !important;
-  /* Prevent any transform issues */
-  transform-style: preserve-3d;
-  /* Ensure backdrop doesn't interfere */
-  isolation: isolate;
 }
 
 .dropdown-content {
-  padding: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
 }
 
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--color-border-subtle);
+  margin-bottom: var(--spacing-xs);
+}
+
+.dropdown-header i {
+  color: var(--color-primary);
+}
+
+/* Enhanced Dropdown Items */
 .dropdown-item {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: none;
-  background: none;
-  text-align: left;
+  padding: var(--spacing-md);
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
-  cursor: pointer;
 }
 
 .dropdown-item:hover {
-  background-color: var(--color-background-hover);
+  background: var(--color-background-hover);
+  border-color: var(--color-border-subtle);
+  transform: translateY(-1px);
 }
 
-.dropdown-item:focus {
-  outline: none;
-  background-color: var(--color-primary-subtle);
-  border-left: 3px solid var(--color-primary);
+.item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-md);
+  flex-shrink: 0;
 }
 
-/* Node Icon Colors - Updated for better contrast */
-.node-icon {
-  width: 1rem;
-  text-align: center;
+.item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
 }
 
-.node-icon-blue {
-  color: var(--color-primary);
+.item-title {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
-.node-icon-green {
-  color: var(--color-success);
-}
-
-.node-icon-orange {
-  color: var(--color-warning);
-}
-
-.node-icon-purple {
-  color: var(--color-accent);
-}
-
-.node-icon-gray {
+.item-description {
+  font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
 }
 
-.node-icon-yellow {
-  color: var(--color-warning-bright);
+.item-badge {
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.node-icon-indigo {
-  color: var(--color-primary-bright);
+/* Node Type Specific Styling */
+.api-item .item-icon {
+  background: var(--color-api-node-light);
+  color: var(--color-primary);
 }
 
-/* Animation for dropdown */
+.api-badge {
+  background: var(--color-api-node-light);
+  color: var(--color-primary-dark);
+}
+
+.functional-item .item-icon {
+  background: var(--color-functional-node-light);
+  color: var(--color-warning);
+}
+
+.functional-badge {
+  background: var(--color-functional-node-light);
+  color: var(--color-warning-dark);
+}
+
+.openapi-item .item-icon {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.openapi-badge {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.postman-item .item-icon {
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+.postman-badge {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -562,7 +747,7 @@ onUnmounted(() => {
   .header-content {
     flex-direction: column;
     gap: var(--spacing-md);
-    align-items: flex-start;
+    align-items: stretch;
   }
   
   .title-section {
@@ -571,38 +756,61 @@ onUnmounted(() => {
     gap: var(--spacing-sm);
   }
   
-  .actions-section {
-    align-self: flex-end;
+  .title-container {
     flex-wrap: wrap;
   }
   
-  .env-select {
-    min-width: 150px;
-    font-size: var(--font-size-xs);
+  .actions-section {
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
   
-  .dropdown-menu {
-    right: auto;
-    left: 0;
-    /* Ensure mobile dropdown is also above VueFlow */
-    z-index: 10001 !important;
+  .env-selector-container {
+    min-width: 160px;
+  }
+  
+  .neo-dropdown {
+    min-width: 240px;
   }
 }
 
 @media (max-width: 480px) {
+  .flow-lab-brand .flow-brand-text {
+    display: none;
+  }
+  
+  .title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .btn span {
+    display: none;
+  }
+  
   .btn {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-xs);
+    padding: var(--spacing-sm);
   }
-  
-  .env-select {
-    min-width: 120px;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-xs);
+}
+
+/* Animation keyframes */
+@keyframes dropdown-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
   }
-  
-  .dropdown-menu {
-    width: 12rem;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .playground-header::before {
+    background: linear-gradient(90deg, 
+      var(--color-primary-dark) 0%, 
+      var(--color-primary) 20%, 
+      var(--color-primary-dark) 100%);
   }
 }
 </style>
