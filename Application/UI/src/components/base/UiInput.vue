@@ -91,7 +91,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'text',
-  size: 'md',
+  size: 'sm',
   variant: 'glass',
   disabled: false,
   readonly: false,

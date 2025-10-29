@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-expansion-panel">
+  <div class="ui-expansion-panel glass-panel">
     <!-- Panel Header -->
     <div
       class="panel-header"

@@ -2,24 +2,39 @@
   <div class="webflow-playground">
     <!-- Loading state -->
     <div v-if="playgroundStore.isLoading" class="loading-container">
-      <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <p class="loading-text">Loading webflow playground...</p>
+      <div class="loading-content glass-panel">
+        <div class="loading-spinner">
+          <i class="fas fa-spinner fa-spin"></i>
+        </div>
+        <div class="loading-text-content">
+          <h4 class="loading-title">Loading Webflow Playground</h4>
+          <p class="loading-text">Initializing your workspace...</p>
+        </div>
       </div>
     </div>
 
     <!-- Error state -->
     <div v-else-if="playgroundStore.hasError" class="error-container">
-      <div class="error-content">
-        <div class="error-icon">⚠️</div>
-        <h2 class="error-title">Failed to load webflow</h2>
-        <p class="error-message">{{ playgroundStore.error }}</p>
-        <button @click="loadWebflow" class="retry-btn">Retry</button>
+      <div class="error-content glass-panel">
+        <div class="error-illustration">
+          <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="error-glow"></div>
+        </div>
+        <div class="error-text-content">
+          <h2 class="error-title">Failed to Load Webflow</h2>
+          <p class="error-message">{{ playgroundStore.error }}</p>
+          <button @click="loadWebflow" class="retry-btn glass-button">
+            <i class="fas fa-refresh"></i>
+            Try Again
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Main content -->
-    <div v-else>
+    <div v-else class="playground-main">
       <webflow-playground-header
         :webflow-details="playgroundStore.webflowDetails"
         @play="handlePlay"
@@ -31,19 +46,19 @@
 
       <!-- Playground Content Area -->
       <div class="playground-content">
-        <div class="canvas-container">
-            <webflow-playground-canvas
-              ref="webflowCanvas"
-              :nodes="apiFluxCore.nodes.value"
-              :edges="apiFluxCore.edges.value"
-              :node-map="apiFluxCore.nodeMap.value"
-              :variablePool="apiFluxCore.variablePool.value"
-              :envVariableMap="apiFluxCore.envVariableMap.value"
-              @node-drag="apiFluxCore.setPosition"
-              @connect="apiFluxCore.addEdge"
-              @editNode="onEditNode"
-              @deleteNode="onDeleteNode"
-            />
+        <div class="canvas-container glass-panel">
+          <webflow-playground-canvas
+            ref="webflowCanvas"
+            :nodes="apiFluxCore.nodes.value"
+            :edges="apiFluxCore.edges.value"
+            :node-map="apiFluxCore.nodeMap.value"
+            :variablePool="apiFluxCore.variablePool.value"
+            :envVariableMap="apiFluxCore.envVariableMap.value"
+            @node-drag="apiFluxCore.setPosition"
+            @connect="apiFluxCore.addEdge"
+            @editNode="onEditNode"
+            @deleteNode="onDeleteNode"
+          />
         </div>
       </div>
     </div>
@@ -51,7 +66,6 @@
     <!-- Add New Node Drawer -->
     <UiDrawer
       v-model:visible="addNewDrawerVisible"
-      :title="`Add New ${addNewNodeType} Node`"
       size="lg"
     >
       <api-node-form
@@ -99,7 +113,7 @@ import type { WebflowNode } from "@/apifluxCore/types";
 import FunctionalNodeForm from "../../components/features/webflow/playground/forms/functionalNodeForm.vue";
 import { alert, toast } from "@/utils";
 import CurlNodeForm from "@/components/features/webflow/playground/forms/curlNodeForm.vue";
-import OpenApiNodeForm from "@/components/features/webflow/playground/forms/openApiNodeForm.vue";
+import OpenApiNodeForm from "@/components/features/webflow/playground/forms/openapiNodeForm.vue";
 import type { ExtractedAPI } from "@/types";
 const route = useRoute();
 const playgroundStore = useWebflowPlaygroundStore();
@@ -226,35 +240,185 @@ watch(
 </script>
 
 <style scoped>
-/* Webflow Playground Styles using Design System */
+/* Webflow Playground Styles - Neo-Systemic Design */
 
 .webflow-playground {
   min-height: 100vh;
-  background-color: var(--color-background-secondary);
+  background: var(--color-canvas-bg);
+  font-family: var(--font-family-base);
 }
 
-/* Loading State */
+/* ===== Loading State ===== */
 .loading-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  padding: var(--spacing-xl);
 }
 
 .loading-content {
   text-align: center;
+  padding: var(--spacing-2xl);
+  max-width: 24rem;
 }
 
 .loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 3rem;
   height: 3rem;
-  border: 2px solid var(--color-gray-200);
-  border-top: 2px solid var(--color-primary);
-  border-radius: var(--radius-full);
-  margin: 0 auto var(--spacing-md) auto;
+  margin: 0 auto var(--spacing-lg) auto;
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+}
+
+.loading-spinner i {
   animation: spin 1s linear infinite;
 }
 
+.loading-text-content {
+  margin-top: var(--spacing-md);
+}
+
+.loading-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.loading-text {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+}
+
+/* ===== Error State ===== */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--spacing-xl);
+}
+
+.error-content {
+  text-align: center;
+  max-width: 28rem;
+  padding: var(--spacing-2xl);
+}
+
+.error-illustration {
+  position: relative;
+  display: inline-block;
+  margin-bottom: var(--spacing-xl);
+}
+
+.error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5rem;
+  height: 5rem;
+  border-radius: var(--radius-full);
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  font-size: var(--font-size-2xl);
+  position: relative;
+  z-index: 1;
+}
+
+.error-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6rem;
+  height: 6rem;
+  border-radius: var(--radius-full);
+  background: radial-gradient(
+    circle,
+    var(--color-danger-subtle) 0%,
+    transparent 70%
+  );
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.error-text-content {
+  margin-top: var(--spacing-lg);
+}
+
+.error-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.error-message {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xl);
+  line-height: var(--line-height-normal);
+  font-size: var(--font-size-md);
+}
+
+.retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--gradient-primary);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-base);
+  cursor: pointer;
+  transition: all var(--transition-spring);
+  box-shadow: var(--shadow-md);
+}
+
+.retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.retry-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.retry-btn:active {
+  transform: translateY(0);
+}
+
+/* ===== Main Content ===== */
+.playground-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.playground-content {
+  flex: 1;
+  padding: var(--spacing-lg);
+  padding-top: 0;
+}
+
+.canvas-container {
+  width: 100%;
+  height: calc(100vh - 8rem);
+  min-height: 32rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== Animations ===== */
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -264,114 +428,75 @@ watch(
   }
 }
 
-.loading-text {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-base);
-}
-
-/* Error State */
-.error-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
-
-.error-content {
-  text-align: center;
-  max-width: 24rem;
-  padding: var(--spacing-xl);
-}
-
-.error-icon {
-  font-size: var(--font-size-5xl);
-  margin-bottom: var(--spacing-md);
-}
-
-.error-title {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-sm);
-}
-
-.error-message {
-  color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-md);
-  line-height: var(--line-height-normal);
-}
-
-.retry-btn {
-  padding: var(--spacing-sm) var(--spacing-md);
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.retry-btn:hover {
-  background-color: var(--color-primary-hover);
-  /* transform: translateY(-1px); */
-  box-shadow: var(--shadow-md);
-}
-
-.retry-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--color-primary-light);
-}
-
-/* Main Content */
-.playground-content {
-  padding: var(--spacing-lg);
-}
-
-.canvas-container {
-  background-color: var(--color-background);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  height: calc(100vh - 140px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--color-border);
-}
-
-.canvas-placeholder {
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .playground-content {
-    padding: var(--spacing-lg);
-  }
-
-  .canvas-container {
-    height: 20rem;
-  }
-
-  .error-content {
-    padding: var(--spacing-lg);
-  }
-}
-
-@media (max-width: 480px) {
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
   .playground-content {
     padding: var(--spacing-md);
   }
 
   .canvas-container {
-    height: 16rem;
+    height: calc(100vh - 6rem);
+    min-height: 24rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .loading-container,
+  .error-container {
+    padding: var(--spacing-lg);
   }
 
-  .canvas-placeholder {
-    font-size: var(--font-size-base);
+  .loading-content,
+  .error-content {
+    padding: var(--spacing-xl);
+  }
+
+  .playground-content {
+    padding: var(--spacing-sm);
+  }
+
+  .canvas-container {
+    height: calc(100vh - 5rem);
+    min-height: 20rem;
+  }
+
+  .error-icon {
+    width: 4rem;
+    height: 4rem;
+    font-size: var(--font-size-xl);
+  }
+
+  .error-glow {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .loading-spinner {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .loading-title,
+  .error-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .loading-text,
+  .error-message {
+    font-size: var(--font-size-sm);
+  }
+
+  .retry-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .canvas-container {
+    height: calc(100vh - 4rem);
+    min-height: 16rem;
   }
 }
 </style>

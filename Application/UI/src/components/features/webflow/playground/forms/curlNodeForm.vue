@@ -2,33 +2,52 @@
   <div class="curl-node-form" v-if="!showApiNodeForm">
     <!-- cURL Input Section -->
     <div class="curl-input-section">
+      <!-- Form Header -->
       <div class="form-header">
-        <h3 class="form-title">
-          <i class="fas fa-terminal form-icon"></i>
-          Import from cURL
-        </h3>
-        <p class="form-description">
-          Paste your cURL command below and we'll automatically parse it into an
-          API node configuration.
-        </p>
+        <div class="header-icon">
+          <i class="fas fa-terminal"></i>
+        </div>
+        <div class="header-content">
+          <h3 class="form-title">Import from cURL</h3>
+          <p class="form-description">
+            Paste your cURL command below and we'll automatically parse it into an API node configuration.
+          </p>
+        </div>
       </div>
 
+      <!-- Form Content -->
       <div class="form-content">
-        <div class="input-group">
-          <label for="curlCommand" class="input-label"> cURL Command </label>
-          <textarea
-            id="curlCommand"
-            v-model="curlCommand"
-            class="curl-textarea"
-            placeholder='curl -X POST https://api.example.com/users -H &apos;Content-Type: application/json&apos; -H &apos;Authorization: Bearer your-token&apos; -d &apos;{"name": "John Doe", "email": "john@example.com"}&apos;'
-            :rows="8"
-          ></textarea>
+        <!-- cURL Input Group -->
+        <div class="input-section">
+          <label for="curlCommand" class="input-label">
+            <i class="fas fa-code input-label-icon"></i>
+            cURL Command
+          </label>
+          <div class="textarea-wrapper">
+            <textarea
+              id="curlCommand"
+              v-model="curlCommand"
+              class="curl-textarea"
+              placeholder='curl -X POST https://api.example.com/users -H "Content-Type: application/json" -H "Authorization: Bearer your-token" -d "{\"name\": \"John Doe\", \"email\": \"john@example.com\"}"'
+              :rows="8"
+            ></textarea>
+            <div class="textarea-footer">
+              <span class="character-count">
+                {{ curlCommand.length }} characters
+              </span>
+            </div>
+          </div>
         </div>
 
         <!-- Error Display -->
-        <div v-if="curlHasError" class="error-message">
-          <i class="fas fa-exclamation-triangle"></i>
-          <span>{{ errorMessage }}</span>
+        <div v-if="curlHasError" class="error-section">
+          <div class="error-content">
+            <i class="fas fa-exclamation-triangle error-icon"></i>
+            <div class="error-text">
+              <h5 class="error-title">Parsing Error</h5>
+              <p class="error-message">{{ errorMessage }}</p>
+            </div>
+          </div>
         </div>
 
         <!-- Action Buttons -->
@@ -39,7 +58,7 @@
             type="button"
           >
             <i class="fas fa-times"></i>
-            Cancel
+            <span>Cancel</span>
           </button>
           <button
             @click="submitCurlCommand"
@@ -48,12 +67,13 @@
             :disabled="!curlCommand.trim()"
           >
             <i class="fas fa-magic"></i>
-            Parse cURL
+            <span>Parse cURL</span>
           </button>
         </div>
       </div>
     </div>
   </div>
+
   <!-- API Node Form Section -->
   <ApiNodeForm
     v-if="showApiNodeForm && currentAApiNode"
@@ -116,48 +136,64 @@ const onSave = (node: ApiNode) => {
 </script>
 
 <style scoped>
-/* cURL Node Form Styles using Design System */
-
+/* cURL Node Form Container */
 .curl-node-form {
-  background: var(--color-background-elevated);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: var(--blur-md);
-  overflow: hidden;
+  margin-bottom: var(--spacing-lg);
+  transition: all var(--transition-spring);
+  position: relative;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .curl-input-section {
-  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
 }
 
 /* Form Header */
 .form-header {
-  margin-bottom: var(--spacing-xl);
-  text-align: center;
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.form-title {
+.header-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-sm);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-light);
+  flex-shrink: 0;
+}
+
+.header-icon i {
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+}
+
+.header-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.form-title {
+  margin: 0;
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
-  margin: 0 0 var(--spacing-sm) 0;
-}
-
-.form-icon {
-  color: var(--color-primary);
-  font-size: var(--font-size-lg);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 .form-description {
+  margin: 0;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  line-height: var(--line-height-relaxed);
-  margin: 0;
+  line-height: var(--line-height-normal);
 }
 
 /* Form Content */
@@ -167,41 +203,63 @@ const onSave = (node: ApiNode) => {
   gap: var(--spacing-lg);
 }
 
-/* Input Group */
-.input-group {
+/* Input Section */
+.input-section {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
 }
 
 .input-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
+  letter-spacing: var(--letter-spacing-normal);
   margin: 0;
+}
+
+.input-label-icon {
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+}
+
+/* Textarea Wrapper */
+.textarea-wrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+  transition: all var(--transition-normal);
+  overflow: hidden;
+}
+
+.textarea-wrapper:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.textarea-wrapper:hover {
+  border-color: var(--color-border-hover);
 }
 
 /* cURL Textarea */
 .curl-textarea {
   width: 100%;
-  min-height: 180px;
+  min-height: 200px;
   padding: var(--spacing-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background-color: var(--color-background-primary);
+  border: none;
+  background: transparent;
   color: var(--color-text-primary);
   font-family: var(--font-family-mono);
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-relaxed);
+  line-height: var(--line-height-normal);
   resize: vertical;
-  transition: all var(--transition-fast);
-}
-
-.curl-textarea:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
-  background-color: var(--color-background-secondary);
+  transition: all var(--transition-normal);
 }
 
 .curl-textarea::placeholder {
@@ -209,23 +267,61 @@ const onSave = (node: ApiNode) => {
   font-style: italic;
 }
 
-/* Error Message */
-.error-message {
+.textarea-footer {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  background-color: var(--color-error-light);
-  border: 1px solid var(--color-error);
-  border-radius: var(--radius-md);
-  color: var(--color-error);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  justify-content: flex-end;
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: var(--color-background-subtle);
+  border-top: 1px solid var(--color-border-subtle);
 }
 
-.error-message i {
-  color: var(--color-error);
+.character-count {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-family: var(--font-family-mono);
+}
+
+/* Error Section */
+.error-section {
+  padding: var(--spacing-md);
+  background: var(--color-danger-light);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  animation: shake 0.5s ease-in-out;
+}
+
+.error-content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.error-icon {
+  color: var(--color-danger);
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
+  margin-top: var(--spacing-xs);
+}
+
+.error-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.error-title {
+  margin: 0;
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-danger);
+}
+
+.error-message {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-danger-dark);
+  line-height: var(--line-height-normal);
 }
 
 /* Form Actions */
@@ -234,25 +330,27 @@ const onSave = (node: ApiNode) => {
   gap: var(--spacing-md);
   justify-content: flex-end;
   padding-top: var(--spacing-lg);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border-subtle);
 }
 
-/* Button Styles */
+/* Button Base Styles */
 .btn {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
   padding: var(--spacing-sm) var(--spacing-lg);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-base);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-spring);
   outline: none;
   text-decoration: none;
   min-width: 120px;
   justify-content: center;
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .btn:focus {
@@ -260,57 +358,93 @@ const onSave = (node: ApiNode) => {
 }
 
 .btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none !important;
 }
 
+.btn:not(:disabled):active {
+  transform: scale(0.98);
+}
+
 /* Button Variants */
 .btn-primary {
-  background: linear-gradient(
-    135deg,
-    var(--color-primary),
-    var(--color-primary-hover)
-  );
-  color: var(--color-text-inverse);
+  background: var(--color-primary);
+  color: white;
+  border: 1px solid var(--color-primary);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(
-    135deg,
-    var(--color-primary-hover),
-    var(--color-primary)
-  );
-  /* transform: translateY(-1px); */
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
 .btn-secondary {
-  background-color: var(--color-background-secondary);
+  background: var(--color-background);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: var(--color-background-hover);
+  background: var(--color-background-hover);
   border-color: var(--color-border-hover);
-  /* transform: translateY(-1px); */
+  transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
 }
 
-/* Icon styles in buttons */
+/* Button Icons */
 .btn i {
   font-size: var(--font-size-xs);
 }
 
+/* Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Scrollbar Styling */
+.curl-textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.curl-textarea::-webkit-scrollbar-track {
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-xs);
+}
+
+.curl-textarea::-webkit-scrollbar-thumb {
+  background: var(--color-border-hover);
+  border-radius: var(--radius-xs);
+}
+
+.curl-textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-  .curl-input-section {
+  .curl-node-form {
     padding: var(--spacing-lg);
+    margin: 0 var(--spacing-md);
+  }
+
+  .form-header {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-md);
+  }
+
+  .header-icon {
+    align-self: center;
   }
 
   .form-actions {
     flex-direction: column-reverse;
+    gap: var(--spacing-sm);
   }
 
   .btn {
@@ -324,6 +458,10 @@ const onSave = (node: ApiNode) => {
 }
 
 @media (max-width: 480px) {
+  .curl-node-form {
+    padding: var(--spacing-md);
+  }
+
   .form-title {
     font-size: var(--font-size-lg);
   }
@@ -335,36 +473,37 @@ const onSave = (node: ApiNode) => {
   .curl-textarea {
     min-height: 120px;
   }
+
+  .header-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .header-icon i {
+    font-size: var(--font-size-lg);
+  }
 }
 
-/* Dark theme enhancements */
-.curl-textarea {
-  /* Add subtle inner shadow for depth */
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+/* Focus and Hover States */
+.curl-node-form:focus-within {
+  border-color: var(--color-primary-light);
 }
 
-.curl-textarea:focus {
-  /* Enhanced glow effect for focus state */
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2),
-    0 0 0 3px var(--color-primary-light);
+/* Loading State */
+.curl-node-form.loading {
+  opacity: 0.7;
+  pointer-events: none;
 }
 
-/* Scrollbar styling for webkit browsers */
-.curl-textarea::-webkit-scrollbar {
-  width: 8px;
-}
-
-.curl-textarea::-webkit-scrollbar-track {
-  background: var(--color-background-tertiary);
-  border-radius: var(--radius-sm);
-}
-
-.curl-textarea::-webkit-scrollbar-thumb {
-  background: var(--color-border-hover);
-  border-radius: var(--radius-sm);
-}
-
-.curl-textarea::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-tertiary);
+.curl-node-form.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(2px);
+  border-radius: var(--radius-lg);
 }
 </style>

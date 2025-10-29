@@ -1,82 +1,95 @@
 <template>
   <div class="variable-form">
-    <div class="form-content">
-      <!-- Variable Name -->
-      <div class="form-group">
-        <UiInput
-          v-model="localVariable.name"
-          label="Variable Name"
-          placeholder="Enter variable name..."
-          required
-          :error="errors.name"
-          :error-message="errors.name"
-          left-icon="tag"
-          @blur="validateName"
-        />
-        <div class="form-group" style="width: 200px">
-          <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input
-                type="checkbox"
-                v-model="localVariable.fromEnv"
-                class="checkbox-input"
-                @change="onEnvToggle"
-              />
-              <span class="checkbox-custom"></span>
-              <span class="checkbox-text">
-                <i class="fas fa-server"></i>
-                From Env
-              </span>
-            </label>
-            <i
-              class="fa fa-trash remove-variable"
-              v-if="canRemove"
-              @click="removeVariable"
-            ></i>
+    <!-- Variable Form Content -->
+    <div class="variable-content">
+      <!-- Delete Button Row -->
+      <div v-if="canRemove" class="delete-row">
+        <button 
+          @click="removeVariable"
+          class="remove-button"
+          v-tooltip="'Remove this variable'"
+        >
+          <i class="fas fa-trash"></i>
+          <span>Remove Variable</span>
+        </button>
+      </div>
+      <!-- Name and Environment Toggle Row -->
+      <div class="name-env-row">
+        <div class="name-input-container">
+          <UiInput
+            v-model="localVariable.name"
+            label="Variable Name"
+            placeholder="Enter variable name..."
+            required
+            :error="errors.name"
+            :error-message="errors.name"
+            left-icon="tag"
+            @blur="validateName"
+            class="name-input"
+          />
+        </div>
+        
+        <div class="env-toggle-container">
+          <label class="env-toggle">
+            <input
+              type="checkbox"
+              v-model="localVariable.fromEnv"
+              class="toggle-input"
+              @change="onEnvToggle"
+            />
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">
+              <i class="fas fa-server toggle-icon"></i>
+              <span class="toggle-text">From Environment</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Description and Type Row -->
+      <div v-if="showDescription && showType" class="description-type-row">
+        <div class="description-container">
+          <UiInput
+            v-model="localVariable.description"
+            label="Description"
+            placeholder="Describe the variable purpose..."
+            left-icon="info-circle"
+            class="description-input"
+          />
+        </div>
+        
+        <div class="type-selector-container">
+          <label class="type-label">Variable Type</label>
+          <div class="type-select-wrapper">
+            <select
+              v-model="localVariable.type"
+              class="type-select"
+              :class="{ error: errors.type }"
+              :disabled="localVariable.fromEnv || !!props.defaultType"
+            >
+              <option
+                v-for="type in variableTypes"
+                :key="type.value"
+                :value="type.value"
+              >
+                {{ type.label }}
+              </option>
+            </select>
+            <i class="fas fa-chevron-down select-arrow"></i>
           </div>
         </div>
       </div>
 
-      <!-- Variable Description -->
-      <div class="form-group" v-if="showDescription && showType">
-        <UiInput
-          v-model="localVariable.description"
-          label="Description"
-          placeholder="Describe the variable purpose..."
-          left-icon="info-circle"
-        />
-        <div>
-          <span class="form-label">Type</span>
-          <select
-            v-model="localVariable.type"
-            class="env-select"
-            style="width: 140px"
-            :class="{ error: errors.type }"
-            :disabled="localVariable.fromEnv || !!props.defaultType"
-          >
-            <option
-              v-for="type in variableTypes"
-              :key="type.value"
-              :value="type.value"
-            >
-              {{ type.label }}
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Environment Variable Toggle -->
-
-      <!-- Environment Variable Name (shown when fromEnv is true) -->
-      <div v-if="localVariable.fromEnv">
-        <label class="form-label">Environment Variable Name</label>
-        <div class="env-var-input">
+      <!-- Environment Variable Selection -->
+      <div v-if="localVariable.fromEnv" class="env-var-section">
+        <label class="env-var-label">Environment Variable</label>
+        <div class="env-select-wrapper">
           <select
             v-model="localVariable.envVarName"
             class="env-select"
             :class="{ error: errors.envVarName }"
           >
-            <option value="">Select an environment variable</option>
+            <option value="">Select environment variable</option>
             <option
               v-for="envVar in props.envVariablesNames"
               :key="envVar"
@@ -85,59 +98,61 @@
               {{ envVar }}
             </option>
           </select>
+          <i class="fas fa-chevron-down select-arrow"></i>
         </div>
-        <p v-if="errors.envVarName" class="error-text">
+        <p v-if="errors.envVarName" class="error-message">
           {{ errors.envVarName }}
         </p>
       </div>
 
-      <!-- Default Value (shown when fromEnv is false or as fallback) -->
-      <div class="form-group" v-else>
+      <!-- Default Value Section -->
+      <div v-else class="default-value-section">
         <!-- String/Number Input -->
         <UiInput
-          v-if="
-            localVariable.type === 'string' || localVariable.type === 'number'
-          "
+          v-if="localVariable.type === 'string' || localVariable.type === 'number'"
           v-model="localVariable.defaultValue"
           :type="localVariable.type === 'number' ? 'number' : 'text'"
           :placeholder="getPlaceholderForType(localVariable.type)"
           :error="errors.defaultValue"
           :error-message="errors.defaultValue"
           left-icon="edit"
-          :label="'Default Value'"
+          label="Default Value"
+          class="default-input"
         />
 
         <!-- Boolean Toggle -->
-        <div
-          v-else-if="localVariable.type === 'boolean'"
-          class="boolean-toggle"
-        >
-          <label class="toggle-label">
-            <input
-              type="checkbox"
-              v-model="booleanValue"
-              class="toggle-input"
-              @change="onBooleanChange"
-            />
-            <span class="toggle-slider"></span>
-            <span class="toggle-text">Default Value</span>
-          </label>
+        <div v-else-if="localVariable.type === 'boolean'" class="boolean-section">
+          <label class="boolean-label">Default Value</label>
+          <div class="boolean-toggle-wrapper">
+            <label class="boolean-toggle">
+              <input
+                type="checkbox"
+                v-model="booleanValue"
+                class="boolean-input"
+                @change="onBooleanChange"
+              />
+              <span class="boolean-slider"></span>
+              <span class="boolean-text">
+                {{ booleanValue ? 'True' : 'False' }}
+              </span>
+            </label>
+          </div>
         </div>
 
         <!-- JSON Editor for Object/Array -->
-        <UiJsonEditor
-          v-else-if="
-            localVariable.type === 'object' || localVariable.type === 'array'
-          "
-          v-model="localVariable.defaultValue"
-          :label="'Default Value'"
-          :placeholder="getPlaceholderForType(localVariable.type)"
-          :height="200"
-          :error="errors.defaultValue"
-          show-format-button
-          show-copy-button
-          @validation="onJsonValidation"
-        />
+        <div v-else-if="localVariable.type === 'object' || localVariable.type === 'array'" class="json-section">
+          <UiJsonEditor
+            v-model="localVariable.defaultValue"
+            label="Default Value"
+            :placeholder="getPlaceholderForType(localVariable.type)"
+            :height="200"
+            :error="errors.defaultValue"
+            show-format-button
+            show-copy-button
+            @validation="onJsonValidation"
+            class="json-editor"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -322,107 +337,271 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.form-group {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: end;
-  margin-bottom: var(--spacing-sm);
+/* Variable Form Container */
+.variable-form {
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition-spring);
+  position: relative;
+  border-radius: var(--radius-md);
 }
 
-.form-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-xs);
+/* Delete Row */
+.delete-row {
+  position: absolute;
+  top: 4px;
+  right: 4px;
 }
 
-.required {
-  color: var(--color-error);
-  margin-left: var(--spacing-xs);
-}
-
-.helper-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  margin: var(--spacing-xs) 0 0 0;
-  line-height: var(--line-height-normal);
-}
-
-.error-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-error);
-  margin: var(--spacing-xs) 0 0 0;
-}
-
-/* Checkbox Group */
-.checkbox-group {
+.remove-button {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  cursor: pointer;
+  transition: all var(--transition-spring);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
 }
 
-.checkbox-label {
+.remove-button:hover {
+  background: var(--color-danger);
+  color: white;
+  transform: scale(1.02);
+}
+
+/* Variable Content */
+.variable-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* Name and Environment Row */
+.name-env-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-lg);
+  align-items: end;
+}
+
+.name-input-container {
+  min-width: 0;
+}
+
+.name-input {
+  width: 100%;
+}
+
+.env-toggle-container {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Environment Toggle */
+.env-toggle {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   cursor: pointer;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-primary);
+  user-select: none;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-normal);
 }
 
-.checkbox-input {
+.env-toggle:hover {
+  background: var(--color-background-hover);
+}
+
+.toggle-input {
   display: none;
 }
 
-.checkbox-custom {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-sm);
+.toggle-slider {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-spring);
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all var(--transition-fast);
-  position: relative;
 }
 
-.checkbox-input:checked + .checkbox-custom {
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: var(--color-background);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-spring);
+  box-shadow: var(--shadow-sm);
+}
+
+.toggle-input:checked + .toggle-slider {
   background: var(--color-primary);
   border-color: var(--color-primary);
 }
 
-.checkbox-input:checked + .checkbox-custom::after {
-  content: "✓";
-  color: white;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
+.toggle-input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+  background: white;
 }
 
-.checkbox-text {
+.toggle-label {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  transition: color var(--transition-normal);
 }
 
-.checkbox-text i {
+.env-toggle:hover .toggle-label {
+  color: var(--color-text-primary);
+}
+
+.toggle-icon {
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+}
+
+.toggle-text {
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.toggle-input:checked ~ .toggle-label {
   color: var(--color-primary);
 }
 
-/* Environment Variable Input */
-.env-var-input {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
+/* Description and Type Row */
+.description-type-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-lg);
+  align-items: end;
 }
 
-.env-select {
-  padding: var(--spacing-sm) var(--spacing-md);
+.description-container {
+  min-width: 0;
+}
+
+.description-input {
+  width: 100%;
+}
+
+.type-selector-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.type-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.type-select-wrapper {
+  position: relative;
+}
+
+.type-select {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-xl) var(--spacing-sm) var(--spacing-md);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background: var(--color-background);
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
-  transition: border-color var(--transition-fast);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-normal);
+  transition: all var(--transition-normal);
+  appearance: none;
+  cursor: pointer;
+}
+
+.type-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.type-select:hover {
+  border-color: var(--color-border-hover);
+}
+
+.type-select:disabled {
+  background: var(--color-background-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.type-select.error {
+  border-color: var(--color-danger);
+}
+
+.select-arrow {
+  position: absolute;
+  right: var(--spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  pointer-events: none;
+  transition: color var(--transition-normal);
+}
+
+.type-select:focus + .select-arrow {
+  color: var(--color-primary);
+}
+
+/* Environment Variable Section */
+.env-var-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: var(--color-background-subtle);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.env-var-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.env-select-wrapper {
+  position: relative;
+}
+
+.env-select {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-xl) var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-base);
+  transition: all var(--transition-normal);
+  appearance: none;
+  cursor: pointer;
 }
 
 .env-select:focus {
@@ -431,116 +610,183 @@ onMounted(() => {
   box-shadow: 0 0 0 3px var(--color-primary-light);
 }
 
+.env-select:hover {
+  border-color: var(--color-border-hover);
+}
+
 .env-select.error {
-  border-color: var(--color-error);
+  border-color: var(--color-danger);
 }
 
-.env-select:disabled {
-  background: var(--color-gray-100);
-  cursor: not-allowed;
+.error-message {
+  font-size: var(--font-size-xs);
+  color: var(--color-danger);
+  margin: 0;
+  line-height: var(--line-height-normal);
 }
 
-/* Boolean Toggle */
-.boolean-toggle {
+/* Default Value Section */
+.default-value-section {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: var(--spacing-md);
 }
 
-.toggle-label {
+.default-input {
+  width: 100%;
+}
+
+/* Boolean Section */
+.boolean-section {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--spacing-sm);
-  cursor: pointer;
 }
 
-.toggle-input {
-  display: none;
-}
-
-.toggle-slider {
-  width: 50px;
-  height: 26px;
-  background: var(--color-gray-300);
-  border-radius: var(--radius-full);
-  position: relative;
-  transition: background var(--transition-fast);
-}
-
-.toggle-slider::before {
-  content: "";
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: white;
-  border-radius: 50%;
-  top: 3px;
-  left: 3px;
-  transition: transform var(--transition-fast);
-  box-shadow: var(--shadow-sm);
-}
-
-.toggle-input:checked + .toggle-slider {
-  background: var(--color-primary);
-}
-
-.toggle-input:checked + .toggle-slider::before {
-  transform: translateX(24px);
-}
-
-.toggle-text {
+.boolean-label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.boolean-toggle-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.boolean-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  cursor: pointer;
+  user-select: none;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+  transition: all var(--transition-spring);
+}
+
+.boolean-toggle:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-background-hover);
+}
+
+.boolean-input {
+  display: none;
+}
+
+.boolean-slider {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-spring);
+  display: flex;
+  align-items: center;
+}
+
+.boolean-slider::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: var(--color-background);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-spring);
+  box-shadow: var(--shadow-sm);
+}
+
+.boolean-input:checked + .boolean-slider {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.boolean-input:checked + .boolean-slider::before {
+  transform: translateX(24px);
+  background: white;
+}
+
+.boolean-text {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  min-width: 40px;
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+/* JSON Section */
+.json-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.json-editor {
+  width: 100%;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .form-group {
-    flex-direction: column;
-    align-items: stretch;
+  .variable-form {
+    padding: var(--spacing-md);
+  }
+  
+  .name-env-row {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .description-type-row {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .env-toggle-container {
+    justify-self: start;
   }
 }
 
-/* Dark Theme Support */
-[data-theme="dark"] .form-container {
-  background: var(--color-gray-800);
-  border-color: var(--color-gray-700);
+@media (max-width: 480px) {
+  .variable-form {
+    padding: var(--spacing-sm);
+  }
 }
 
-[data-theme="dark"] .form-title {
-  color: var(--color-text-inverse);
+/* Focus States */
+.variable-form:focus-within {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 1px var(--color-primary-light);
 }
 
-[data-theme="dark"] .type-option {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
-  color: var(--color-gray-300);
+/* Animation States */
+.boolean-toggle:active .boolean-slider {
+  transform: scale(0.98);
 }
 
-[data-theme="dark"] .type-option:hover {
-  background: var(--color-gray-600);
+.env-toggle:active .toggle-slider {
+  transform: scale(0.98);
 }
 
-[data-theme="dark"] .env-select,
-[data-theme="dark"] .json-textarea {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
-  color: var(--color-text-inverse);
+/* Loading State */
+.variable-form.loading {
+  opacity: 0.7;
+  pointer-events: none;
 }
 
-[data-theme="dark"] .variable-preview {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
-}
-
-[data-theme="dark"] .add-item-btn {
-  background: var(--color-gray-700);
-  border-color: var(--color-gray-600);
-}
-
-.remove-variable {
-  color: rgb(183, 0, 0);
-  cursor: pointer;
-  transition: color var(--transition-fast);
+.variable-form.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(2px);
+  border-radius: var(--radius-lg);
 }
 </style>

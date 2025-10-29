@@ -428,19 +428,11 @@ onUnmounted(() => {
 /* Content Styles */
 .popover-content {
   flex: 1;
-  padding: var(--spacing-lg);
   overflow-y: auto;
   color: var(--text-primary);
   line-height: var(--leading-normal);
 }
 
-.popover-content:first-child {
-  padding-top: var(--spacing-lg);
-}
-
-.popover-content:last-child {
-  padding-bottom: var(--spacing-lg);
-}
 
 /* Footer Styles */
 .popover-footer {

@@ -488,3 +488,21 @@ p {
   stroke-dasharray: 5, 5;
   animation: flow-data 1s linear infinite;
 }
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+  :root {
+    --font-size-xs: 10px;
+    --font-size-sm: 12px;
+    --font-size-md: 13px;
+    --font-size-lg: 15px;
+    --font-size-xl: 18px;
+    --font-size-2xl: 24px;
+    
+    --spacing-xs: 2px;
+    --spacing-sm: 4px;
+    --spacing-md: 8px;
+    --spacing-lg: 12px;
+    --spacing-xl: 16px;
+  }
+}

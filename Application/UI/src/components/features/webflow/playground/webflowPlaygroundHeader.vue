@@ -75,122 +75,109 @@
                     <span>Export</span>
                 </button>
 
-                <!-- Enhanced Add button with dropdown -->
-                <div class="dropdown-container" ref="dropdownRef">
+                <!-- Enhanced Add button with UiFixedPopover -->
+                <div class="add-node-container">
                     <button 
-                        @click="toggleDropdown"
-                        class="btn btn-add"
                         ref="addButtonRef"
+                        @click="showDropdown = !showDropdown"
+                        class="btn btn-add"
                     >
                         <i class="fas fa-plus"></i>
                         <span>Add Node</span>
                         <i class="fas fa-chevron-down dropdown-chevron" :class="{ 'rotated': showDropdown }"></i>
                     </button>
 
-                    <!-- Enhanced Dropdown menu -->
-                    <Teleport to="body">
-                        <div 
-                            v-if="showDropdown"
-                            class="dropdown-menu neo-dropdown"
-                            :style="dropdownStyle"
-                        >
-                            <div class="dropdown-content">
-                                <div class="dropdown-header">
-                                    <i class="fas fa-plus-circle"></i>
-                                    <span>Add New Node</span>
-                                </div>
-                                
-                                <!-- API Node -->
-                                <button 
-                                    @click="addNode('API')"
-                                    class="dropdown-item api-item"
-                                >
-                                    <div class="item-icon">
-                                        <i class="fas fa-globe"></i>
-                                    </div>
-                                    <div class="item-content">
-                                        <span class="item-title">API Node</span>
-                                        <span class="item-description">Make HTTP requests</span>
-                                    </div>
-                                    <div class="item-badge api-badge">API</div>
-                                </button>
-
-                                <!-- Open API Node (conditional) -->
-                                <button 
-                                    v-if="props.webflowDetails?.hasOpenApiConfig"
-                                    @click="addNode('OPENAPI')"
-                                    class="dropdown-item openapi-item"
-                                >
-                                    <div class="item-icon">
-                                        <i class="fas fa-file-code"></i>
-                                    </div>
-                                    <div class="item-content">
-                                        <span class="item-title">OpenAPI Node</span>
-                                        <span class="item-description">From OpenAPI spec</span>
-                                    </div>
-                                    <div class="item-badge openapi-badge">SPEC</div>
-                                </button>
-
-                                <!-- Postman Node (conditional) -->
-                                <button 
-                                    v-if="props.webflowDetails?.hasPostmanCollection"
-                                    @click="addNode('POSTMAN')"
-                                    class="dropdown-item postman-item"
-                                >
-                                    <div class="item-icon">
-                                        <i class="fas fa-rocket"></i>
-                                    </div>
-                                    <div class="item-content">
-                                        <span class="item-title">Postman Node</span>
-                                        <span class="item-description">From collection</span>
-                                    </div>
-                                    <div class="item-badge postman-badge">POST</div>
-                                </button>
-
-                                <!-- Functional Node -->
-                                <button 
-                                    @click="addNode('FUNCTIONAL')"
-                                    class="dropdown-item functional-item"
-                                >
-                                    <div class="item-icon">
-                                        <i class="fas fa-code"></i>
-                                    </div>
-                                    <div class="item-content">
-                                        <span class="item-title">Transform Node</span>
-                                        <span class="item-description">Process & transform data</span>
-                                    </div>
-                                    <div class="item-badge functional-badge">FUNC</div>
-                                </button>
-
-                                <!-- CURL Node -->
-                                <button 
-                                    @click="addNode('CURL')"
-                                    class="dropdown-item"
-                                >
-                                    <i class="fas fa-terminal node-icon node-icon-gray"></i>
-                                    <span>CURL Node</span>
-                                </button>
-
-                                <!-- Conditional Node -->
-                                <!-- <button 
-                                    @click="addNode('CONDITIONAL')"
-                                    class="dropdown-item"
-                                >
-                                    <i class="fas fa-code-branch node-icon node-icon-yellow"></i>
-                                    <span>Conditional Node</span>
-                                </button> -->
-
-                                <!-- Loop Node -->
-                                <!-- <button 
-                                    @click="addNode('LOOP')"
-                                    class="dropdown-item"
-                                >
-                                    <i class="fas fa-sync-alt node-icon node-icon-indigo"></i>
-                                    <span>Loop Node</span>
-                                </button> -->
+                    <!-- UiFixedPopover for Add Node Menu -->
+                    <UiFixedPopover
+                        v-model:visible="showDropdown"
+                        :target-element="addButtonRef"
+                        placement="bottom-start"
+                        class="add-node-popover"
+                    >
+                        <div class="dropdown-content">
+                            <div class="dropdown-header">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Add New Node</span>
                             </div>
+                            
+                            <!-- API Node -->
+                            <button 
+                                @click="addNode('API')"
+                                class="dropdown-item api-item"
+                            >
+                                <div class="item-icon">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div class="item-content">
+                                    <span class="item-title">API Node</span>
+                                    <span class="item-description">Make HTTP requests</span>
+                                </div>
+                                <div class="item-badge api-badge">API</div>
+                            </button>
+
+                            <!-- Open API Node (conditional) -->
+                            <button 
+                                v-if="props.webflowDetails?.hasOpenApiConfig"
+                                @click="addNode('OPENAPI')"
+                                class="dropdown-item openapi-item"
+                            >
+                                <div class="item-icon">
+                                    <i class="fas fa-file-code"></i>
+                                </div>
+                                <div class="item-content">
+                                    <span class="item-title">OpenAPI Node</span>
+                                    <span class="item-description">From OpenAPI spec</span>
+                                </div>
+                                <div class="item-badge openapi-badge">SPEC</div>
+                            </button>
+
+                            <!-- Postman Node (conditional) -->
+                            <button 
+                                v-if="props.webflowDetails?.hasPostmanCollection"
+                                @click="addNode('POSTMAN')"
+                                class="dropdown-item postman-item"
+                            >
+                                <div class="item-icon">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <div class="item-content">
+                                    <span class="item-title">Postman Node</span>
+                                    <span class="item-description">From collection</span>
+                                </div>
+                                <div class="item-badge postman-badge">POST</div>
+                            </button>
+
+                            <!-- Functional Node -->
+                            <button 
+                                @click="addNode('FUNCTIONAL')"
+                                class="dropdown-item functional-item"
+                            >
+                                <div class="item-icon">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                                <div class="item-content">
+                                    <span class="item-title">Transform Node</span>
+                                    <span class="item-description">Process & transform data</span>
+                                </div>
+                                <div class="item-badge functional-badge">FUNC</div>
+                            </button>
+
+                            <!-- CURL Node -->
+                            <button 
+                                @click="addNode('CURL')"
+                                class="dropdown-item curl-item"
+                            >
+                                <div class="item-icon">
+                                    <i class="fas fa-terminal"></i>
+                                </div>
+                                <div class="item-content">
+                                    <span class="item-title">CURL Node</span>
+                                    <span class="item-description">Import from cURL command</span>
+                                </div>
+                                <div class="item-badge curl-badge">CURL</div>
+                            </button>
                         </div>
-                    </Teleport>
+                    </UiFixedPopover>
                 </div>
             </div>
         </div>
@@ -198,8 +185,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import { UiWebflowBreadcrumb } from '@/components/base'
+import { ref, computed, onMounted } from 'vue'
+import { UiWebflowBreadcrumb, UiFixedPopover } from '@/components/base'
 import { useWebflowPlaygroundStore } from '@/stores/webflowPlayground'
 import type { WebFlowEnvLink } from '@/stores/webflowPlayground'
 
@@ -230,24 +217,13 @@ const webflowStore = useWebflowPlaygroundStore()
 
 // Reactive data
 const showDropdown = ref(false)
-const dropdownRef = ref<HTMLElement>()
 const addButtonRef = ref<HTMLElement>()
-const dropdownPosition = ref({ top: 0, left: 0, width: 0 })
 const selectedEnvFile = ref<number | null>(null)
 const isExecuting = ref(false)
 const hasUnsavedChanges = ref(false)
 
 // Computed properties
 const envFiles = computed(() => webflowStore.webflowEnvLinks || [])
-
-// Computed style for teleported dropdown
-const dropdownStyle = computed(() => ({
-    position: 'fixed' as const,
-    top: `${dropdownPosition.value.top}px`,
-    left: `${dropdownPosition.value.left}px`,
-    minWidth: `${Math.max(dropdownPosition.value.width, 224)}px`, // 14rem = 224px
-    zIndex: 10001
-}))
 
 // Methods
 const handlePlay = () => {
@@ -267,64 +243,10 @@ const handleEnvFileChange = () => {
     emit('envFileChanged', selectedEnvFile.value)
 }
 
-// Add node dropdown methods
-const updateDropdownPosition = () => {
-    const buttonElement = addButtonRef.value || dropdownRef.value
-    if (buttonElement) {
-        const rect = buttonElement.getBoundingClientRect()
-        const dropdownWidth = 224 // 14rem in pixels
-        
-        // Calculate left position to align dropdown right edge with button right edge
-        let leftPosition = rect.right - dropdownWidth
-        
-        // Ensure dropdown doesn't go off-screen on the left
-        if (leftPosition < 8) {
-            leftPosition = 8
-        }
-        
-        // Ensure dropdown doesn't go off-screen on the right
-        const maxLeft = window.innerWidth - dropdownWidth - 8
-        if (leftPosition > maxLeft) {
-            leftPosition = maxLeft
-        }
-        
-        dropdownPosition.value = {
-            top: rect.bottom + 8, // 8px spacing below button
-            left: leftPosition,
-            width: rect.width
-        }
-    }
-}
-
-const toggleDropdown = async () => {
-    showDropdown.value = !showDropdown.value
-    if (showDropdown.value) {
-        await nextTick()
-        updateDropdownPosition()
-    }
-}
-
+// Add node handler
 const addNode = (nodeType: string) => {
     emit('addNode', nodeType)
     showDropdown.value = false
-}
-
-// Close dropdown when clicking outside
-const handleClickOutside = (event: MouseEvent) => {
-    const target = event.target as Element
-    const isDropdownContainer = dropdownRef.value?.contains(target)
-    const isDropdownMenu = target.closest('.dropdown-menu')
-    
-    if (!isDropdownContainer && !isDropdownMenu) {
-        showDropdown.value = false
-    }
-}
-
-// Update position on scroll/resize
-const handlePositionUpdate = () => {
-    if (showDropdown.value) {
-        updateDropdownPosition()
-    }
 }
 
 onMounted(() => {
@@ -332,29 +254,21 @@ onMounted(() => {
         selectedEnvFile.value = envFiles.value[0]?.id ?? null
         emit('envFileChanged', selectedEnvFile.value)
     }
-    document.addEventListener('click', handleClickOutside)
-    window.addEventListener('scroll', handlePositionUpdate, true)
-    window.addEventListener('resize', handlePositionUpdate)
-})
-
-onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside)
-    window.removeEventListener('scroll', handlePositionUpdate, true)
-    window.removeEventListener('resize', handlePositionUpdate)
 })
 </script>
 
 <style scoped>
-/* Neo-Systemic Playground Header */
+/* Webflow Playground Header - Neo-Systemic Design */
 
 .playground-header {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
   border-bottom: 1px solid var(--glass-border);
-  padding: var(--spacing-lg) var(--spacing-xl);
+  padding: var(--spacing-md) var(--spacing-xl);
   position: relative;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-family-base);
 }
 
 .playground-header::before {
@@ -363,11 +277,9 @@ onUnmounted(() => {
   top: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    var(--color-primary-light) 0%, 
-    var(--color-primary) 20%, 
-    var(--color-primary-light) 100%);
+  height: 2px;
+  background: var(--gradient-primary);
+  opacity: 0.8;
 }
 
 .header-content {
@@ -375,20 +287,23 @@ onUnmounted(() => {
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-lg);
+  max-width: 100%;
 }
 
-/* Enhanced Title Section */
+/* ===== Title Section ===== */
 .title-section {
   display: flex;
   align-items: center;
   gap: var(--spacing-lg);
   flex: 1;
+  min-width: 0;
 }
 
 .title-container {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
+  min-width: 0;
 }
 
 /* Flow Lab Branding */
@@ -397,12 +312,13 @@ onUnmounted(() => {
   align-items: center;
   gap: var(--spacing-sm);
   background: var(--gradient-flow-blue);
-  color: white;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--color-text-inverse);
+  padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-md);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-sm);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .flow-brand-icon {
@@ -410,14 +326,16 @@ onUnmounted(() => {
 }
 
 .flow-brand-text {
-  letter-spacing: 0.025em;
+  letter-spacing: var(--letter-spacing-wide);
+  font-weight: var(--font-weight-bold);
 }
 
 .title-divider {
   width: 1px;
   height: 24px;
   background: var(--color-border);
-  margin: 0 var(--spacing-sm);
+  margin: 0 var(--spacing-md);
+  opacity: 0.6;
 }
 
 /* Playground Title */
@@ -425,11 +343,13 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  min-width: 0;
 }
 
 .title-icon {
   color: var(--color-primary);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
 }
 
 .title {
@@ -441,21 +361,27 @@ onUnmounted(() => {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  letter-spacing: var(--letter-spacing-tight);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Enhanced Breadcrumb */
 .neo-breadcrumb {
   margin-left: var(--spacing-md);
+  flex-shrink: 0;
 }
 
-/* Actions Section */
+/* ===== Actions Section ===== */
 .actions-section {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
+  flex-shrink: 0;
 }
 
-/* Enhanced Environment Selector */
+/* Environment Selector */
 .env-selector {
   position: relative;
 }
@@ -469,12 +395,15 @@ onUnmounted(() => {
   border-radius: var(--radius-md);
   padding: 0 var(--spacing-sm);
   min-width: 200px;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-spring);
+  box-shadow: var(--shadow-sm);
 }
 
 .env-selector-container:hover {
   border-color: var(--color-border-hover);
   background: var(--color-background-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .env-icon {
@@ -488,6 +417,7 @@ onUnmounted(() => {
   border: none;
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: var(--font-size-sm);
+  font-family: var(--font-family-base);
   color: var(--color-text-primary);
   cursor: pointer;
   flex: 1;
@@ -500,25 +430,30 @@ onUnmounted(() => {
   font-size: var(--font-size-xs);
   pointer-events: none;
   margin-left: var(--spacing-xs);
+  transition: all var(--transition-fast);
 }
 
-/* Enhanced Buttons */
+/* ===== Enhanced Buttons ===== */
 .btn {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-sm);
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-base);
   cursor: pointer;
   transition: all var(--transition-spring);
   position: relative;
   overflow: hidden;
   background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+  letter-spacing: var(--letter-spacing-normal);
+  min-height: auto;
 }
 
 .btn:disabled {
@@ -528,7 +463,8 @@ onUnmounted(() => {
 }
 
 .btn:not(:disabled):hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .btn:not(:disabled):active {
@@ -538,13 +474,13 @@ onUnmounted(() => {
 /* Play Button */
 .btn-play {
   background: var(--gradient-success);
-  color: white;
+  color: var(--color-text-inverse);
   border-color: var(--color-success);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-play:not(:disabled):hover {
-  box-shadow: var(--shadow-md), 0 0 20px var(--color-success-light);
+  box-shadow: var(--shadow-xl), 0 0 20px var(--color-success-light);
   border-color: var(--color-success-hover);
 }
 
@@ -581,40 +517,43 @@ onUnmounted(() => {
 /* Add Button */
 .btn-add {
   background: var(--gradient-primary);
-  color: white;
+  color: var(--color-text-inverse);
   border-color: var(--color-primary);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-add:hover {
-  box-shadow: var(--shadow-md), 0 0 20px var(--color-primary-light);
+  box-shadow: var(--shadow-xl), 0 0 20px var(--color-primary-light);
   border-color: var(--color-primary-hover);
 }
 
 .dropdown-chevron {
   font-size: var(--font-size-xs);
   transition: transform var(--transition-fast);
+  margin-left: var(--spacing-xs);
 }
 
 .dropdown-chevron.rotated {
   transform: rotate(180deg);
 }
 
-/* Enhanced Dropdown */
-.neo-dropdown {
+/* ===== UiFixedPopover Styles ===== */
+.add-node-container {
+  position: relative;
+}
+
+.add-node-popover {
+  min-width: 300px;
+}
+
+.add-node-popover .dropdown-content {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  padding: var(--spacing-sm);
-  min-width: 280px;
-  animation: dropdown-appear 0.2s var(--easing-spring);
-  z-index: 10001 !important;
-}
-
-.dropdown-content {
+  box-shadow: var(--shadow-2xl);
+  padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
@@ -629,13 +568,14 @@ onUnmounted(() => {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--letter-spacing-wide);
   border-bottom: 1px solid var(--color-border-subtle);
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
 }
 
 .dropdown-header i {
   color: var(--color-primary);
+  font-size: var(--font-size-md);
 }
 
 /* Enhanced Dropdown Items */
@@ -648,7 +588,7 @@ onUnmounted(() => {
   border-radius: var(--radius-md);
   background: transparent;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-spring);
   text-align: left;
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
@@ -658,43 +598,50 @@ onUnmounted(() => {
   background: var(--color-background-hover);
   border-color: var(--color-border-subtle);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .item-icon {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--font-size-md);
   flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
 }
 
 .item-content {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--spacing-xs);
   flex: 1;
+  min-width: 0;
 }
 
 .item-title {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .item-description {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
 }
 
 .item-badge {
-  padding: 2px 6px;
+  padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--letter-spacing-wide);
+  flex-shrink: 0;
 }
 
 /* Node Type Specific Styling */
@@ -736,6 +683,16 @@ onUnmounted(() => {
 .postman-badge {
   background: var(--color-warning-light);
   color: var(--color-warning-dark);
+}
+
+.curl-item .item-icon {
+  background: var(--color-text-tertiary);
+  color: var(--color-text-inverse);
+}
+
+.curl-badge {
+  background: var(--color-text-tertiary);
+  color: var(--color-text-inverse);
 }
 
 /* Responsive Design */
@@ -792,25 +749,107 @@ onUnmounted(() => {
   }
 }
 
-/* Animation keyframes */
-@keyframes dropdown-appear {
-  from {
-    opacity: 0;
-    transform: translateY(-8px) scale(0.95);
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+  .playground-header {
+    padding: var(--spacing-md) var(--spacing-lg);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  
+  .header-content {
+    gap: var(--spacing-md);
+  }
+  
+  .env-selector-container {
+    min-width: 180px;
+  }
+  
+  .add-node-popover {
+    min-width: 280px;
   }
 }
 
-/* Dark theme adjustments */
-@media (prefers-color-scheme: dark) {
-  .playground-header::before {
-    background: linear-gradient(90deg, 
-      var(--color-primary-dark) 0%, 
-      var(--color-primary) 20%, 
-      var(--color-primary-dark) 100%);
+@media (max-width: 768px) {
+  .playground-header {
+    padding: var(--spacing-md);
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: stretch;
+  }
+  
+  .title-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .title-container {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+  
+  .title-divider {
+    display: none;
+  }
+  
+  .actions-section {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .env-selector-container {
+    min-width: 160px;
+  }
+  
+  .add-node-popover {
+    min-width: 260px;
+  }
+  
+  .btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .flow-lab-brand .flow-brand-text {
+    display: none;
+  }
+  
+  .title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .btn span {
+    display: none;
+  }
+  
+  .btn {
+    padding: var(--spacing-xs);
+    min-width: 2rem;
+    justify-content: center;
+  }
+  
+  .actions-section {
+    justify-content: center;
+  }
+  
+  .env-selector-container {
+    min-width: 140px;
+  }
+  
+  .add-node-popover {
+    min-width: 240px;
+  }
+  
+  .item-content {
+    gap: 2px;
+  }
+  
+  .item-description {
+    display: none;
   }
 }
 </style>

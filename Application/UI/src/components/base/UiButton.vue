@@ -32,7 +32,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'secondary',
-  size: 'md',
+  size: 'sm',
   disabled: false,
   loading: false,
   iconPosition: 'left',
@@ -134,6 +134,7 @@ const handleClick = (event: MouseEvent) => {
 .button-text {
   display: flex;
   align-items: center;
+  gap: var(--spacing-xs);
 }
 
 .loading-icon {

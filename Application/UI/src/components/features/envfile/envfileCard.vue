@@ -1,69 +1,69 @@
 <template>
-  <div class="envfile-card">
-    <!-- Card Header -->
+  <div class="envfile-card" @click="handleView">
+    <!-- Row 1: Name and Menu -->
     <div class="card-header">
       <div class="card-title-section">
         <h3 class="card-title">{{ envFile.name }}</h3>
-        <p class="card-description">
-          {{ envFile.description || "No description" }}
-        </p>
       </div>
-
-      <div class="card-actions" ref="menuRef">
-        <button
+      
+      <div class="card-actions">
+        <button 
+          ref="menuTrigger"
           class="menu-trigger"
-          @click="toggleMenu"
+          @click.stop="toggleMenu"
           :class="{ active: showMenu }"
+          aria-label="More options"
         >
           <i class="fas fa-ellipsis-v"></i>
         </button>
-
-        <!-- Dropdown Menu -->
-        <div v-if="showMenu" class="dropdown-menu">
-          <button class="menu-item" @click="handleView">
-            <i class="fas fa-eye"></i>
-            <span>View Details</span>
-          </button>
-          <button class="menu-item" @click="handleEdit">
-            <i class="fas fa-edit"></i>
-            <span>Edit</span>
-          </button>
-          <button class="menu-item" @click="handleDuplicate">
-            <i class="fas fa-copy"></i>
-            <span>Duplicate</span>
-          </button>
-          <div class="menu-divider"></div>
-          <button class="menu-item menu-item-danger" @click="handleDelete">
-            <i class="fas fa-trash"></i>
-            <span>Delete</span>
-          </button>
-        </div>
       </div>
     </div>
 
-    <!-- Card Content -->
-    <div class="card-content">
-      <div class="configs-summary">
-        <div class="config-count">
-          <i class="fas fa-cog"></i>
-          <span
-            >{{ envFile.configs?.length || 0 }} environment variable{{
-              envFile.configs?.length === 1 ? "" : "s"
-            }}
-          </span>
-        </div>
+    <!-- Row 2: Number of Environment Variables -->
+    <div class="card-configs">
+      <div class="config-count">
+        <i class="fas fa-key"></i>
+        <span>{{ envFile.configs?.length || 0 }} environment variable{{ envFile.configs?.length === 1 ? '' : 's' }}</span>
       </div>
     </div>
 
-    <!-- Card Footer -->
+    <!-- Row 3: Time -->
     <div class="card-footer">
-      <div class="card-meta">
-        <span class="last-updated">
-          <i class="fas fa-clock"></i>
-          {{ formatDate(envFile.updatedAt) }}
-        </span>
+      <div class="card-time">
+        <i class="fas fa-clock"></i>
+        <span>{{ formatDate(envFile.updatedAt) }}</span>
       </div>
     </div>
+
+    <!-- Actions Popover -->
+    <UiFixedPopover
+      v-model:visible="showMenu"
+      :target-element="menuTrigger"
+      placement="bottom-end"
+      size="sm"
+      :show-arrow="true"
+      :closable="false"
+    >
+      <div class="actions-menu">
+        <button class="menu-item" @click="handleMenuAction(handleView)">
+          <i class="fas fa-eye"></i>
+          <span>View Details</span>
+        </button>
+        <button class="menu-item" @click="handleMenuAction(handleEdit)">
+          <i class="fas fa-edit"></i>
+          <span>Edit</span>
+        </button>
+        <button class="menu-item" @click="handleMenuAction(handleDuplicate)">
+          <i class="fas fa-copy"></i>
+          <span>Duplicate</span>
+        </button>
+        <div class="menu-divider"></div>
+        <button class="menu-item menu-item-danger" @click="handleMenuAction(handleDelete)">
+          <i class="fas fa-trash"></i>
+          <span>Delete</span>
+        </button>
+      </div>
+    </UiFixedPopover>
 
     <!-- Detail Modal -->
     <UiModal
@@ -83,9 +83,7 @@
             </div>
             <div class="detail-item">
               <label>Description:</label>
-              <span>{{
-                envFile.description || "No description provided"
-              }}</span>
+              <span>{{ envFile.description || "No description provided" }}</span>
             </div>
             <div class="detail-item">
               <label>Created:</label>
@@ -103,18 +101,15 @@
           <h4 class="section-title">
             Environment Variables ({{ envFile.configs?.length || 0 }})
           </h4>
-          <div
-            v-if="envFile.configs && envFile.configs.length > 0"
-            class="configs-detail"
-          >
-            <div
-              v-for="(config, index) in envFile.configs"
+          <div v-if="envFile.configs && envFile.configs.length > 0" class="configs-detail">
+            <div 
+              v-for="(config, index) in envFile.configs" 
               :key="config.id || index"
               class="config-detail-item"
             >
               <div class="config-header">
                 <span class="config-key">{{ config.key }}</span>
-                <button
+                <button 
                   class="copy-value-btn"
                   @click="copyToClipboard(config.value)"
                   title="Copy value"
@@ -150,10 +145,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
-import { UiModal, UiButton } from "@/components/base";
-import { toast } from "@/utils";
-import type { EnvFile } from "@/services";
+import { ref, onMounted, onUnmounted } from 'vue'
+import { UiModal, UiButton, UiFixedPopover } from '@/components/base'
+import { toast } from '@/utils'
+import type { EnvFile } from '@/services'
 
 interface Props {
   envFile: EnvFile;
@@ -168,102 +163,108 @@ const emit = defineEmits<{
   delete: [envFile: EnvFile];
 }>();
 
-const showMenu = ref(false);
-const showDetailModal = ref(false);
-const menuRef = ref<HTMLElement>();
+const showMenu = ref(false)
+const showDetailModal = ref(false)
+const menuTrigger = ref<HTMLElement>()
 
 const formatDate = (dateString: string) => {
-  if (!dateString) return "Never";
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
+  if (!dateString) return 'Never'
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })
+}
 
 const toggleMenu = () => {
-  showMenu.value = !showMenu.value;
-};
+  showMenu.value = !showMenu.value
+}
 
-const closeMenu = () => {
-  showMenu.value = false;
-};
+// Handle menu action and close popover
+const handleMenuAction = (action: () => void) => {
+  action()
+  showMenu.value = false
+}
 
 const handleView = () => {
-  closeMenu();
-  showDetailModal.value = true;
-  emit("view", props.envFile);
-};
+  showDetailModal.value = true
+  emit('view', props.envFile)
+}
 
 const handleEdit = () => {
-  closeMenu();
-  emit("edit", props.envFile);
-};
+  emit('edit', props.envFile)
+}
 
 const handleDuplicate = () => {
-  closeMenu();
-  emit("duplicate", props.envFile);
-};
+  emit('duplicate', props.envFile)
+}
 
 const handleDelete = () => {
-  closeMenu();
-  emit("delete", props.envFile);
-};
+  emit('delete', props.envFile)
+}
 
 const handleEditFromModal = () => {
-  showDetailModal.value = false;
-  emit("edit", props.envFile);
-};
+  showDetailModal.value = false
+  emit('edit', props.envFile)
+}
 
 const closeDetailModal = () => {
-  showDetailModal.value = false;
-};
+  showDetailModal.value = false
+}
 
 const copyToClipboard = async (text: string) => {
   try {
-    await navigator.clipboard.writeText(text);
-    toast.success("Value copied to clipboard");
+    await navigator.clipboard.writeText(text)
+    toast.success('Value copied to clipboard')
   } catch (error) {
-    console.error("Failed to copy:", error);
-    toast.error("Failed to copy to clipboard");
+    console.error('Failed to copy:', error)
+    toast.error('Failed to copy to clipboard')
   }
-};
-
-const handleClickOutside = (event: Event) => {
-  if (menuRef.value && !menuRef.value.contains(event.target as Node)) {
-    closeMenu();
-  }
-};
-
-onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
-});
-
-onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
-});
+}
 </script>
 
 <style scoped>
+/* Glass Card Container */
 .envfile-card {
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-sm);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-md);
   cursor: pointer;
   position: relative;
   max-width: 300px;
+  min-height: 140px;
+  transition: all var(--transition-spring);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
 }
 
-/* Card Header */
+
+.envfile-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-border-hover);
+}
+
+.envfile-card:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+/* Row 1: Header with Name and Menu */
 .card-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--spacing-xs);
+  gap: var(--spacing-sm);
+  padding: 0;
+  background-color: transparent;
+  border-bottom: none;
 }
 
 .card-title-section {
@@ -272,27 +273,21 @@ onUnmounted(() => {
 }
 
 .card-title {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-primary-dark);
-  margin: 0 0 var(--spacing-xs) 0;
-  line-height: 1.4;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background: var(--gradient-data-green);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.card-description {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  margin: 0;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
+/* Card Actions */
 .card-actions {
   position: relative;
   flex-shrink: 0;
@@ -304,41 +299,83 @@ onUnmounted(() => {
   justify-content: center;
   width: 28px;
   height: 28px;
-  border: none;
-  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-background-subtle);
   color: var(--color-text-secondary);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  border: 1px solid var(--color-border);
+  transition: all var(--transition-spring);
+  font-size: var(--font-size-xs);
 }
 
 .menu-trigger:hover {
-  background: var(--color-background-tertiary);
+  background: var(--color-background-hover);
   color: var(--color-text-primary);
+  border-color: var(--color-border-hover);
+  transform: scale(1.05);
 }
 
 .menu-trigger.active {
-  background: var(--color-primary);
+  background: var(--color-success);
   color: var(--color-text-inverse);
+  border-color: var(--color-success);
 }
 
-/* Dropdown Menu */
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: var(--spacing-sm);
-  background: var(--color-background);
-  backdrop-filter: var(--glass-backdrop);
-  -webkit-backdrop-filter: var(--glass-backdrop);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  z-index: var(--z-dropdown);
-  min-width: 160px;
-  overflow: hidden;
+/* Row 2: Config Count */
+.card-configs {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
 }
 
-.menu-item {
+.config-count {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-success-subtle);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-full);
+  color: var(--color-success);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.config-count i {
+  color: var(--color-success);
+  width: 12px;
+  text-align: center;
+}
+
+/* Row 3: Time */
+.card-footer {
+  margin-top: auto;
+  padding: var(--spacing-xs);
+  border-top: none;
+  border-radius: 0;
+}
+
+.card-time {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-medium);
+}
+
+.card-time i {
+  color: var(--color-text-tertiary);
+  width: 12px;
+  text-align: center;
+}
+
+/* Actions Menu (inside UiFixedPopover) */
+.actions-menu {
+  padding: var(--spacing-xs);
+}
+
+.actions-menu .menu-item {
   display: flex;
   align-items: center;
   width: 100%;
@@ -347,98 +384,51 @@ onUnmounted(() => {
   background: none;
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
   gap: var(--spacing-sm);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-spring);
+  text-align: left;
 }
 
-.menu-item:hover {
-  background: var(--glass-bg-hover);
-  color: var(--text-primary);
+.actions-menu .menu-item:hover {
+  background: var(--color-background-hover);
+  color: var(--color-text-primary);
   transform: translateX(2px);
 }
 
-.menu-item i {
+.actions-menu .menu-item i {
   width: 16px;
   text-align: center;
   color: var(--color-text-secondary);
+  transition: color var(--transition-spring);
 }
 
-.menu-item-danger {
+.actions-menu .menu-item:hover i {
+  color: var(--color-success);
+}
+
+.actions-menu .menu-item-danger {
   color: var(--color-danger);
 }
 
-.menu-item-danger:hover {
-   background: var(--glass-bg-subtle);
-   color: var(--color-danger);
-}
-
-.menu-item-danger i {
+.actions-menu .menu-item-danger:hover {
+  background: var(--color-danger-subtle);
   color: var(--color-danger);
 }
 
-.menu-divider {
+.actions-menu .menu-item-danger i {
+  color: var(--color-danger);
+}
+
+.actions-menu .menu-divider {
   height: 1px;
-  background: var(--color-border);
-  margin: var(--spacing-xs) 0;
+  background: var(--color-border-subtle);
+  margin: var(--spacing-sm) 0;
 }
 
-/* Card Content */
-.card-content {
-  margin-bottom: var(--spacing-sm);
-}
-
-.configs-summary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-sm);
-  background: var(--color-background-secondary);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
-}
-
-.config-count {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  font-weight: var(--font-weight-medium);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-}
-
-.config-count i {
-  color: var(--color-gray-400);
-}
-
-/* Card Footer */
-.card-footer {
-  border-top: 1px solid var(--color-gray-100);
-  padding: var(--spacing-sm);
-}
-
-.card-meta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.last-updated {
-  display: flex;
-  align-items: left;
-  gap: var(--spacing-xs);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-}
-
-/* Detail Modal */
+/* Detail Modal Styles */
 .detail-content {
   display: flex;
   flex-direction: column;
@@ -454,8 +444,12 @@ onUnmounted(() => {
 .section-title {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-primary-dark);
+  color: var(--color-text-primary);
   margin: 0;
+  background: var(--gradient-data-green);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .detail-grid {
@@ -493,9 +487,9 @@ onUnmounted(() => {
 
 .config-detail-item {
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-md);
-  background: var(--color-background-secondary);
+  background: var(--color-background-subtle);
 }
 
 .config-header {
@@ -507,8 +501,8 @@ onUnmounted(() => {
 
 .config-key {
   font-weight: var(--font-weight-semibold);
-  color: var(--color-primary-dark);
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  color: var(--color-text-primary);
+  font-family: var(--font-family-mono);
   font-size: var(--font-size-sm);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -523,20 +517,22 @@ onUnmounted(() => {
   width: 24px;
   height: 24px;
   border: 1px solid var(--color-border);
-  background: var(--color-background-secondary);
+  background: var(--color-background);
   color: var(--color-text-secondary);
   border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: var(--font-size-xs);
+  transition: all var(--transition-spring);
 }
 
 .copy-value-btn:hover {
-  background: var(--color-background-tertiary);
+  background: var(--color-background-hover);
   color: var(--color-text-primary);
+  transform: scale(1.05);
 }
 
 .config-value {
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-family: var(--font-family-mono);
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   background: var(--color-background);
@@ -563,7 +559,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   padding: var(--spacing-3xl) var(--spacing-xl);
-  color: var(--color-gray-400);
+  color: var(--color-text-tertiary);
   text-align: center;
 }
 
@@ -578,5 +574,21 @@ onUnmounted(() => {
   align-items: center;
   justify-content: flex-end;
   gap: var(--spacing-md);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .envfile-card {
+    max-width: 100%;
+    min-height: 120px;
+  }
+  
+  .card-title {
+    font-size: var(--font-size-md);
+  }
+  
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -1,9 +1,31 @@
 <template>
-  <WidgetMeta
-    :name="localFnNode.name"
-    :description="localFnNode.description"
-    @onUpdate="updateMeta"
-  ></WidgetMeta>
+  <div class="functional-node-form">
+    <!-- Form Header -->
+    <div class="form-header">
+      <div class="header-content">
+        <div class="header-icon">
+          <i class="fas fa-code"></i>
+        </div>
+        <div class="header-info">
+          <h3 class="form-title">Functional Node Configuration</h3>
+          <p class="form-subtitle">Configure data transformation logic and function parameters</p>
+        </div>
+      </div>
+      <div class="header-badge">
+        <span class="node-type-badge functional-node">
+          <i class="fas fa-cogs"></i>
+          <span>Transform Node</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Form Content -->
+    <div class="form-content">
+      <WidgetMeta
+        :name="localFnNode.name"
+        :description="localFnNode.description"
+        @onUpdate="updateMeta"
+      ></WidgetMeta>
   <UiExpansionPanel
     title="Parameters"
     :showAddButton="true"
@@ -43,6 +65,8 @@
   <div class="flex justify-end gap-sm">
     <UiButton variant="secondary" @click="cancel">Cancel</UiButton>
     <UiButton variant="primary" @click="save"> Save </UiButton>
+  </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -119,10 +143,143 @@ onMounted(() => {
 });
 </script>
 <style scoped>
+/* ===== Functional Node Form - Neo-Systemic Design ===== */
+.functional-node-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border-radius: var(--radius-xl);
+}
+
+/* ===== Form Header ===== */
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-background-subtle) 100%);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex: 1;
+}
+
+.header-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--color-functional-node-gradient);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--font-size-lg);
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0;
+}
+
+.header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-xs) 0;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.form-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+.header-badge {
+  flex-shrink: 0;
+}
+
+.node-type-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid;
+  transition: all var(--transition-normal);
+}
+
+.node-type-badge.functional-node {
+  background: var(--color-functional-node-light);
+  color: var(--color-functional-node);
+  border-color: var(--color-functional-node);
+}
+
+.node-type-badge i {
+  font-size: var(--font-size-sm);
+}
+
+/* ===== Form Content ===== */
+.form-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--spacing-md);
+}
+
+/* ===== Existing Styles ===== */
 .no-data-found {
   text-align: center;
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   padding: var(--spacing-md) 0;
+  background: var(--color-background-subtle);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border);
+}
+
+/* ===== Form Actions ===== */
+.form-content .flex.justify-end {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+  .functional-node-form {
+    margin: var(--spacing-sm);
+    padding: var(--spacing-lg);
+  }
+  
+  .form-header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    text-align: center;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .form-title {
+    font-size: var(--font-size-lg);
+  }
 }
 </style>
