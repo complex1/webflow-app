@@ -3,7 +3,7 @@ export const proxyService = {
     request: async (proxyConfig: any) => {
         try {
             const config = {
-                baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
+                baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
                 url: '/proxy',
                 method: 'POST',
                 headers: {
