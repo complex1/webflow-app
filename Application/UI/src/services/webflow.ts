@@ -162,5 +162,10 @@ export const webFlowService = {
       edges
     })
     return response.data
+  },
+
+  async getOpenApiDocs(webFlowId: number): Promise<{ openApiDocs: any }> {
+    const response = await http.get<{ openApiDocs: any }>(`/web-flows/${webFlowId}/openapi-docs`)
+    return response.data
   }
 }

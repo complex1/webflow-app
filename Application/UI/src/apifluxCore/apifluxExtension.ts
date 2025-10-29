@@ -2,6 +2,18 @@ import type { Edge, Node } from "@vue-flow/core";
 import { NodeType, type WebflowNode } from "./types";
 import { ApiNode } from "./nodes/apiNode";
 import FunctionalNode from "./nodes/functionalNode";
+import type { ExtractedAPI } from "@/types";
+import { generateUUID } from "./utils/uuid";
+import Variable from "./nodes/variable";
+
+export const getNextNodePosition = (nodes: Node[]): { x: number; y: number } => {
+  if (nodes.length === 0) {
+    return { x: 0, y: 0 };
+  }
+  const maxX = Math.max(...nodes.map((n) => n.position.x)) || 0;
+  const maxY = Math.max(...nodes.map((n) => n.position.y)) || 0;
+  return { x: maxX + 300, y: maxY + 200 };
+};
 
 export const serialized = (nodes: Node[], edges: Edge[], nodeMap: { [key: string]: WebflowNode }) => {
   const _nodes = nodes.map((node) => ({
@@ -50,4 +62,55 @@ export const deserialize = (data: any): { nodes: Node[]; edges: Edge[]; nodeMap:
   });
   const edges: Edge[] = data.edges;
   return { nodes, edges, nodeMap };
+}
+
+
+export const apiConfigToNode = (apiConfig: ExtractedAPI[]): WebflowNode[] => {
+  const webflowNodes: WebflowNode[] = [];
+
+  apiConfig.forEach((api) => {
+    const uuid = generateUUID();
+    const node = new ApiNode(uuid);
+    node.name = api.name;
+    node.description = api.description || '';
+    node.url = new Variable({
+      name: 'url',
+      description: 'API Endpoint URL',
+      defaultValue: api.url,
+      type: 'string'
+    });
+    node.baseUrl = new Variable({
+      name: 'baseUrl',
+      description: 'Base URL',
+      defaultValue: '',
+      type: 'string'
+    });
+    node.method = api.method;
+    node.headers = (api.header || []).map(header => new Variable({
+      name: header.name,
+      description: header.description || '',
+      defaultValue: '',
+      type: header.type
+    }));
+    node.queryParams = (api.queryParam || []).map(param => new Variable({
+      name: param.name,
+      description: param.description || '',
+      defaultValue: '',
+      type: param.type
+    }));
+    node.pathParams = (api.pathParam || []).map(param => new Variable({
+      name: param.name,
+      description: param.description || '',
+      defaultValue: '',
+      type: param.type
+    }));
+    node.body = new Variable({
+      name: 'body',
+      description: 'Request Body',
+      defaultValue: api.body || null,
+      type: 'object'
+    });
+    webflowNodes.push(node);
+  });
+  return webflowNodes;
 }

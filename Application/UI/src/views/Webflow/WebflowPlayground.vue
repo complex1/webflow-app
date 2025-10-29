@@ -75,6 +75,12 @@
         @on-save="saveNode"
         @on-cancel="addNewDrawerVisible = false"
       />
+      <OpenApiNodeForm
+        v-else-if="addNewNodeType === 'OPENAPI'"
+        :openapiApis="playgroundStore.openapiApis"
+        @on-save="addSelectedApis"
+        @on-cancel="addNewDrawerVisible = false"
+      />
     </UiDrawer>
 
   </div>
@@ -93,7 +99,8 @@ import type { WebflowNode } from "@/apifluxCore/types";
 import FunctionalNodeForm from "../../components/features/webflow/playground/forms/functionalNodeForm.vue";
 import { alert, toast } from "@/utils";
 import CurlNodeForm from "@/components/features/webflow/playground/forms/curlNodeForm.vue";
-
+import OpenApiNodeForm from "@/components/features/webflow/playground/forms/openApiNodeForm.vue";
+import type { ExtractedAPI } from "@/types";
 const route = useRoute();
 const playgroundStore = useWebflowPlaygroundStore();
 const addNewDrawerVisible = ref(false);
@@ -148,6 +155,10 @@ const saveNode = (nodeData: WebflowNode) => {
   addNewDrawerVisible.value = false;
   nodeForEdit.value = null;
   webflowCanvas.value?.fitToView();
+};
+
+const addSelectedApis = (selectedApis: ExtractedAPI[]) => {
+  apiFluxCore.addNodeFromConfig(selectedApis);
 };
 
 const onEditNode = (node: WebflowNode) => {

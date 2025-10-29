@@ -5,6 +5,7 @@ import {
   getWebFlowById,
   getWebFlowHierarchy,
   getWebFlowEnvFiles,
+  getWebFlowOpenApiDocs,
   updateWebFlow,
   getWebFlowConfig,
   updateWebFlowConfig,
@@ -23,6 +24,7 @@ router.post('/', createWebFlow);
 router.get('/', getWebFlows);
 router.get('/:id/hierarchy', getWebFlowHierarchy);
 router.get('/:id/env-files', getWebFlowEnvFiles);
+router.get('/:id/openapi-docs', getWebFlowOpenApiDocs);
 router.get('/:id/config', getWebFlowConfig);
 router.get('/:id', getWebFlowById);
 router.put('/:id', updateWebFlow);

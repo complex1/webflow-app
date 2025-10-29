@@ -21,3 +21,22 @@ export interface WebFlowConfig {
     createdAt: string
     updatedAt: string
 }
+
+export interface ExtractedField {
+  name: string;
+  required: boolean;
+  type: string;
+  description?: string;
+}
+export interface ExtractedAPI {
+  id: string;
+  groupName: string;
+  name: string;
+  url: string;
+  method: string;
+  description?: string; // Add description field which is used in filtering
+  header?: ExtractedField[];
+  pathParam?: ExtractedField[];
+  queryParam?: ExtractedField[];
+  body?: any;
+}

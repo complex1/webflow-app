@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { webFlowService } from '@/services'
-import type { WebFlowConfig } from '@/types'
+import type { ExtractedAPI, WebFlowConfig } from '@/types'
 
 export interface WebFlowDetails {
   id: number
@@ -35,6 +35,7 @@ export const useWebflowPlaygroundStore = defineStore('webflowPlayground', () => 
   const webflowDetails = ref<WebFlowDetails | null>(null)
   const webflowConfig = ref<WebFlowConfig | null>(null)
   const webflowEnvLinks = ref<WebFlowEnvLink[]>([])
+  const openapiApis = ref<ExtractedAPI[]>([])
   
   const isLoadingDetails = ref(false)
   const isLoadingConfig = ref(false)
@@ -107,6 +108,18 @@ export const useWebflowPlaygroundStore = defineStore('webflowPlayground', () => 
     }
   }
 
+  const loadWebflowOpenApiDocs = async (webFlowId: number) => {
+    try {
+      clearError()
+      
+      const response = await webFlowService.getOpenApiDocs(webFlowId)
+      openapiApis.value = response.openApiDocs as ExtractedAPI[]
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to load webflow OpenAPI documents')
+      throw err
+    }
+  }
+
   // Load all data for a webflow
   const loadAll = async (webFlowId: number) => {
     setCurrentWebFlowId(webFlowId)
@@ -115,7 +128,8 @@ export const useWebflowPlaygroundStore = defineStore('webflowPlayground', () => 
     await Promise.all([
       loadWebflowDetails(webFlowId),
       loadWebflowConfig(webFlowId),
-      loadWebflowEnvLinks(webFlowId)
+      loadWebflowEnvLinks(webFlowId),
+      loadWebflowOpenApiDocs(webFlowId)
     ])
   }
 
@@ -156,6 +170,7 @@ export const useWebflowPlaygroundStore = defineStore('webflowPlayground', () => 
     webflowConfig: computed(() => webflowConfig.value),
     webflowEnvLinks: computed(() => webflowEnvLinks.value),
     currentWebFlowId: computed(() => currentWebFlowId.value),
+    openapiApis: computed(() => openapiApis.value),
     
     // Loading states
     isLoadingDetails: computed(() => isLoadingDetails.value),

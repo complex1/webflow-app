@@ -3,7 +3,8 @@ import type { VariablePool, WebflowNode } from "./types";
 import type { Connection, Edge, Node, NodeDragEvent } from "@vue-flow/core";
 import { updateNodeByDeepCopying } from "./utils/clone";
 import { executeWebflow } from "./execute/execute";
-import { deserialize, serialized } from "./apifluxExtension";
+import { apiConfigToNode, deserialize, getNextNodePosition, serialized } from "./apifluxExtension";
+import type { ExtractedAPI } from "@/types";
 
 interface UseApiFluxReturn {
   nodes: Ref<Node[]>;
@@ -13,6 +14,7 @@ interface UseApiFluxReturn {
   envVariableMap: Ref<Record<string, string>>;
   envVariablesNames: Ref<string[]>;
   addNode: (node: WebflowNode) => void;
+  addNodeFromConfig: (apiConfig: ExtractedAPI[]) => void;
   addEdge: (edge: Connection) => void;
   setPosition: (event: NodeDragEvent) => void;
   deleteNode: (nodeId: string) => void;
@@ -34,9 +36,10 @@ const useApiFlux = (): UseApiFluxReturn => {
   const addNode = (node: WebflowNode) => {
     if (!nodeMap.value[node.id]) {
       nodeMap.value[node.id] = node;
+      const position = getNextNodePosition(nodes.value);
       nodes.value.push({
         id: node.id,
-        position: { x: 0, y: 0 },
+        position: position,
         type: node.type,
         data: { label: node.name || "Unnamed Node", id: node.id },
       });
@@ -46,6 +49,11 @@ const useApiFlux = (): UseApiFluxReturn => {
       nodeMap.value[node.id] = updateNodeByDeepCopying(node, nodeMap.value[node.id] as WebflowNode);
     }
   };
+
+  const addNodeFromConfig = (apiConfig: ExtractedAPI[]) => {
+    const apis = apiConfigToNode(apiConfig);
+    apis.forEach((api) => addNode(api));
+  }
 
   const addEdge = (edge: Connection) => {
     console.log("Adding edge:", edge);
@@ -130,6 +138,7 @@ const useApiFlux = (): UseApiFluxReturn => {
     envVariableMap: envVariableMap,
     envVariablesNames: envVariablesNames,
     addNode,
+    addNodeFromConfig,
     addEdge,
     setPosition,
     deleteNode,
