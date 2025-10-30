@@ -26,6 +26,7 @@ export default class Node {
 
         this.nodeStatus = NodeStatus.INACTIVE; // updated to use NodeStatus enum
         this.nodeData = new Variable(); // initialize nodeData
+        this.nodeData.id = this.id + "_data"; // link nodeData id to node id
         this.executing = false; // initialize executing
         this.hasError = false; // initialize hasError
         this.errorMessage = null; // initialize errorMessage
