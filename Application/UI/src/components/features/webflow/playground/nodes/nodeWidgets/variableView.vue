@@ -1,18 +1,30 @@
 <template>
-  <div class="variable-view px-sm">
+  <div class="variable-view variable-view-compact" :class="{ 'compact': compact }">
     <Handle
-      class="variable-handle"
+      class="variable-handle-compact"
       type="target"
       :id="props.variable.id"
       :position="Position.Left"
     />
-    <div class="variable-name">{{ props.variable.name }}</div>
-    <UiPopover trigger="click" placement="bottom">
-      <template #trigger>
-        <i class="fa fa-eye" data-tooltip="View Data"></i>
-      </template>
-      <div style="max-height: 310px; width: 300px; overflow: auto">
-        <pre v-if="getType !== 'object'" class="data-content">{{
+    <div class="variable-name-compact">{{ props.variable.name }}</div>
+    <i 
+      ref="viewIconRef"
+      class="fa fa-eye view-icon-compact" 
+      data-tooltip="View Data"
+      @click.stop="toggleDataPopover"
+    ></i>
+    
+    <!-- Data Popover -->
+    <UiFixedPopover
+      v-model:visible="showDataPopover"
+      :target-element="viewIconRef"
+      placement="bottom"
+      size="md"
+      :show-arrow="true"
+      :closable="true"
+    >
+      <div class="variable-popover-content">
+        <pre v-if="getType !== 'object'" class="data-content-compact">{{
           getVariableData
         }}</pre>
         <UiJsonEditor
@@ -22,23 +34,33 @@
           :show-footer="false"
         />
       </div>
-    </UiPopover>
+    </UiFixedPopover>
   </div>
 </template>
 
 <script setup lang="ts">
 import type Variable from "@/apifluxCore/nodes/variable";
 import { Handle } from "@vue-flow/core";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { Position } from "@vue-flow/core";
-import { UiJsonEditor, UiPopover } from "@/components/base";
+import { UiJsonEditor, UiFixedPopover } from "@/components/base";
 import type { VariablePool } from "@/apifluxCore/types";
 
 const props = defineProps<{
   variable: Variable;
   variablePool?: VariablePool;
   envVariableMap?: Record<string, string>;
+  compact?: boolean;
 }>();
+
+// Refs for UiFixedPopover
+const showDataPopover = ref(false);
+const viewIconRef = ref<HTMLElement>();
+
+// Toggle popover
+const toggleDataPopover = () => {
+  showDataPopover.value = !showDataPopover.value;
+};
 
 const getType = computed(() => {
   return typeof getVariableData.value;
@@ -50,65 +72,89 @@ const getVariableData = computed(() => {
 </script>
 
 <style scoped>
-.variable-view {
+/* Compact Variable View Styling */
+.variable-view-compact {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: var(--font-size-sm);
-  width: 160px;
-  padding: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  width: 100%;
+  padding: 2px var(--spacing-xs);
   background: var(--color-background-secondary);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
-  margin-bottom: var(--spacing-xs);
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--color-border-subtle);
+  transition: all var(--transition-fast);
 }
 
-.variable-handle {
-  width: 10px;
-  height: 10px;
+.variable-view-compact:hover {
+  border-color: var(--color-border);
+  background: var(--color-background-hover);
+}
+
+.variable-view-compact.compact {
+  padding: 1px var(--spacing-xs);
+  font-size: 10px;
+}
+
+.variable-handle-compact {
+  width: 6px;
+  height: 6px;
   background: var(--color-primary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xs);
   top: 50%;
-  left: -6px;
+  left: -4px;
   transform: translateY(-50%);
 }
 
-.variable-name {
+.variable-name-compact {
   flex-grow: 1;
-  margin-left: var(--spacing-sm);
+  margin-left: var(--spacing-xs);
   color: var(--color-text-primary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
-.fa.fa-eye {
-  position: relative;
-  font-size: var(--font-size-sm);
-  margin-left: var(--spacing-xs);
+.view-icon-compact {
+  font-size: 10px;
   cursor: pointer;
-  color: var(--color-primary);
-  padding: var(--spacing-xs);
-  border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
+  color: var(--color-text-secondary);
+  padding: 2px;
+  border-radius: var(--radius-xs);
+  transition: all var(--transition-fast);
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.fa.fa-eye:hover {
+.view-icon-compact:hover {
   color: var(--color-primary);
+  background: var(--color-primary-light);
 }
 
-.data-content {
+.variable-popover-content {
+  max-height: 250px;
+  width: 280px;
+  overflow: auto;
+}
+
+.data-content-compact {
   background: var(--color-background-secondary);
   color: var(--color-text-primary);
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
-  line-height: 1.4;
+  line-height: 1.3;
   white-space: pre-wrap;
   word-break: break-word;
+  margin: 0;
 }
 </style>

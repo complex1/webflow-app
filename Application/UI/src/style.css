@@ -550,12 +550,6 @@
   width: 12px;
   height: 12px;
 }
-
-.vue-flow__handle:hover {
-  background: var(--color-connector-active);
-  transform: scale(1.2);
-}
-
 .vue-flow__controls {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);

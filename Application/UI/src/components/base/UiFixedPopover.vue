@@ -1,5 +1,12 @@
 <template>
   <Teleport to="body">
+    <!-- Transparent Mask/Backdrop -->
+    <div
+      v-if="visible"
+      class="ui-popover-mask"
+      @click="handleMaskClick"
+    ></div>
+    
     <div
       v-if="visible"
       class="ui-fixed-popover"
@@ -81,6 +88,9 @@ const popoverRef = ref<HTMLElement>()
 
 // Calculate popover position
 const popoverStyle = computed(() => {
+  if (props.visible === false) {
+    return { display: 'none' }
+  }
   if (props.position) {
     return {
       position: 'fixed',
@@ -212,6 +222,13 @@ const getPopoverHeight = () => {
 const handleClose = () => {
   emit('close')
   emit('update:visible', false)
+}
+
+// Handle mask click
+const handleMaskClick = () => {
+  if (props.closable) {
+    handleClose()
+  }
 }
 
 // Handle click outside
@@ -446,6 +463,31 @@ onUnmounted(() => {
     var(--gradient-flow-glass-start),
     var(--gradient-flow-glass-end)
   );
+}
+
+/* Transparent Mask/Backdrop */
+.ui-popover-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  z-index: 9998;
+  animation: maskFadeIn 0.15s ease-out;
+}
+
+@keyframes maskFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
 }
 
 /* Responsive adjustments */

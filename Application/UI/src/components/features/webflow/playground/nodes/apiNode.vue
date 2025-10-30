@@ -18,86 +18,91 @@
       />
     </div>
     
-    <!-- Node content with glass panels -->
+    <!-- Compact node content -->
     <div class="node-content-group">
-      <div class="node-content">
+      <!-- Condensed property list -->
+      <div class="node-properties">
         <!-- Request Body (for non-GET methods) -->
-        <div v-if="data.method !== 'GET'" class="api-node-property">
-          <div class="property-header">
-            <i class="fas fa-file-code property-icon"></i>
-            <span class="property-title">Request Body</span>
+        <div v-if="data.method !== 'GET'" class="property-compact">
+          <div class="property-compact-header">
+            <i class="fas fa-file-code"></i>
+            <span>Body</span>
           </div>
-          <VariableView 
-            :variable="data.body" 
-            :variable-pool="variablePool" 
-            :env-variable-map="envVariableMap" 
-          />
+          <div class="property-compact-value">
+            <VariableView 
+              :variable="data.body" 
+              :variable-pool="variablePool" 
+              :env-variable-map="envVariableMap"
+              compact
+            />
+          </div>
         </div>
         
         <!-- Headers -->
-        <div v-if="data.headers.length" class="api-node-property">
-          <div class="property-header">
-            <i class="fas fa-list-ul property-icon"></i>
-            <span class="property-title">Headers</span>
-            <span class="property-count">{{ Object.keys(data.headers).length }}</span>
+        <div v-if="data.headers.length" class="property-compact">
+          <div class="property-compact-header">
+            <i class="fas fa-list-ul"></i>
+            <span class="property-title" >Headers</span>
+            <span class="count-badge">{{ Object.keys(data.headers).length }}</span>
           </div>
-          <div class="property-list">
+          <div class="property-compact-list">
             <VariableView
               v-for="(value, key) in data.headers"
               :key="key"
               :variable="value"
               :variable-pool="variablePool"
               :env-variable-map="envVariableMap"
-              class="property-item"
+              compact
             />
           </div>
         </div>
         
         <!-- Query Parameters -->
-        <div v-if="data.queryParams.length" class="api-node-property">
-          <div class="property-header">
-            <i class="fas fa-search property-icon"></i>
-            <span class="property-title">Query Parameters</span>
-            <span class="property-count">{{ Object.keys(data.queryParams).length }}</span>
+        <div v-if="data.queryParams.length" class="property-compact">
+          <div class="property-compact-header">
+            <i class="fas fa-search"></i>
+            <span class="property-title">Query</span>
+            <span class="count-badge">{{ Object.keys(data.queryParams).length }}</span>
           </div>
-          <div class="property-list">
+          <div class="property-compact-list">
             <VariableView
               v-for="(value, key) in data.queryParams"
               :key="key"
               :variable="value"
               :variable-pool="variablePool"
               :env-variable-map="envVariableMap"
-              class="property-item"
+              compact
             />
           </div>
         </div>
         
         <!-- Path Parameters -->
-        <div v-if="data.pathParams.length" class="api-node-property">
-          <div class="property-header">
-            <i class="fas fa-route property-icon"></i>
-            <span class="property-title">Path Parameters</span>
-            <span class="property-count">{{ Object.keys(data.pathParams).length }}</span>
+        <div v-if="data.pathParams.length" class="property-compact">
+          <div class="property-compact-header">
+            <i class="fas fa-route"></i>
+            <span class="property-title">Path</span>
+            <span class="count-badge">{{ Object.keys(data.pathParams).length }}</span>
           </div>
-          <div class="property-list">
+          <div class="property-compact-list">
             <VariableView
               v-for="(value, key) in data.pathParams"
               :key="key"
               :variable="value"
               :variable-pool="variablePool"
               :env-variable-map="envVariableMap"
-              class="property-item"
+              compact
             />
           </div>
         </div>
       </div>
       
-      <!-- Result block with glass styling -->
+      <!-- Compact result block -->
       <NodeResultBlock 
         :node="data" 
         :variable-pool="variablePool" 
         :env-variable-map="envVariableMap"
         class="node-result"
+        compact
       />
     </div>
     
@@ -167,7 +172,7 @@ const onDelete = () => {
 </script>
 
 <style scoped>
-/* Neo-Systemic API Node Styling */
+/* Neo-Systemic API Node Styling - Compact Design */
 .api-node {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
@@ -175,15 +180,11 @@ const onDelete = () => {
   border: 2px solid var(--color-api-node);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  width: 320px;
+  width: 280px;
   position: relative;
-  overflow: hidden;
-  transition: all var(--transition-spring);
 }
 
 .api-node:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl), 0 0 20px var(--color-api-node-light);
   border-color: var(--color-primary-hover);
 }
 
@@ -194,107 +195,100 @@ const onDelete = () => {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* URL Section */
+/* URL Section - Compact */
 .api-node-url-section {
-  padding: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
   background: var(--color-background-subtle);
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
-/* Content Group */
+/* Content Group - Compact */
 .node-content-group {
+  padding: var(--spacing-xs);
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-sm)
+}
+
+.node-properties {
+  background: var(--color-background);
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: var(--spacing-xs);
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
 }
 
-.node-content {
-  padding: var(--spacing-md);
-  background: var(--color-background);
-}
-
-/* Property Styling */
-.api-node-property {
-  margin-bottom: var(--spacing-md);
+/* Compact Property Styling */
+.property-compact {
   background: var(--glass-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   transition: all var(--transition-normal);
 }
 
-.api-node-property:hover {
+.property-compact:hover {
   border-color: var(--color-border-hover);
   box-shadow: var(--shadow-sm);
 }
 
-.api-node-property:last-child {
-  margin-bottom: 0;
-}
-
-/* Property Header */
-.property-header {
+/* Compact Property Header */
+.property-compact-header {
   display: flex;
   align-items: center;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-sm);
   background: var(--color-background-subtle);
   border-bottom: 1px solid var(--color-border-subtle);
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.property-icon {
+.property-compact-header i {
   color: var(--color-primary);
-  font-size: var(--font-size-sm);
-  width: 16px;
+  font-size: var(--font-size-xs);
+  width: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.property-title {
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.property-compact-header .property-title {
   flex: 1;
 }
 
-.property-count {
+.count-badge {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   background: var(--color-primary-light);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
+  padding: 1px 4px;
+  border-radius: var(--radius-xs);
   font-weight: var(--font-weight-medium);
+  min-width: 16px;
+  text-align: center;
+  width: fit-content;
 }
 
-/* Property List */
-.property-list {
-  padding: var(--spacing-sm);
-}
-
-.property-item {
-  margin-bottom: var(--spacing-xs);
+/* Compact Property Value */
+.property-compact-value {
   padding: var(--spacing-xs);
-  background: var(--color-background);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-subtle);
-  transition: all var(--transition-fast);
 }
 
-.property-item:hover {
-  border-color: var(--color-border);
-  background: var(--color-background-hover);
+/* Compact Property List */
+.property-compact-list {
+  padding: var(--spacing-xs);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.property-item:last-child {
-  margin-bottom: 0;
-}
-
-/* Result Block */
+/* Result Block - Compact */
 .node-result {
   border-top: 1px solid var(--color-border-subtle);
   background: var(--color-background-subtle);
@@ -339,51 +333,27 @@ const onDelete = () => {
   border-color: var(--color-info);
 }
 
-/* Flow Connection Points */
-.api-node::before,
-.api-node::after {
-  content: '';
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background: var(--color-connector);
-  border: 2px solid white;
-  border-radius: var(--radius-full);
-  top: 50%;
-  transform: translateY(-50%);
-  transition: all var(--transition-normal);
-}
 
-.api-node::before {
-  left: -8px;
-}
 
-.api-node::after {
-  right: -8px;
-}
-
-.api-node:hover::before,
-.api-node:hover::after {
-  background: var(--color-connector-active);
-  transform: translateY(-50%) scale(1.2);
-}
-
-/* Responsive adjustments */
+/* Responsive adjustments - Compact */
 @media (max-width: 768px) {
   .api-node {
-    width: 280px;
+    width: 260px;
   }
   
-  .node-content-group {
-    gap: 0;
+  .node-properties {
+    padding: var(--spacing-xs);
+    gap: 2px;
   }
   
-  .node-content {
-    padding: var(--spacing-sm);
+  .property-compact-header {
+    padding: 2px var(--spacing-xs);
+    font-size: 10px;
   }
   
-  .property-header {
-    padding: var(--spacing-xs) var(--spacing-sm);
+  .property-compact-value,
+  .property-compact-list {
+    padding: 2px var(--spacing-xs);
   }
 }
 

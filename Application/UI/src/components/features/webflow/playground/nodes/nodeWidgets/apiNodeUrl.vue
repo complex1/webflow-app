@@ -1,14 +1,14 @@
 <template>
-  <div class="node-header node-header--api">
-    <div
-      class="node-method-chip"
-      style="background-color: transparent; border: 1px solid"
-      :style="{ borderColor: getApiMethod.color, color: getApiMethod.color }"
-    >
-      <i :class="getApiMethod.icon" style="margin-right: 4px"></i>
+  <div class="api-url-section-compact">
+    <div class="method-chip-compact" :style="{ 
+      borderColor: getApiMethod.color, 
+      color: getApiMethod.color,
+      backgroundColor: getApiMethod.bgColor 
+    }">
+      <i :class="getApiMethod.icon"></i>
       <span>{{ getApiMethod.method }}</span>
     </div>
-    <div class="node-url" v-tooltip="getFullUrl">
+    <div class="url-display-compact" v-tooltip="getFullUrl">
       {{ data.url?.get(props.variablePool, props.envVariableMap) }}
     </div>
   </div>
@@ -29,31 +29,43 @@ const getApiMethod = computed(() => {
     case "GET":
       return {
         method: "GET",
-        color: "var(--color-get)",
-        icon: "fas fa-arrow-down",
+        color: "var(--color-success)",
+        bgColor: "var(--color-success-light)",
+        icon: "fas fa-download",
       };
     case "POST":
       return {
         method: "POST",
-        color: "var(--color-post)",
-        icon: "fas fa-arrow-up",
+        color: "var(--color-primary)",
+        bgColor: "var(--color-primary-light)",
+        icon: "fas fa-plus",
       };
     case "PUT":
       return {
         method: "PUT",
-        color: "var(--color-put)",
-        icon: "fas fa-sync",
+        color: "var(--color-warning)",
+        bgColor: "var(--color-warning-light)",
+        icon: "fas fa-edit",
       };
     case "DELETE":
       return {
-        method: "DELETE",
-        color: "var(--color-delete)",
+        method: "DEL",
+        color: "var(--color-danger)",
+        bgColor: "var(--color-danger-light)",
         icon: "fas fa-trash",
+      };
+    case "PATCH":
+      return {
+        method: "PATCH",
+        color: "var(--color-info)",
+        bgColor: "var(--color-info-light)",
+        icon: "fas fa-wrench",
       };
     default:
       return {
-        method: "UNKNOWN",
-        color: "var(--color-unknown)",
+        method: "???",
+        color: "var(--color-text-secondary)",
+        bgColor: "var(--color-background-secondary)",
         icon: "fas fa-question",
       };
   }
@@ -66,41 +78,94 @@ const getFullUrl = computed(() => {
 });
 </script>
 <style scoped>
-.node-method-chip {
-  font-size: var(--font-size-xs);
+/* Compact API URL Section Styling */
+.api-url-section-compact {
   display: flex;
   align-items: center;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs);
+  background: var(--color-background-subtle);
   border-radius: var(--radius-sm);
-  width: fit-content;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  background: var(--color-background-secondary);
+  min-height: 32px;
 }
 
-.node-header {
+/* Compact Method Chip */
+.method-chip-compact {
   display: flex;
-  border-bottom: 1px solid var(--color-border);
-  padding: var(--spacing-md);
-  gap: var(--spacing-md);
   align-items: center;
-  background: var(--color-background-secondary);
+  gap: 2px;
+  padding: 2px var(--spacing-xs);
+  border-radius: var(--radius-xs);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border: 1px solid;
+  min-width: 44px;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.node-url {
-  font-size: var(--font-size-sm);
+.method-chip-compact i {
+  font-size: 8px;
+  width: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.method-chip-compact span {
+  line-height: 1;
+}
+
+/* Compact URL Display */
+.url-display-compact {
+  font-size: var(--font-size-xs);
   color: var(--color-text-primary);
-  font-weight: 500;
-  font-family: var(--font-mono);
-  word-break: break-all;
-  flex-grow: 1;
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-mono);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  flex: 1;
+  padding: var(--spacing-xs);
   background: var(--color-background);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--color-border-subtle);
+  line-height: 1.2;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.url-display-compact:hover {
+  border-color: var(--color-border);
+  background: var(--color-background-hover);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .api-url-section-compact {
+    padding: 2px var(--spacing-xs);
+    gap: 2px;
+    min-height: 28px;
+  }
+  
+  .method-chip-compact {
+    padding: 1px 2px;
+    min-width: 36px;
+    font-size: 9px;
+  }
+  
+  .method-chip-compact i {
+    font-size: 7px;
+    width: 8px;
+  }
+  
+  .url-display-compact {
+    font-size: 10px;
+    padding: 2px var(--spacing-xs);
+    min-height: 20px;
+  }
 }
 </style>

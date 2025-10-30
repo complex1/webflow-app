@@ -1,105 +1,146 @@
 <template>
-  <div class="functional-node-detail">
-    <!-- Node Info Section -->
-    <div class="node-info-section">
-      <div class="node-header">
-        <h2 class="node-name">{{ functionalNode.name || 'Unnamed Functional Node' }}</h2>
-        <div class="node-status" :class="statusClass">
-          <i :class="statusIcon"></i>
-          {{ statusText }}
+  <div class="functional-node-detail glass-panel">
+    <!-- Node Header -->
+    <div class="detail-header">
+      <div class="header-content">
+        <div class="header-icon functional-node">
+          <i class="fas fa-code"></i>
+        </div>
+        <div class="header-info">
+          <h2 class="node-name">{{ functionalNode.name || 'Unnamed Functional Node' }}</h2>
+          <p v-if="functionalNode.description" class="node-description">{{ functionalNode.description }}</p>
+          <div class="node-meta">
+            <span class="node-id">{{ functionalNode.id }}</span>
+          </div>
         </div>
       </div>
-      <p v-if="functionalNode.description" class="node-description">{{ functionalNode.description }}</p>
-      <div class="node-id">{{ functionalNode.id }}</div>
+      <div class="status-badge">
+        <div class="node-status" :class="statusClass">
+          <i :class="statusIcon"></i>
+          <span>{{ statusText }}</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Transform Code Section -->
-    <div class="transform-section">
-      <h3 class="section-title">
-        <i class="fas fa-code"></i>
-        Transform Function
-      </h3>
+    <!-- Transform Function Card -->
+    <div class="transform-card glass-panel">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-code"></i>
+          <span>Transform Function</span>
+        </h3>
+      </div>
       
       <div class="transform-content">
-        <div class="transform-info">
-          <div class="info-item">
-            <span class="info-label">Language:</span>
-            <span class="info-value">JavaScript</span>
-          </div>
-          <div class="info-item" v-if="functionalNode.parameters.length > 0">
-            <span class="info-label">Parameters:</span>
-            <span class="info-value">{{ parameterNames.join(', ') }}</span>
+        <div class="function-meta">
+          <div class="meta-grid">
+            <div class="meta-item">
+              <div class="meta-label">
+                <i class="fab fa-js-square"></i>
+                <span>Language</span>
+              </div>
+              <div class="meta-value">JavaScript</div>
+            </div>
+            <div class="meta-item" v-if="functionalNode.parameters.length > 0">
+              <div class="meta-label">
+                <i class="fas fa-cogs"></i>
+                <span>Parameters</span>
+              </div>
+              <div class="meta-value">{{ parameterNames.join(', ') }}</div>
+            </div>
           </div>
         </div>
         
-        <div class="code-container">
-          <pre class="code-block">{{ transformCode }}</pre>
+        <div class="code-section">
+          <div class="code-header">
+            <div class="code-title">
+              <i class="fas fa-terminal"></i>
+              <span>Function Code</span>
+            </div>
+          </div>
+          <div class="code-container">
+            <pre class="code-block">{{ transformCode }}</pre>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Parameters Section -->
-    <div v-if="functionalNode.parameters.length > 0" class="parameters-section">
-      <h3 class="section-title">
-        <i class="fas fa-cogs"></i>
-        Parameters ({{ functionalNode.parameters.length }})
-      </h3>
+    <!-- Parameters Card -->
+    <div v-if="functionalNode.parameters.length > 0" class="parameters-card glass-panel">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-sliders-h"></i>
+          <span>Function Parameters ({{ functionalNode.parameters.length }})</span>
+        </h3>
+      </div>
       
-      <div class="variable-list">
-        <div 
-          v-for="param in functionalNode.parameters" 
-          :key="param.id"
-          class="variable-item"
-        >
-          <div class="variable-name">{{ param.name }}</div>
-          <div class="variable-type">{{ param.type }}</div>
-          <div class="variable-value">{{ getVariableValue(param) }}</div>
+      <div class="parameters-content">
+        <div class="parameter-list">
+          <div 
+            v-for="param in functionalNode.parameters" 
+            :key="param.id"
+            class="parameter-item"
+          >
+            <div class="param-info">
+              <div class="param-name">{{ param.name }}</div>
+              <div class="param-type">{{ param.type }}</div>
+            </div>
+            <div class="param-value">{{ getVariableValue(param) }}</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Execution Results -->
-    <div v-if="hasExecutionResults" class="results-section">
-      <h3 class="section-title">
-        <i :class="resultIcon"></i>
-        Execution Results
-      </h3>
-      
-      <div class="execution-meta">
-        <div class="meta-row" v-if="functionalNode.executionTime">
-          <span class="meta-label">Execution Time:</span>
-          <span class="meta-value">{{ functionalNode.executionTime }}ms</span>
-        </div>
-        <div class="meta-row" v-if="functionalNode.hasError">
-          <span class="meta-label">Error:</span>
-          <span class="meta-value error">{{ functionalNode.errorMessage }}</span>
-        </div>
+    <!-- Execution Results Card -->
+    <div v-if="hasExecutionResults" class="results-card glass-panel">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i :class="resultIcon"></i>
+          <span>Execution Results</span>
+        </h3>
       </div>
+      
+      <div class="results-content">
+        <div class="execution-stats">
+          <div class="stat-item" v-if="functionalNode.executionTime">
+            <div class="stat-label">Execution Time</div>
+            <div class="stat-value">{{ functionalNode.executionTime }}ms</div>
+          </div>
+          <div class="stat-item error" v-if="functionalNode.hasError">
+            <div class="stat-label">Error</div>
+            <div class="stat-value">{{ functionalNode.errorMessage }}</div>
+          </div>
+        </div>
 
-      <!-- Result Data -->
-      <div v-if="functionalNode.nodeData && !functionalNode.hasError" class="result-section">
-        <h4 class="subsection-title">Result Data</h4>
-        <div class="result-content">
-          <pre v-if="resultType !== 'object'" class="code-block">{{ JSON.stringify(functionalNode.nodeData, null, 2) }}</pre>
-          <UiJsonEditor
-            v-else
-            :modelValue="functionalNode.nodeData"
-            readonly
-            :show-footer="false"
-          />
+        <!-- Result Data -->
+        <div v-if="functionalNode.nodeData && !functionalNode.hasError" class="result-section">
+          <h4 class="result-title">Transformed Data</h4>
+          <div class="result-content">
+            <div class="code-container">
+              <pre v-if="resultType !== 'object'" class="code-block">{{ JSON.stringify(functionalNode.nodeData, null, 2) }}</pre>
+              <UiJsonEditor
+                v-else
+                :modelValue="functionalNode.nodeData"
+                readonly
+                :show-footer="false"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div v-if="isEmpty" class="empty-state">
-      <div class="empty-icon">
-        <i class="fas fa-function"></i>
+    <div v-if="isEmpty" class="empty-state-card glass-panel">
+      <div class="empty-content">
+        <div class="empty-icon">
+          <i class="fas fa-function"></i>
+        </div>
+        <h3 class="empty-title">Functional Node Not Configured</h3>
+        <p class="empty-description">
+          This functional node hasn't been set up yet. Add a name, description, transform code, and configure the parameters to get started.
+        </p>
       </div>
-      <h3 class="empty-title">Functional Node Not Configured</h3>
-      <p class="empty-description">
-        This functional node hasn't been set up yet. Add a name, description, transform code, and configure the parameters to get started.
-      </p>
     </div>
   </div>
 </template>
@@ -204,131 +245,245 @@ const getVariableValue = (variable: any) => {
 </script>
 
 <style scoped>
+/* ===== Functional Node Detail - Neo-Systemic Design ===== */
 .functional-node-detail {
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
   font-size: var(--font-size-sm);
 }
 
-/* Node Info Section */
-.node-info-section {
-  padding: var(--spacing-lg);
-  background: var(--color-gray-50);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-lg);
+/* ===== Detail Header ===== */
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-background-subtle) 100%);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-subtle);
 }
 
-.node-header {
+.header-content {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--spacing-sm);
+  gap: var(--spacing-md);
+  flex: 1;
+}
+
+.header-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--font-size-xl);
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0;
+}
+
+.header-icon.functional-node {
+  background: var(--color-functional-node-gradient);
+}
+
+.header-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .node-name {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
-  margin: 0;
-  flex: 1;
-  margin-right: var(--spacing-md);
+  margin: 0 0 var(--spacing-sm) 0;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 .node-description {
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
-  line-height: 1.5;
-  margin: 0 0 var(--spacing-sm) 0;
+  line-height: var(--line-height-normal);
+  margin: 0 0 var(--spacing-md) 0;
   font-style: italic;
 }
 
-.node-status {
+.node-meta {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  flex-shrink: 0;
-}
-
-.status-success {
-  background: var(--color-success-light);
-  color: var(--color-success-dark);
-}
-
-.status-error {
-  background: var(--color-error-light);
-  color: var(--color-error-dark);
-}
-
-.status-running {
-  background: var(--color-warning-light);
-  color: var(--color-warning-dark);
-}
-
-.status-idle {
-  background: var(--color-gray-200);
-  color: var(--color-text-secondary);
+  gap: var(--spacing-sm);
 }
 
 .node-id {
   font-family: var(--font-family-mono);
   font-size: var(--font-size-xs);
   color: var(--color-text-tertiary);
-  margin-top: var(--spacing-xs);
+  background: var(--color-background-secondary);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
 }
 
-/* Transform Section */
-.transform-section {
-  margin-bottom: var(--spacing-lg);
+.status-badge {
+  flex-shrink: 0;
 }
 
-.section-title {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-md);
+.node-status {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid;
+  transition: all var(--transition-normal);
 }
 
-.transform-content {
-  background: var(--color-gray-50);
-  border-radius: var(--radius-sm);
+.status-success {
+  background: var(--color-success-light);
+  color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.status-error {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.status-running {
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+.status-idle {
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+
+/* ===== Card Components ===== */
+.transform-card,
+.parameters-card,
+.results-card,
+.empty-state-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
-.transform-info {
-  padding: var(--spacing-md);
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-gray-25);
+.card-header {
+  padding: var(--spacing-lg);
+  background: var(--color-background-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.info-item {
+.card-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-xs);
 }
 
-.info-item:last-child {
-  margin-bottom: 0;
+.card-title i {
+  color: var(--color-functional-node);
+  font-size: var(--font-size-sm);
 }
 
-.info-label {
+/* ===== Transform Card ===== */
+.transform-content {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.function-meta {
+  background: var(--color-background-subtle);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  padding: var(--spacing-lg);
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.meta-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  min-width: 80px;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
 }
 
-.info-value {
-  font-size: var(--font-size-xs);
+.meta-label i {
+  font-size: var(--font-size-sm);
+  color: var(--color-functional-node);
+}
+
+.meta-value {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   font-family: var(--font-family-mono);
+}
+
+.code-section {
+  background: var(--color-background-code);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+}
+
+.code-header {
+  padding: var(--spacing-md);
+  background: var(--color-background-secondary);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.code-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.code-title i {
+  color: var(--color-functional-node);
+  font-size: var(--font-size-xs);
 }
 
 .code-container {
@@ -338,169 +493,200 @@ const getVariableValue = (variable: any) => {
 
 .code-block {
   margin: 0;
-  padding: var(--spacing-md);
-  background: var(--color-gray-50);
+  padding: var(--spacing-lg);
+  background: var(--color-background-code);
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-xs);
-  line-height: 1.4;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
   white-space: pre-wrap;
   word-break: break-word;
-  color: var(--color-text-primary);
+  color: var(--color-text-code);
 }
 
-/* Parameters Section */
-.parameters-section {
-  margin-bottom: var(--spacing-lg);
+/* ===== Parameters Card ===== */
+.parameters-content {
+  padding: var(--spacing-lg);
 }
 
-.variable-list {
-  background: var(--color-gray-50);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-}
-
-.variable-item {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  align-items: center;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.variable-item:last-child {
-  border-bottom: none;
-}
-
-.variable-name {
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
-}
-
-.variable-type {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  background: var(--color-gray-200);
-  padding: 2px 6px;
-  border-radius: var(--radius-xs);
-}
-
-.variable-value {
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  text-align: right;
-  word-break: break-all;
-}
-
-/* Results Section */
-.results-section {
-  margin-bottom: var(--spacing-lg);
-}
-
-.result-content {
-  background: var(--color-gray-50);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
+.parameter-list {
+  background: var(--color-background-subtle);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
   overflow: hidden;
 }
 
-/* Execution Meta */
-.execution-meta {
-  margin-bottom: var(--spacing-md);
-}
-
-.meta-row {
+.parameter-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-sm);
-  background: var(--color-gray-50);
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.parameter-item:last-child {
+  border-bottom: none;
+}
+
+.param-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex: 1;
+}
+
+.param-name {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.param-type {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  background: var(--color-background-secondary);
+  padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.param-value {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  background: var(--color-background-code);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== Results Card ===== */
+.results-content {
+  padding: var(--spacing-lg);
+}
+
+.execution-stats {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  background: var(--color-background-subtle);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  flex: 1;
+  min-width: 150px;
+}
+
+.stat-item.error {
+  background: var(--color-danger-light);
+  border-color: var(--color-danger);
+}
+
+.stat-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
   margin-bottom: var(--spacing-xs);
 }
 
-.meta-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-}
-
-.meta-value {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-}
-
-.meta-value.error {
-  color: var(--color-error);
-}
-
-.subsection-title {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+.stat-value {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
-  margin-bottom: var(--spacing-sm);
 }
 
-.result-section {
-  margin-top: var(--spacing-md);
+.stat-item.error .stat-value {
+  color: var(--color-danger);
 }
 
-/* Empty State */
-.empty-state {
+.result-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.result-content {
+  background: var(--color-background-code);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+}
+
+/* ===== Empty State ===== */
+.empty-state-card {
   text-align: center;
-  padding: var(--spacing-3xl) var(--spacing-lg);
-  color: var(--color-text-secondary);
+}
+
+.empty-content {
+  padding: var(--spacing-3xl);
 }
 
 .empty-icon {
-  font-size: var(--font-size-3xl);
-  margin-bottom: var(--spacing-lg);
-  opacity: 0.4;
+  font-size: var(--font-size-4xl);
   color: var(--color-text-tertiary);
+  opacity: 0.4;
+  margin-bottom: var(--spacing-xl);
 }
 
 .empty-title {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--spacing-sm);
   color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-md) 0;
 }
 
 .empty-description {
   font-size: var(--font-size-sm);
-  max-width: 300px;
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  max-width: 400px;
   margin: 0 auto;
-  line-height: 1.5;
 }
 
-/* Responsive */
+/* ===== Responsive Design ===== */
 @media (max-width: 768px) {
-  .variable-item {
+  .functional-node-detail {
+    padding: var(--spacing-lg);
+  }
+  
+  .detail-header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .meta-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-xs);
   }
   
-  .variable-value {
-    text-align: left;
-  }
-  
-  .meta-row {
+  .parameter-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
   }
   
-  .info-item {
+  .param-value {
+    max-width: 100%;
+  }
+  
+  .execution-stats {
     flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-xs);
-  }
-  
-  .info-label {
-    min-width: auto;
   }
 }
 </style>

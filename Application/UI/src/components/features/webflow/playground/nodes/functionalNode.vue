@@ -1,83 +1,90 @@
 <template>
-  <div class="functional-node node-functional" :class="{ 'node-executing': isExecuting }">
+  <div
+    class="functional-node node-functional"
+    :class="{ 'node-executing': isExecuting }"
+  >
     <!-- Glass node header with amber gradient -->
-    <NodeHeader 
-      :data="data" 
-      @edit="onEdit" 
-      @delete="onDelete" 
+    <NodeHeader
+      :data="data"
+      @edit="onEdit"
+      @delete="onDelete"
       @view="onView"
       class="functional-node-header"
     />
-    
-    <!-- Node content with glass panels -->
+
+    <!-- Compact Transform Method Section -->
+
+    <div class="functional-node-property">
+      <div class="property-compact-header">
+        <i class="fas fa-code"></i>
+        <span>Transform</span>
+        <i class="fas fa-expand-alt view-indicator"></i>
+      </div>
+      <UiPopover trigger="click" placement="bottom" class="method-popover">
+        <template #trigger>
+          <div class="method-preview-compact">
+            <div class="method-preview-content">
+              <span class="method-preview-text">{{ getMethodPreview }}</span>
+            </div>
+            <div class="method-expand-hint">
+              <span>Click to expand</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </template>
+        <div class="method-popover-content">
+          <UiCodeMirrorEditor
+            :modelValue="data.transform"
+            readonly
+            :show-footer="false"
+          />
+        </div>
+      </UiPopover>
+    </div>
+
+    <!-- Compact node content -->
     <div class="node-content-group">
       <div class="functional-node-content">
-        <!-- Transform Method Section -->
-        <div class="functional-node-property">
-          <div class="property-header">
-            <i class="fas fa-code property-icon"></i>
-            <span class="property-title">Transform Method</span>
-            <i class="fas fa-expand-alt view-indicator"></i>
-          </div>
-          <UiPopover trigger="click" placement="bottom" class="method-popover">
-            <template #trigger>
-              <div class="method-preview">
-                <div class="method-preview-content">
-                  <span class="method-preview-text">{{ getMethodPreview }}</span>
-                </div>
-                <div class="method-expand-hint">
-                  <span>Click to expand</span>
-                  <i class="fas fa-chevron-down"></i>
-                </div>
-              </div>
-            </template>
-            <div class="method-popover-content">
-              <UiCodeMirrorEditor
-                :modelValue="data.transform"
-                readonly
-                :show-footer="false"
-              />
-            </div>
-          </UiPopover>
-        </div>
-        
-        <!-- Parameters Section -->
+        <!-- Compact Parameters Section -->
         <div v-if="data.parameters.length" class="functional-node-property">
-          <div class="property-header">
-            <i class="fas fa-sliders-h property-icon"></i>
+          <div class="property-compact-header">
+            <i class="fas fa-sliders-h"></i>
             <span class="property-title">Parameters</span>
-            <span class="property-count">{{ Object.keys(data.parameters).length }}</span>
+            <span class="count-badge">{{
+              Object.keys(data.parameters).length
+            }}</span>
           </div>
-          <div class="property-list">
+          <div class="property-compact-list">
             <VariableView
               v-for="(value, key) in data.parameters"
               :key="key"
               :variable="value"
               :variable-pool="variablePool"
               :env-variable-map="envVariableMap"
-              class="parameter-item"
+              compact
             />
           </div>
         </div>
       </div>
-      
-      <!-- Result block with glass styling -->
-      <NodeResultBlock 
-        :node="data" 
-        :variable-pool="variablePool" 
+
+      <!-- Compact result block -->
+      <NodeResultBlock
+        :node="data"
+        :variable-pool="variablePool"
         :env-variable-map="envVariableMap"
         class="node-result"
+        compact
       />
     </div>
-    
+
     <!-- Execution indicator -->
     <div v-if="isExecuting" class="execution-pulse"></div>
   </div>
 
   <!-- Enhanced modal with glass design -->
-  <UiModal 
-    v-model:visible="showDetailModal" 
-    size="xl" 
+  <UiModal
+    v-model:visible="showDetailModal"
+    size="xl"
     title="Functional Node Details"
     subtitle="Configure your data transformation logic"
     variant="glass"
@@ -128,17 +135,17 @@ const isExecuting = computed(() => {
 // Computed property for method preview
 const getMethodPreview = computed(() => {
   const method = props.data.transform;
-  if (!method) return 'No method defined';
-  
+  if (!method) return "No method defined";
+
   // Get first meaningful line or function signature
-  const lines = method.split('\n').filter(line => line.trim());
-  const firstLine = lines[0] || '';
-  
+  const lines = method.split("\n").filter((line) => line.trim());
+  const firstLine = lines[0] || "";
+
   if (firstLine.length > 50) {
-    return firstLine.substring(0, 47) + '...';
+    return firstLine.substring(0, 47) + "...";
   }
-  
-  return firstLine || 'function transform(data) { ... }';
+
+  return firstLine || "function transform(data) { ... }";
 });
 
 const onEdit = () => {
@@ -155,7 +162,7 @@ const onView = () => {
 </script>
 
 <style scoped>
-/* Neo-Systemic Functional Node Styling */
+/* Neo-Systemic Functional Node Styling - Compact Design */
 .functional-node {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
@@ -163,16 +170,8 @@ const onView = () => {
   border: 2px solid var(--color-functional-node);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  width: 320px;
+  width: 280px;
   position: relative;
-  overflow: hidden;
-  transition: all var(--transition-spring);
-}
-
-.functional-node:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl), 0 0 20px var(--color-functional-node-light);
-  border-color: var(--color-warning-hover);
 }
 
 /* Functional Node Header */
@@ -182,26 +181,28 @@ const onView = () => {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Content Group */
+/* Content Group - Compact */
 .node-content-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  padding: var(--spacing-xs);
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-sm);
 }
 
 .functional-node-content {
-  padding: var(--spacing-md);
   background: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
 }
 
-/* Property Styling */
+/* Property Styling - Compact */
 .functional-node-property {
-  margin-bottom: var(--spacing-md);
   background: var(--glass-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   transition: all var(--transition-normal);
 }
@@ -211,45 +212,44 @@ const onView = () => {
   box-shadow: var(--shadow-sm);
 }
 
-.functional-node-property:last-child {
-  margin-bottom: 0;
-}
-
-/* Property Header */
-.property-header {
+/* Compact Property Header */
+.property-compact-header {
   display: flex;
   align-items: center;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-sm);
   background: var(--color-background-subtle);
   border-bottom: 1px solid var(--color-border-subtle);
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.property-icon {
+.property-compact-header i {
   color: var(--color-warning);
-  font-size: var(--font-size-sm);
-  width: 16px;
+  font-size: var(--font-size-xs);
+  width: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.property-title {
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.property-compact-header .property-title {
   flex: 1;
 }
 
-.property-count {
+.count-badge {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   background: var(--color-warning-light);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
+  padding: 1px 4px;
+  border-radius: var(--radius-xs);
   font-weight: var(--font-weight-medium);
+  min-width: 16px;
+  width: fit-content;
+  text-align: center;
 }
 
 .view-indicator {
@@ -259,23 +259,23 @@ const onView = () => {
   transition: all var(--transition-fast);
 }
 
-/* Method Preview */
-.method-preview {
-  padding: var(--spacing-sm) var(--spacing-md);
+/* Compact Method Preview */
+.method-preview-compact {
+  padding: var(--spacing-xs) var(--spacing-sm);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
-.method-preview:hover {
+.method-preview-compact:hover {
   background: var(--color-background-hover);
 }
 
 .method-preview-content {
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-xs);
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .method-preview-text {
@@ -285,52 +285,41 @@ const onView = () => {
   border-left: 3px solid var(--color-warning);
   display: block;
   font-weight: var(--font-weight-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .method-expand-hint {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: var(--font-size-xs);
+  font-size: 10px;
   color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-/* Method Popover */
+/* Method Popover - Compact */
 .method-popover-content {
-  height: 310px;
-  width: 400px;
+  height: 280px;
+  width: 360px;
   overflow: auto;
   background: var(--color-background);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
 }
 
-/* Parameter List */
-.property-list {
-  padding: var(--spacing-sm);
-}
-
-.parameter-item {
-  margin-bottom: var(--spacing-xs);
+/* Compact Parameter List */
+.property-compact-list {
   padding: var(--spacing-xs);
-  background: var(--color-background);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-subtle);
-  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.parameter-item:hover {
-  border-color: var(--color-border);
-  background: var(--color-background-hover);
-}
-
-.parameter-item:last-child {
-  margin-bottom: 0;
-}
-
-/* Result Block */
+/* Result Block - Compact */
 .node-result {
   border-top: 1px solid var(--color-border-subtle);
   background: var(--color-background-subtle);
@@ -368,57 +357,40 @@ const onView = () => {
   color: var(--color-warning-dark);
 }
 
-/* Flow Connection Points */
-.functional-node::before,
-.functional-node::after {
-  content: '';
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background: var(--color-connector);
-  border: 2px solid white;
-  border-radius: var(--radius-full);
-  top: 50%;
-  transform: translateY(-50%);
-  transition: all var(--transition-normal);
-}
-
-.functional-node::before {
-  left: -8px;
-}
-
-.functional-node::after {
-  right: -8px;
-}
-
-.functional-node:hover::before,
-.functional-node:hover::after {
-  background: var(--color-connector-active);
-  transform: translateY(-50%) scale(1.2);
-}
-
-/* Responsive adjustments */
+/* Responsive adjustments - Compact */
 @media (max-width: 768px) {
   .functional-node {
-    width: 280px;
+    width: 260px;
   }
-  
+
   .functional-node-content {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-xs);
+    gap: 2px;
   }
-  
-  .property-header {
-    padding: var(--spacing-xs) var(--spacing-sm);
+
+  .property-compact-header {
+    padding: 2px var(--spacing-xs);
+    font-size: 10px;
   }
-  
+
+  .method-preview-compact {
+    padding: 2px var(--spacing-xs);
+  }
+
+  .property-compact-list {
+    padding: 2px var(--spacing-xs);
+  }
+
   .method-popover-content {
-    width: 320px;
+    width: 300px;
+    height: 240px;
   }
 }
 
 /* Animation keyframes */
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -434,7 +406,7 @@ const onView = () => {
   .functional-node::after {
     border-color: var(--color-bg-dark);
   }
-  
+
   .method-preview-text {
     background: var(--color-background-tertiary);
   }

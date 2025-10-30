@@ -336,24 +336,6 @@ defineExpose({
 }
 
 /* Connection Handle Styling */
-:deep(.vue-flow__handle) {
-  background: var(--color-connector) !important;
-  border: 2px solid white !important;
-  width: 12px !important;
-  height: 12px !important;
-  transition: all var(--transition-normal) !important;
-}
-
-:deep(.vue-flow__handle:hover) {
-  background: var(--color-connector-active) !important;
-  transform: scale(1.3) !important;
-  box-shadow: 0 0 12px var(--color-connector-active) !important;
-}
-
-:deep(.vue-flow__handle.connectingfrom) {
-  background: var(--color-success) !important;
-  animation: pulse 1s infinite;
-}
 
 /* Flow Enhancements Panel */
 .flow-enhancements {

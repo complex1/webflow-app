@@ -1,37 +1,33 @@
 <template>
   <div
-    class="node-header flex items-center gap-sm"
+    class="node-header node-header-compact flex items-center gap-xs"
     :class="{
       'node-header--api': props.data.type === NodeType.API,
       'node-header--functional': props.data.type === NodeType.FUNCTIONAL,
     }"
     @click="$emit('view', props.data)"
   >
-    <i :class="getIcon"></i>
-    <h3>{{ props.data.name }}</h3>
-    <div class="node-status-chip" :status="getNodeStatusDetail.status">
+    <i :class="getIcon" class="node-icon"></i>
+    <h3 class="node-title">{{ props.data.name }}</h3>
+    <div class="node-status-chip-compact" :status="getNodeStatusDetail.status">
       <i :class="getNodeStatusDetail.icon"></i>
-      {{ getNodeStatusDetail.message }}
     </div>
     <div class="dropdown-container" ref="dropdownRef">
       <i
-        class="fa fa-ellipsis-v dropdown-trigger"
+        class="fa fa-ellipsis-v dropdown-trigger-compact"
         @click.stop="toggleDropdown"
       ></i>
 
-      <!-- Dropdown Menu -->
-      <div v-if="showDropdown" class="dropdown-menu">
-        <button class="dropdown-item" @click.stop="handleAction('edit')">
+      <!-- Compact Dropdown Menu -->
+      <div v-if="showDropdown" class="dropdown-menu-compact">
+        <button class="dropdown-item-compact" @click.stop="handleAction('edit')">
           <i class="fas fa-edit"></i>
-          Edit
         </button>
-        <button class="dropdown-item" @click.stop="handleAction('delete')">
+        <button class="dropdown-item-compact" @click.stop="handleAction('delete')">
           <i class="fas fa-trash"></i>
-          Delete
         </button>
-        <button class="dropdown-item" @click.stop="handleAction('view')">
+        <button class="dropdown-item-compact" @click.stop="handleAction('view')">
           <i class="fas fa-eye"></i>
-          View
         </button>
       </div>
     </div>
@@ -157,157 +153,171 @@ onUnmounted(() => {
 });
 </script>
 <style scoped>
-.node-header {
+/* Compact Node Header Styling */
+.node-header-compact {
   position: relative;
-  padding: var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-sm);
   background: var(--color-background-elevated);
   border-bottom: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-md) var(--radius-md) 0 0;
   cursor: pointer;
   z-index: 3;
+  min-height: 36px;
 }
 
-.node-header:hover {
-  background: var(--color-background-hover);
-}
 
-.node-header i {
-  font-size: var(--font-size-lg);
+.node-icon {
+  font-size: var(--font-size-sm);
   color: var(--color-primary);
-  margin-right: var(--spacing-sm);
+  width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.node-header--functional i {
-  color: var(--color-accent);
+.node-header--functional .node-icon {
+  color: var(--color-warning);
 }
 
-.node-header h3 {
+.node-title {
   flex-grow: 1;
-  display: inline;
-  font-size: var(--font-size-md);
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
   margin: 0;
+  line-height: 1.2;
 }
 
-.node-status-chip {
+/* Compact Status Chip */
+.node-status-chip-compact {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-}
-.node-status-chip[status="PENDING"] {
-  background-color: var(--color-yellow-100);
-  color: var(--color-yellow-800);
-}
-.node-status-chip[status="IN_PROGRESS"] {
-  background-color: var(--color-blue-100);
-  color: var(--color-blue-800);
-}
-.node-status-chip[status="SUCCESS"] {
-  background-color: var(--color-green-100);
-  color: var(--color-green-800);
-}
-.node-status-chip[status="FAILURE"] {
-  background-color: var(--color-red-100);
-  color: var(--color-red-800);
-}
-.node-status-chip[status="INACTIVE"] {
-  background-color: var(--color-gray-100);
-  color: var(--color-gray-800);
-}
-.node-status-chip[status="SKIPPED"] {
-  background-color: var(--color-orange-100);
-  color: var(--color-orange-800);
-}
-.node-status-chip i {
-  font-size: var(--font-size-xs);
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
 }
 
-/* Dropdown styles */
+.node-status-chip-compact[status="PENDING"] {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.node-status-chip-compact[status="IN_PROGRESS"] {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.node-status-chip-compact[status="SUCCESS"] {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.node-status-chip-compact[status="FAILURE"] {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+.node-status-chip-compact[status="INACTIVE"] {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+}
+
+.node-status-chip-compact[status="SKIPPED"] {
+  background-color: var(--color-info-light);
+  color: var(--color-info-dark);
+}
+
+.node-status-chip-compact i {
+  font-size: 8px;
+}
+
+/* Compact Dropdown styles */
 .dropdown-container {
   position: relative;
   display: inline-block;
 }
 
-.dropdown-trigger {
+.dropdown-trigger-compact {
   cursor: pointer;
   padding: var(--spacing-xs);
   border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.dropdown-trigger:hover {
-  background-color: var(--color-gray-100);
+.dropdown-trigger-compact:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
-.dropdown-menu {
+.dropdown-menu-compact {
   position: absolute;
   top: 100%;
   right: 0;
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-xs);
+  z-index: var(--z-dropdown);
   min-width: 120px;
-  overflow: hidden;
+  display: flex;
+  gap: var(--spacing-xs);
 }
 
-.dropdown-item {
+.dropdown-item-compact {
+  background: none;
+  border: none;
+  padding: var(--spacing-xs);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: none;
-  background: none;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.dropdown-item-compact:hover {
+  background: var(--color-background-hover);
   color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-  text-align: left;
 }
 
-.dropdown-item:hover {
-  background-color: var(--color-gray-50);
-}
-
-.dropdown-item:active {
-  background-color: var(--color-gray-100);
-}
-
-.dropdown-item i {
-  font-size: var(--font-size-xs);
-  width: 14px;
-  color: var(--color-text-secondary);
-}
-
-.dropdown-item:hover i {
-  color: var(--color-primary);
-}
-
-/* Theme support removed for monochromatic design */
-
+/* Handle styles - Compact */
 .variable-handle {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   background: var(--color-primary);
   border: 2px solid var(--color-background);
   border-radius: 50%;
   top: 50%;
-  left: -8px;
-  transform: translateY(-40%);
+  transform: translateY(-50%);
 }
+
 .variable-handle-left {
-  left: -8px;
+  left: -6px;
 }
+
 .variable-handle-right {
-  right: -8px;
+  right: -6px;
   left: auto;
   background: var(--color-success);
+}
+
+.variable-handle:hover {
+  transform: translateY(-50%) scale(1.2);
 }
 </style>
