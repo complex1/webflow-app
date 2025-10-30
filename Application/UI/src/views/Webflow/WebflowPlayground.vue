@@ -37,6 +37,7 @@
     <div v-else class="playground-main">
       <webflow-playground-header
         :webflow-details="playgroundStore.webflowDetails"
+        :has-unsaved-changes="apiFluxCore.hasUnsavedChanges.value"
         @play="handlePlay"
         @add-node="handleAddNode"
         @env-file-changed="onSelectEnvFile"

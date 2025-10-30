@@ -60,7 +60,7 @@
                 <button 
                     @click="handleSave"
                     class="btn btn-save"
-                    :disabled="!hasUnsavedChanges"
+                    :disabled="!props?.hasUnsavedChanges"
                 >
                     <i class="fas fa-save"></i>
                     <span>Save</span>
@@ -200,7 +200,8 @@ interface WebflowDetails {
 }
 
 const props = defineProps<{
-    webflowDetails?: WebflowDetails | null
+    webflowDetails?: WebflowDetails | null,
+    hasUnsavedChanges?: boolean
 }>()
 
 // Emits
@@ -220,7 +221,6 @@ const showDropdown = ref(false)
 const addButtonRef = ref<HTMLElement>()
 const selectedEnvFile = ref<number | null>(null)
 const isExecuting = ref(false)
-const hasUnsavedChanges = ref(false)
 
 // Computed properties
 const envFiles = computed(() => webflowStore.webflowEnvLinks || [])

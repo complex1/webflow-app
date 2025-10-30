@@ -7,6 +7,7 @@ import { apiConfigToNode, deserialize, getNextNodePosition, serialized } from ".
 import type { ExtractedAPI } from "@/types";
 
 interface UseApiFluxReturn {
+  hasUnsavedChanges: Ref<boolean>;
   nodes: Ref<Node[]>;
   edges: Ref<Edge[]>;
   nodeMap: Ref<{ [key: string]: WebflowNode }>;
@@ -26,6 +27,7 @@ interface UseApiFluxReturn {
 }
 
 const useApiFlux = (): UseApiFluxReturn => {
+  const hasUnsavedChanges = ref(false);
   const nodeMap = ref({} as { [key: string]: WebflowNode });
   const nodes = ref([] as Node[]);
   const edges = ref([] as Edge[]);
@@ -48,6 +50,7 @@ const useApiFlux = (): UseApiFluxReturn => {
       nodeMap.value[node.id]?.setPosition(nodePosition || { x: 0, y: 0 });
       nodeMap.value[node.id] = updateNodeByDeepCopying(node, nodeMap.value[node.id] as WebflowNode);
     }
+    hasUnsavedChanges.value = true;
   };
 
   const addNodeFromConfig = (apiConfig: ExtractedAPI[]) => {
@@ -79,6 +82,7 @@ const useApiFlux = (): UseApiFluxReturn => {
     if (edge.sourceHandle) _edge.sourceHandle = edge.sourceHandle;
     if (edge.targetHandle) _edge.targetHandle = edge.targetHandle;
     edges.value.push(_edge);
+    hasUnsavedChanges.value = true;
   };
 
   const setPosition = (event: NodeDragEvent) => {
@@ -86,6 +90,7 @@ const useApiFlux = (): UseApiFluxReturn => {
     if (node) {
       node.position = event.node.position;
       nodeMap.value[node.id]?.setPosition(event.node.position);
+      hasUnsavedChanges.value = true;
     }
   };
 
@@ -95,10 +100,12 @@ const useApiFlux = (): UseApiFluxReturn => {
       (e) => e.source !== nodeId && e.target !== nodeId
     );
     delete nodeMap.value[nodeId];
+    hasUnsavedChanges.value = true;
   };
 
   const deleteEdge = (edgeId: string) => {
     edges.value = edges.value.filter((e) => e.id !== edgeId);
+    hasUnsavedChanges.value = true;
   };
 
   const setEnvironmentVariableMap = (map: Record<string, string>) => {
@@ -114,6 +121,7 @@ const useApiFlux = (): UseApiFluxReturn => {
     nodes.value = deserializedNodes;
     edges.value = deserializedEdges;
     nodeMap.value = deserializedNodeMap;
+    hasUnsavedChanges.value = false;
   }
 
   const envVariablesNames = computed(() => {
@@ -131,6 +139,7 @@ const useApiFlux = (): UseApiFluxReturn => {
   };
 
   return {
+    hasUnsavedChanges,
     nodes: nodes,
     edges: edges,
     nodeMap: nodeMap,
