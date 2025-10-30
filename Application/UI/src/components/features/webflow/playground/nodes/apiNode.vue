@@ -19,7 +19,11 @@
     </div>
     
     <!-- Compact node content -->
-    <div class="node-content-group">
+    <div
+      class="node-content-group"
+      :class="{
+        'no-input': data.headers.length === 0 && data.queryParams.length === 0 && data.pathParams.length === 0 && (data.method === 'GET' || !data.body)
+      }">
       <!-- Condensed property list -->
       <div class="node-properties">
         <!-- Request Body (for non-GET methods) -->
@@ -208,6 +212,11 @@ const onDelete = () => {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: var(--spacing-sm)
+}
+
+.node-content-group.no-input {
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
 .node-properties {

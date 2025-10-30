@@ -12,38 +12,43 @@
       class="functional-node-header"
     />
 
-    <!-- Compact Transform Method Section -->
-
-    <div class="functional-node-property">
-      <div class="property-compact-header">
-        <i class="fas fa-code"></i>
-        <span>Transform</span>
-        <i class="fas fa-expand-alt view-indicator"></i>
-      </div>
-      <UiPopover trigger="click" placement="bottom" class="method-popover">
-        <template #trigger>
-          <div class="method-preview-compact">
-            <div class="method-preview-content">
-              <span class="method-preview-text">{{ getMethodPreview }}</span>
-            </div>
-            <div class="method-expand-hint">
-              <span>Click to expand</span>
-              <i class="fas fa-chevron-down"></i>
-            </div>
-          </div>
-        </template>
-        <div class="method-popover-content">
-          <UiCodeMirrorEditor
-            :modelValue="data.transform"
-            readonly
-            :show-footer="false"
-          />
+    <!-- Compact Transform Method Section - Full Width -->
+    <div class="transform-section-full-width">
+      <div class="functional-node-property" @click="showTransformPopover = true">
+        <div 
+          class="property-compact-header clickable" 
+          ref="transformTrigger"
+        >
+          <i class="fas fa-code"></i>
+          <span>Transform</span>
+          <i class="fas fa-expand-alt view-indicator"></i>
         </div>
-      </UiPopover>
+        <div class="method-preview-compact">
+          <div class="method-preview-content">
+            <span class="method-preview-text">{{ getMethodPreview }}</span>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- UiFixedPopover for Transform Method -->
+    <UiFixedPopover
+      v-model:visible="showTransformPopover"
+      :target-element="transformTrigger"
+      placement="bottom"
+      class="transform-popover"
+    >
+      <div class="method-popover-content">
+        <UiCodeMirrorEditor
+          :modelValue="data.transform"
+          readonly
+          :show-footer="false"
+        />
+      </div>
+    </UiFixedPopover>
+
     <!-- Compact node content -->
-    <div class="node-content-group">
+    <div class="node-content-group" :class="{ 'no-input': data.parameters.length === 0 }">
       <div class="functional-node-content">
         <!-- Compact Parameters Section -->
         <div v-if="data.parameters.length" class="functional-node-property">
@@ -109,7 +114,7 @@ import NodeResultBlock from "./nodeWidgets/nodeResultBlock.vue";
 // @ts-ignore
 import FunctionalNodeDetail from "../forms/nodeDetails/functionalNodeDetail.vue";
 
-import { UiPopover, UiCodeMirrorEditor, UiModal } from "@/components/base";
+import { UiFixedPopover, UiCodeMirrorEditor, UiModal } from "@/components/base";
 import type { VariablePool } from "@/apifluxCore/types";
 
 const props = defineProps<{
@@ -125,6 +130,8 @@ const emit = defineEmits<{
 
 // Modal state
 const showDetailModal = ref(false);
+const showTransformPopover = ref(false);
+const transformTrigger = ref<HTMLElement | null>(null);
 
 // Computed property to check if node is executing
 const isExecuting = computed(() => {
@@ -189,6 +196,16 @@ const onView = () => {
   gap: var(--spacing-sm);
 }
 
+.node-content-group.no-input {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+
+.transform-section-full-width .functional-node-property {
+  width: 100%;
+}
+
 .functional-node-content {
   background: var(--color-background);
   display: flex;
@@ -202,7 +219,6 @@ const onView = () => {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
   overflow: hidden;
   transition: all var(--transition-normal);
 }
@@ -259,6 +275,15 @@ const onView = () => {
   transition: all var(--transition-fast);
 }
 
+/* Clickable Header States */
+.property-compact-header.clickable {
+  cursor: pointer;
+}
+
+.property-compact-header.clickable:hover {
+  background: var(--color-background-hover);
+}
+
 /* Compact Method Preview */
 .method-preview-compact {
   padding: var(--spacing-xs) var(--spacing-sm);
@@ -301,13 +326,27 @@ const onView = () => {
   letter-spacing: 0.05em;
 }
 
-/* Method Popover - Compact */
+/* Transform Popover - Enhanced */
+.transform-popover .method-popover-content {
+  height: 400px;
+  width: 500px;
+  max-width: 90vw;
+  overflow: auto;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Legacy Method Popover - Compact */
 .method-popover-content {
   height: 280px;
   width: 360px;
   overflow: auto;
   background: var(--color-background);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
 }
 
