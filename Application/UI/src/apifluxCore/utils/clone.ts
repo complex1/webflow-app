@@ -28,6 +28,9 @@ export const cloneApiNode = (apiNode: ApiNode): ApiNode => {
     if (apiNode.body) {
         clonedNode.body = cloneVariable(apiNode.body);
     }
+    if (apiNode.nodeData) {
+        clonedNode.nodeData = cloneVariable(apiNode.nodeData);
+    }
     clonedNode.method = apiNode.method;
     return clonedNode
 };
@@ -40,6 +43,9 @@ export const cloneFunctionalNode = (fnNode: FunctionalNode): FunctionalNode => {
     clonedNode.type = fnNode.type;
     clonedNode.transform = fnNode.transform;
     clonedNode.parameters = fnNode.parameters.map((param: Variable) => cloneVariable(param));
+    if (fnNode.nodeData) {
+        clonedNode.nodeData = cloneVariable(fnNode.nodeData);
+    }
     // Copy other properties if needed
     return clonedNode;
 };
