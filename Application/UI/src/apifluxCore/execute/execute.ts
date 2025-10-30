@@ -1,5 +1,5 @@
 import type { Edge, Node } from "@vue-flow/core";
-import type { ExecutionEmitter, VariablePool, WebflowNode } from "../types";
+import { NodeStatus, type ExecutionEmitter, type VariablePool, type WebflowNode } from "../types";
 import {
   getAllNextNodeIds,
   getAllTargetIds,
@@ -30,6 +30,14 @@ export const executeWebflow = async (
     (edge) => !(edge.sourceHandle === edge.source)
   );
   let nodeIds = getStartingNodeIds(flowControlEdges, nodes);
+
+  // set all the node status to PENDING before execution starts
+  for (const nodeId of nodeIds) {
+    const node = nodeMap[nodeId];
+    if (node) {
+      node.nodeStatus = NodeStatus.PENDING;
+    }
+  }
 
   for (let i = 0; i < nodeIds.length; i++) {
     const nodeId = nodeIds[i] as string;

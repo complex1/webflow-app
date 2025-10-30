@@ -11,6 +11,7 @@
     <h3 class="node-title">{{ props.data.name }}</h3>
     <div class="node-status-chip-compact" :status="getNodeStatusDetail.status">
       <i :class="getNodeStatusDetail.icon"></i>
+      <small>{{ getNodeStatusDetail.message }}</small>
     </div>
     <div class="dropdown-container" ref="dropdownRef">
       <i
@@ -190,40 +191,47 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
   border-radius: var(--radius-full);
   font-size: 10px;
+  padding: 0 var(--spacing-sm);
+  gap: 4px;
+  border: 1px solid;
 }
 
 .node-status-chip-compact[status="PENDING"] {
   background-color: var(--color-warning-light);
   color: var(--color-warning-dark);
+  border-color: var(--color-warning);
 }
 
 .node-status-chip-compact[status="IN_PROGRESS"] {
   background-color: var(--color-primary-light);
   color: var(--color-primary-dark);
+  border-color: var(--color-primary);
 }
 
 .node-status-chip-compact[status="SUCCESS"] {
   background-color: var(--color-success-light);
   color: var(--color-success-dark);
+  border-color: var(--color-success);
 }
 
 .node-status-chip-compact[status="FAILURE"] {
   background-color: var(--color-danger-light);
   color: var(--color-danger-dark);
+  border-color: var(--color-danger);
 }
 
 .node-status-chip-compact[status="INACTIVE"] {
   background-color: var(--color-background-secondary);
   color: var(--color-text-secondary);
+  border-color: var(--color-border-subtle);
 }
 
 .node-status-chip-compact[status="SKIPPED"] {
   background-color: var(--color-info-light);
   color: var(--color-info-dark);
+  border-color: var(--color-info);
 }
 
 .node-status-chip-compact i {

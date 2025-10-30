@@ -59,6 +59,7 @@
             @connect="apiFluxCore.addEdge"
             @editNode="onEditNode"
             @deleteNode="onDeleteNode"
+            @edge-delete="apiFluxCore.deleteEdge"
           />
         </div>
       </div>

@@ -59,7 +59,6 @@ const useApiFlux = (): UseApiFluxReturn => {
   }
 
   const addEdge = (edge: Connection) => {
-    console.log("Adding edge:", edge);
     const exists = edges.value.some(
       (e) =>
         e.source === edge.source &&
@@ -76,7 +75,7 @@ const useApiFlux = (): UseApiFluxReturn => {
       target: edge.target,
       sourceHandle: edge.sourceHandle || undefined,
       targetHandle: edge.targetHandle || undefined,
-      animated: true,
+      animated: edge.sourceHandle === edge.source ? false : true,
       style: { stroke: "#888" },
     };
     if (edge.sourceHandle) _edge.sourceHandle = edge.sourceHandle;
