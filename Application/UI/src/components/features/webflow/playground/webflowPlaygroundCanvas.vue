@@ -13,8 +13,8 @@
       :nodes="nodes"
       :edges="edges"
       :fit-view-on-init="true"
-      max-zoom="2"
-      min-zoom="0.1"
+      :max-zoom="2"
+      :min-zoom="0.1"
       zoom-on-scroll
       pan-on-scroll
       pan-on-drag

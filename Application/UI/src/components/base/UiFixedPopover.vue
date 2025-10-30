@@ -93,7 +93,7 @@ const popoverStyle = computed(() => {
   }
   if (props.position) {
     return {
-      position: 'fixed',
+      position: 'fixed' as const,
       left: `${props.position.x}px`,
       top: `${props.position.y}px`,
       zIndex: 9999
@@ -105,7 +105,7 @@ const popoverStyle = computed(() => {
     const { x, y } = calculatePosition(targetRect)
     
     return {
-      position: 'fixed',
+      position: 'fixed' as const,
       left: `${x}px`,
       top: `${y}px`,
       zIndex: 9999
@@ -114,7 +114,7 @@ const popoverStyle = computed(() => {
 
   // Default center position
   return {
-    position: 'fixed',
+    position: 'fixed' as const,
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',

@@ -67,7 +67,7 @@
           v-for="size in sizes"
           :key="size"
           @click="showSizePopover(size)"
-          variant="outline"
+          variant="secondary"
           :size="size"
         >
           Size {{ size.toUpperCase() }}
@@ -114,13 +114,13 @@
       <div class="demo-controls">
         <UiButton 
           @click="showCustomPopover"
-          variant="accent"
+          variant="info"
         >
           Show Custom Position
         </UiButton>
         <UiButton 
           @click="showMousePopover"
-          variant="outline"
+          variant="secondary"
           @mousemove="updateMousePosition"
         >
           Mouse Position (Hover)

@@ -20,9 +20,9 @@
             <UiButton variant="secondary">Secondary</UiButton>
             <UiButton variant="success">Success</UiButton>
             <UiButton variant="warning">Warning</UiButton>
-            <UiButton variant="error">Error</UiButton>
+            <UiButton variant="danger">Error</UiButton>
             <UiButton variant="ghost">Ghost</UiButton>
-            <UiButton variant="link">Link</UiButton>
+            <UiButton variant="ghost">Link</UiButton>
           </div>
         </div>
 
@@ -167,8 +167,8 @@
               <p>This card has an outlined border.</p>
             </UiCard>
             
-            <UiCard variant="filled" title="Filled Card">
-              <p>This card has a filled background.</p>
+            <UiCard variant="minimal" title="Minimal Card">
+              <p>This card has a minimal design.</p>
             </UiCard>
           </div>
         </div>

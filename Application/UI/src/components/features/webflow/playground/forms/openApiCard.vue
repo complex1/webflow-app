@@ -48,27 +48,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ExtractedAPI } from "@/types";
 import { computed } from "vue";
-
-interface ExtractedField {
-  name: string;
-  required: boolean;
-  type: string;
-  description?: string;
-}
-
-interface ExtractedAPI {
-  id: string;
-  groupName: string;
-  name: string;
-  url: string;
-  method: string;
-  description?: string;
-  header?: ExtractedField[];
-  pathParam?: ExtractedField[];
-  queryParam?: ExtractedField[];
-  body?: any;
-}
 
 const props = defineProps<{
   api: ExtractedAPI;
