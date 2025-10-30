@@ -13,22 +13,13 @@
     />
 
     <!-- Compact Transform Method Section - Full Width -->
-    <div class="transform-section-full-width">
-      <div class="functional-node-property" @click="showTransformPopover = true">
-        <div 
-          class="property-compact-header clickable" 
-          ref="transformTrigger"
-        >
-          <i class="fas fa-code"></i>
-          <span>Transform</span>
-          <i class="fas fa-expand-alt view-indicator"></i>
-        </div>
-        <div class="method-preview-compact">
-          <div class="method-preview-content">
-            <span class="method-preview-text">{{ getMethodPreview }}</span>
-          </div>
-        </div>
-      </div>
+    <div
+      class="transform-section"
+      @click="showTransformPopover = true"
+      ref="transformTrigger"
+    >
+      <i class="fas fa-code"></i>
+      <span>Transform Method</span>
     </div>
 
     <!-- UiFixedPopover for Transform Method -->
@@ -48,7 +39,10 @@
     </UiFixedPopover>
 
     <!-- Compact node content -->
-    <div class="node-content-group" :class="{ 'no-input': data.parameters.length === 0 }">
+    <div
+      class="node-content-group"
+      :class="{ 'no-input': data.parameters.length === 0 }"
+    >
       <div class="functional-node-content">
         <!-- Compact Parameters Section -->
         <div v-if="data.parameters.length" class="functional-node-property">
@@ -139,22 +133,6 @@ const isExecuting = computed(() => {
   return false; // Replace with actual execution state
 });
 
-// Computed property for method preview
-const getMethodPreview = computed(() => {
-  const method = props.data.transform;
-  if (!method) return "No method defined";
-
-  // Get first meaningful line or function signature
-  const lines = method.split("\n").filter((line) => line.trim());
-  const firstLine = lines[0] || "";
-
-  if (firstLine.length > 50) {
-    return firstLine.substring(0, 47) + "...";
-  }
-
-  return firstLine || "function transform(data) { ... }";
-});
-
 const onEdit = () => {
   emit("edit", props.data);
 };
@@ -174,8 +152,7 @@ const onView = () => {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
-  border: 2px solid var(--color-functional-node);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-card);
   width: 280px;
   position: relative;
@@ -201,26 +178,11 @@ const onView = () => {
   grid-template-columns: 1fr;
 }
 
-
-.transform-section-full-width .functional-node-property {
-  width: 100%;
-}
-
 .functional-node-content {
   background: var(--color-background);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
-}
-
-/* Property Styling - Compact */
-.functional-node-property {
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  overflow: hidden;
-  transition: all var(--transition-normal);
 }
 
 .functional-node-property:hover {
@@ -229,23 +191,25 @@ const onView = () => {
 }
 
 /* Compact Property Header */
+.property-compact:not(:last-child) {
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+}
+
 .property-compact-header {
   display: flex;
   align-items: center;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background: var(--color-background-subtle);
-  border-bottom: 1px solid var(--color-border-subtle);
   gap: var(--spacing-xs);
-  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
+  font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .property-compact-header i {
-  color: var(--color-warning);
-  font-size: var(--font-size-xs);
+  color: var(--color-primary);
   width: 12px;
   display: flex;
   align-items: center;
@@ -257,15 +221,28 @@ const onView = () => {
 }
 
 .count-badge {
-  font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
-  background: var(--color-warning-light);
+  background: var(--color-primary-light);
   padding: 1px 4px;
   border-radius: var(--radius-xs);
   font-weight: var(--font-weight-medium);
   min-width: 16px;
-  width: fit-content;
   text-align: center;
+  width: fit-content;
+}
+
+/* Compact Property Value */
+.property-compact-value {
+  padding: var(--spacing-xs);
+}
+
+/* Compact Property List */
+.property-compact-list {
+  margin-top: var(--spacing-xs);
+  padding-left: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .view-indicator {
@@ -350,20 +327,6 @@ const onView = () => {
   border: 1px solid var(--color-border);
 }
 
-/* Compact Parameter List */
-.property-compact-list {
-  padding: var(--spacing-xs);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-/* Result Block - Compact */
-.node-result {
-  border-top: 1px solid var(--color-border-subtle);
-  background: var(--color-background-subtle);
-}
-
 /* Execution States */
 .node-executing {
   border-color: var(--color-accent-cyan);
@@ -394,6 +357,30 @@ const onView = () => {
 .node-functional .property-count {
   background: var(--color-warning-light);
   color: var(--color-warning-dark);
+}
+
+.transform-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs);
+  background: var(--color-background-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.transform-section .fa-code {
+  height: 16px;
+  width: 16px;
+  padding: var(--spacing-sm);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid var(--color-warning); */
+  background-color: var(--color-text-secondary);
+  color: white;
+  border-radius: var(--radius-xs)
 }
 
 /* Responsive adjustments - Compact */

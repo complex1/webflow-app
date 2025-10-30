@@ -74,17 +74,12 @@ const getVariableData = computed(() => {
 <style scoped>
 /* Compact Variable View Styling */
 .variable-view-compact {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: var(--font-size-xs);
   width: 100%;
-  padding: 2px var(--spacing-xs);
-  background: var(--color-background-secondary);
-  border-radius: var(--radius-xs);
-  border: 1px solid var(--color-border-subtle);
-  transition: all var(--transition-fast);
+  position: relative;
 }
 
 .variable-view-compact:hover {
@@ -100,7 +95,7 @@ const getVariableData = computed(() => {
 .variable-handle-compact {
   width: 6px;
   height: 6px;
-  background: var(--color-primary);
+  background: var(--color-accent-cyan);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xs);
   top: 50%;
@@ -111,7 +106,7 @@ const getVariableData = computed(() => {
 .variable-name-compact {
   flex-grow: 1;
   margin-left: var(--spacing-xs);
-  color: var(--color-text-primary);
+  color: var(--color-text-tertiary);
   font-weight: var(--font-weight-medium);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -122,7 +117,7 @@ const getVariableData = computed(() => {
 .view-icon-compact {
   font-size: 10px;
   cursor: pointer;
-  color: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
   padding: 2px;
   border-radius: var(--radius-xs);
   transition: all var(--transition-fast);

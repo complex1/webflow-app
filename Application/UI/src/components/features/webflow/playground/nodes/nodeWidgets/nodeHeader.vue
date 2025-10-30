@@ -157,9 +157,7 @@ onUnmounted(() => {
 .node-header-compact {
   position: relative;
   padding: var(--spacing-xs) var(--spacing-sm);
-  background: var(--color-background-elevated);
-  border-bottom: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   cursor: pointer;
   z-index: 3;
   min-height: 36px;
@@ -168,22 +166,18 @@ onUnmounted(() => {
 
 .node-icon {
   font-size: var(--font-size-sm);
-  color: var(--color-primary);
+  color: var(--color-text-inverse);
   width: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.node-header--functional .node-icon {
-  color: var(--color-warning);
-}
-
 .node-title {
   flex-grow: 1;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
+  color: var(--color-text-inverse);
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;

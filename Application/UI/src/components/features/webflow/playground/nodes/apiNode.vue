@@ -181,9 +181,7 @@ const onDelete = () => {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
-  border: 2px solid var(--color-api-node);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-sm);
   width: 280px;
   position: relative;
 }
@@ -201,7 +199,7 @@ const onDelete = () => {
 
 /* URL Section - Compact */
 .api-node-url-section {
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: 0 var(--spacing-xs);
   background: var(--color-background-subtle);
   border-bottom: 1px solid var(--color-border-subtle);
 }
@@ -228,40 +226,26 @@ const onDelete = () => {
   border-bottom-right-radius: var(--radius-lg);
 }
 
-/* Compact Property Styling */
-.property-compact {
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  transition: all var(--transition-normal);
-}
-
-.property-compact:hover {
-  border-color: var(--color-border-hover);
-  box-shadow: var(--shadow-sm);
-}
-
 /* Compact Property Header */
+.property-compact:not(:last-child) {
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+}
+
 .property-compact-header {
   display: flex;
   align-items: center;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background: var(--color-background-subtle);
-  border-bottom: 1px solid var(--color-border-subtle);
   gap: var(--spacing-xs);
-  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
+  font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .property-compact-header i {
   color: var(--color-primary);
-  font-size: var(--font-size-xs);
   width: 12px;
   display: flex;
   align-items: center;
@@ -273,7 +257,6 @@ const onDelete = () => {
 }
 
 .count-badge {
-  font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   background: var(--color-primary-light);
   padding: 1px 4px;
@@ -291,16 +274,11 @@ const onDelete = () => {
 
 /* Compact Property List */
 .property-compact-list {
-  padding: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+  padding-left: var(--spacing-md);
   display: flex;
   flex-direction: column;
   gap: 2px;
-}
-
-/* Result Block - Compact */
-.node-result {
-  border-top: 1px solid var(--color-border-subtle);
-  background: var(--color-background-subtle);
 }
 
 /* Execution States */

@@ -1,24 +1,23 @@
 <template>
-  <div class="node-result-block-compact" :class="{ 'compact': compact }">
+  <div class="node-result-block-compact" :class="{ compact: compact }">
     <!-- Compact Result Header -->
     <div class="result-header-compact">
       <div class="result-status-indicator" :class="getResultStatus">
         <i :class="getResultIcon"></i>
       </div>
       <span class="result-label">Output</span>
-      <i 
+      <i
         ref="viewIconRef"
-        class="fa fa-eye result-view-icon" 
+        class="fa fa-eye result-view-icon"
         data-tooltip="View Result"
         @click.stop="toggleResultPopover"
       ></i>
-    </div>
-
-    <!-- Compact Result Preview -->
-    <div class="result-preview-compact">
-      <div class="result-preview-text">
-        {{ getResultPreview }}
-      </div>
+      <Handle
+        class="result-handle-compact"
+        type="source"
+        :id="props.node.nodeData.id"
+        :position="Position.Right"
+      />
     </div>
 
     <!-- Result Data Popover -->
@@ -32,21 +31,6 @@
       title="Execution Result"
     >
       <div class="result-popover-content">
-        <div class="result-meta">
-          <div class="meta-item">
-            <span class="meta-label">Status:</span>
-            <span class="meta-value" :class="getResultStatus">{{ getResultStatusText }}</span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-label">Type:</span>
-            <span class="meta-value">{{ getType }}</span>
-          </div>
-          <div v-if="getExecutionTime" class="meta-item">
-            <span class="meta-label">Time:</span>
-            <span class="meta-value">{{ getExecutionTime }}ms</span>
-          </div>
-        </div>
-        
         <div class="result-data">
           <pre v-if="getType !== 'object'" class="data-content-compact">{{
             getVariableData
@@ -60,14 +44,6 @@
         </div>
       </div>
     </UiFixedPopover>
-
-    <!-- Output Handle -->
-    <Handle
-      class="result-handle-compact"
-      type="source"
-      :id="props.node.nodeData.id"
-      :position="Position.Right"
-    />
   </div>
 </template>
 <script setup lang="ts">
@@ -99,7 +75,10 @@ const getType = computed(() => {
 
 const getVariableData = computed(() => {
   // Logic to fetch and return the variable data
-  return props.node.nodeData.get(props.variablePool || {}, props.envVariableMap || new Map());
+  return props.node.nodeData.get(
+    props.variablePool || {},
+    props.envVariableMap || new Map()
+  );
 });
 
 // Get result status based on execution state
@@ -107,22 +86,27 @@ const getResultStatus = computed(() => {
   // This would be connected to your actual execution state
   const hasError = false; // Replace with actual error checking
   const isExecuting = false; // Replace with actual execution state
-  const hasResult = getVariableData.value !== undefined && getVariableData.value !== null;
-  
-  if (isExecuting) return 'status-executing';
-  if (hasError) return 'status-error';
-  if (hasResult) return 'status-success';
-  return 'status-pending';
+  const hasResult =
+    getVariableData.value !== undefined && getVariableData.value !== null;
+
+  if (isExecuting) return "status-executing";
+  if (hasError) return "status-error";
+  if (hasResult) return "status-success";
+  return "status-pending";
 });
 
 // Get result icon based on status
 const getResultIcon = computed(() => {
   const status = getResultStatus.value;
   switch (status) {
-    case 'status-executing': return 'fas fa-spinner fa-spin';
-    case 'status-error': return 'fas fa-exclamation-triangle';
-    case 'status-success': return 'fas fa-check-circle';
-    default: return 'fas fa-clock';
+    case "status-executing":
+      return "fas fa-spinner fa-spin";
+    case "status-error":
+      return "fas fa-exclamation-triangle";
+    case "status-success":
+      return "fas fa-check-circle";
+    default:
+      return "fas fa-clock";
   }
 });
 
@@ -130,32 +114,15 @@ const getResultIcon = computed(() => {
 const getResultStatusText = computed(() => {
   const status = getResultStatus.value;
   switch (status) {
-    case 'status-executing': return 'Executing';
-    case 'status-error': return 'Error';
-    case 'status-success': return 'Success';
-    default: return 'Pending';
+    case "status-executing":
+      return "Executing";
+    case "status-error":
+      return "Error";
+    case "status-success":
+      return "Success";
+    default:
+      return "Pending";
   }
-});
-
-// Get result preview text
-const getResultPreview = computed(() => {
-  const data = getVariableData.value;
-  if (data === undefined || data === null) return 'No result';
-  
-  const type = typeof data;
-  if (type === 'string') {
-    return data.length > 20 ? data.substring(0, 17) + '...' : data;
-  }
-  if (type === 'number' || type === 'boolean') {
-    return String(data);
-  }
-  if (type === 'object') {
-    if (Array.isArray(data)) {
-      return `Array[${data.length}]`;
-    }
-    return 'Object';
-  }
-  return String(data);
 });
 
 // Get execution time (mock - replace with actual timing)
@@ -165,27 +132,10 @@ const getExecutionTime = computed(() => {
 });
 </script>
 <style scoped>
-/* Compact Node Result Block Styling */
+
 .node-result-block-compact {
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-xs);
-  position: relative;
-  transition: all var(--transition-fast);
-  min-height: 56px;
-}
-
-.node-result-block-compact:hover {
-  border-color: var(--color-border-hover);
-  box-shadow: var(--shadow-sm);
-}
-
-.node-result-block-compact.compact {
-  padding: 2px var(--spacing-xs);
-  min-height: 48px;
+  border-left: 1px solid var(--color-border-subtle);
+  padding-left: var(--spacing-xs);
 }
 
 /* Compact Result Header */
@@ -195,6 +145,7 @@ const getExecutionTime = computed(() => {
   gap: var(--spacing-xs);
   margin-bottom: var(--spacing-xs);
   padding: 2px 0;
+  position: relative;
 }
 
 .result-status-indicator {
@@ -231,7 +182,7 @@ const getExecutionTime = computed(() => {
 .result-label {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   flex: 1;
@@ -240,7 +191,7 @@ const getExecutionTime = computed(() => {
 .result-view-icon {
   font-size: 10px;
   cursor: pointer;
-  color: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
   padding: 2px;
   border-radius: var(--radius-xs);
   transition: all var(--transition-fast);
@@ -254,27 +205,6 @@ const getExecutionTime = computed(() => {
 .result-view-icon:hover {
   color: var(--color-primary);
   background: var(--color-primary-light);
-}
-
-/* Compact Result Preview */
-.result-preview-compact {
-  background: var(--color-background-secondary);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-xs);
-  padding: var(--spacing-xs);
-  min-height: 24px;
-  display: flex;
-  align-items: center;
-}
-
-.result-preview-text {
-  font-size: var(--font-size-xs);
-  font-family: var(--font-family-mono);
-  color: var(--color-text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.2;
 }
 
 /* Result Handle */
@@ -380,36 +310,36 @@ const getExecutionTime = computed(() => {
     padding: 2px var(--spacing-xs);
     min-height: 44px;
   }
-  
+
   .result-header-compact {
     gap: 2px;
   }
-  
+
   .result-status-indicator {
     width: 14px;
     height: 14px;
     font-size: 7px;
   }
-  
+
   .result-label {
     font-size: 10px;
   }
-  
+
   .result-view-icon {
     width: 14px;
     height: 14px;
     font-size: 8px;
   }
-  
+
   .result-preview-compact {
     padding: 2px var(--spacing-xs);
     min-height: 20px;
   }
-  
+
   .result-preview-text {
     font-size: 10px;
   }
-  
+
   .result-popover-content {
     min-width: 280px;
     max-width: 320px;

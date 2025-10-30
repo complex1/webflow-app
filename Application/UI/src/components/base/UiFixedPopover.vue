@@ -275,7 +275,7 @@ onUnmounted(() => {
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-2xl);
   overflow: hidden;
   max-width: 90vw;
@@ -389,29 +389,19 @@ onUnmounted(() => {
 
 /* Header Styles */
 .popover-header {
-  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+  padding: var(--spacing-md);
   border-bottom: 1px solid var(--glass-border);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  background: linear-gradient(
-    135deg,
-    var(--gradient-flow-glass-start),
-    var(--gradient-flow-glass-end)
-  );
   gap: var(--spacing-md);
 }
 
 .popover-title {
-  font-size: var(--text-lg);
-  font-weight: var(--font-semibold);
-  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
   margin: 0;
-  background: var(--gradient-flow-blue);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: var(--leading-tight);
 }
 
 .popover-close {
@@ -420,20 +410,20 @@ onUnmounted(() => {
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: var(--glass-bg-subtle);
-  border: 1px solid var(--glass-border-subtle);
+  background: var(--color-background-subtle);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-full);
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition: all var(--transition-spring);
-  backdrop-filter: var(--glass-backdrop-subtle);
-  -webkit-backdrop-filter: var(--glass-backdrop-subtle);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   flex-shrink: 0;
 }
 
 .popover-close:hover {
-  background: var(--color-flow-red);
-  border-color: var(--color-flow-red);
+  background: var(--color-danger);
+  border-color: var(--color-danger);
   color: white;
   transform: scale(1.05);
 }
@@ -446,8 +436,9 @@ onUnmounted(() => {
 .popover-content {
   flex: 1;
   overflow-y: auto;
-  color: var(--text-primary);
-  line-height: var(--leading-normal);
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
 }
 
 
@@ -458,11 +449,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: flex-end;
   gap: var(--spacing-sm);
-  background: linear-gradient(
-    135deg,
-    var(--gradient-flow-glass-start),
-    var(--gradient-flow-glass-end)
-  );
+  background: var(--color-background-subtle);
 }
 
 /* Transparent Mask/Backdrop */

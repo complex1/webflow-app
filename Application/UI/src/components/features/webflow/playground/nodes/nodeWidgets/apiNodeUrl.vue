@@ -121,26 +121,16 @@ const getFullUrl = computed(() => {
 /* Compact URL Display */
 .url-display-compact {
   font-size: var(--font-size-xs);
-  color: var(--color-text-primary);
-  font-weight: var(--font-weight-medium);
-  font-family: var(--font-family-mono);
+  color: var(--color-text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: 1;
-  padding: var(--spacing-xs);
-  background: var(--color-background);
-  border-radius: var(--radius-xs);
-  border: 1px solid var(--color-border-subtle);
-  line-height: 1.2;
-  min-height: 24px;
-  display: flex;
-  align-items: center;
 }
 
 .url-display-compact:hover {
-  border-color: var(--color-border);
-  background: var(--color-background-hover);
+  color: var(--color-primary);
+  text-decoration: underline;
 }
 
 /* Responsive adjustments */
