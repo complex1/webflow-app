@@ -63,7 +63,7 @@ export class ApiNode extends Node {
                 ...headers,
                 'Content-Type': 'application/json'
             },
-            body: body ? JSON.stringify(body) : null
+            body: body ? body : null
         };
         if (this.method === 'GET') {
             options.body = null;
