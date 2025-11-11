@@ -47,6 +47,11 @@ const router = createRouter({
       path: '/json-editor-demo',
       name: 'JsonEditorDemo',
       component: () => import('@/views/JsonEditorDemo.vue')
+    },
+    {
+      path: '/docs',
+      name: 'Documentation',
+      component: () => import('@/views/Documentation/DashboardDemo.vue')
     }
   ]
 })
