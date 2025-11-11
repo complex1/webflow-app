@@ -47,7 +47,7 @@
 
       <!-- Playground Content Area -->
       <div class="playground-content">
-        <div class="canvas-container glass-panel">
+        <div class="canvas-container">
           <webflow-playground-canvas
             ref="webflowCanvas"
             :nodes="apiFluxCore.nodes.value"
@@ -410,6 +410,9 @@ watch(
   flex: 1;
   padding: var(--spacing-lg);
   padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .canvas-container {
@@ -418,6 +421,9 @@ watch(
   min-height: 32rem;
   position: relative;
   overflow: hidden;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
 }
 
 /* ===== Animations ===== */

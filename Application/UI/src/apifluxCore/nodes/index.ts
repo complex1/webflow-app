@@ -11,10 +11,11 @@ export default class Node {
     nodeData = new Variable(); // changed to any for flexibility
     executing: boolean;
     hasError: boolean; // change to private
+    error: string | null | undefined; // change to private
     errorMessage: string | null; // change to private
     executionTime: number | null = null; // added executionTime property
     executionDone: boolean = false; // added executionDone property
-    private envVariableMap: Record<string, string> = {}; // added envVariableMap property
+    envVariableMap: Record<string, string> = {}; // added envVariableMap property
     private order: number = 0; // added order property
     private position: { x: number; y: number } = { x: 0, y: 0 }; // added position property
 

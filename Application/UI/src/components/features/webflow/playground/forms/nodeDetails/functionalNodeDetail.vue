@@ -1,5 +1,5 @@
 <template>
-  <div class="functional-node-detail glass-panel">
+  <div class="functional-node-detail">
     <!-- Node Header -->
     <div class="detail-header">
       <div class="header-content">
@@ -113,14 +113,14 @@
         </div>
 
         <!-- Result Data -->
-        <div v-if="functionalNode.nodeData && !functionalNode.hasError" class="result-section">
+        <div v-if="!functionalNode.hasError" class="result-section">
           <h4 class="result-title">Transformed Data</h4>
           <div class="result-content">
             <div class="code-container">
-              <pre v-if="resultType !== 'object'" class="code-block">{{ JSON.stringify(functionalNode.nodeData, null, 2) }}</pre>
+              <pre v-if="(typeof getVariableData !== 'object')" class="code-block">{{ getVariableData}}</pre>
               <UiJsonEditor
                 v-else
-                :modelValue="functionalNode.nodeData"
+                :modelValue="getVariableData"
                 readonly
                 :show-footer="false"
               />
@@ -155,6 +155,7 @@ import { UiJsonEditor } from '@/components/base';
 const props = defineProps<{
   functionalNode: FunctionalNode;
   globalStore?: Record<string, any>;
+  envVariableMap?: Record<string, string>;
 }>();
 
 // Computed properties
@@ -236,12 +237,20 @@ const isEmpty = computed(() => {
 // Methods
 const getVariableValue = (variable: any) => {
   try {
-    const value = variable.get(props.globalStore || {});
+    const value = variable.get(props.globalStore || {}, props.envVariableMap || {});
     return value !== undefined && value !== null ? String(value) : 'Not set';
   } catch (error) {
     return 'Error getting value';
   }
 };
+
+const getVariableData = computed(() => {
+  // Logic to fetch and return the variable data
+  return props.functionalNode.nodeData.get(
+    props.globalStore || {},
+    props.envVariableMap || {}
+  );
+});
 </script>
 
 <style scoped>
@@ -249,14 +258,11 @@ const getVariableValue = (variable: any) => {
 .functional-node-detail {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-xl);
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
   background: var(--glass-bg);
-  backdrop-filter: var(--glass-backdrop);
-  -webkit-backdrop-filter: var(--glass-backdrop);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  border-bottom-left-radius: var(--radius-xl);
+  border-bottom-right-radius: var(--radius-xl);
   font-size: var(--font-size-sm);
 }
 
@@ -265,10 +271,10 @@ const getVariableValue = (variable: any) => {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-xl);
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
   background: linear-gradient(135deg, var(--color-background) 0%, var(--color-background-subtle) 100%);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-border-subtle);
 }
 
@@ -282,7 +288,7 @@ const getVariableValue = (variable: any) => {
 .header-icon {
   width: 56px;
   height: 56px;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -343,7 +349,7 @@ const getVariableValue = (variable: any) => {
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   border: 1px solid;
@@ -383,13 +389,13 @@ const getVariableValue = (variable: any) => {
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
 .card-header {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   background: var(--color-background-subtle);
   border-bottom: 1px solid var(--color-border-subtle);
 }
@@ -411,17 +417,17 @@ const getVariableValue = (variable: any) => {
 
 /* ===== Transform Card ===== */
 .transform-content {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
 }
 
 .function-meta {
   background: var(--color-background-subtle);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border-subtle);
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
 }
 
 .meta-grid {
@@ -493,7 +499,7 @@ const getVariableValue = (variable: any) => {
 
 .code-block {
   margin: 0;
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   background: var(--color-background-code);
   font-family: var(--font-family-mono);
   font-size: var(--font-size-sm);
@@ -505,7 +511,7 @@ const getVariableValue = (variable: any) => {
 
 /* ===== Parameters Card ===== */
 .parameters-content {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
 }
 
 .parameter-list {
@@ -567,13 +573,13 @@ const getVariableValue = (variable: any) => {
 
 /* ===== Results Card ===== */
 .results-content {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
 }
 
 .execution-stats {
   display: flex;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
 }
 
@@ -630,14 +636,14 @@ const getVariableValue = (variable: any) => {
 }
 
 .empty-content {
-  padding: var(--spacing-3xl);
+  padding: var(--spacing-md);
 }
 
 .empty-icon {
   font-size: var(--font-size-4xl);
   color: var(--color-text-tertiary);
   opacity: 0.4;
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
 }
 
 .empty-title {
@@ -658,7 +664,7 @@ const getVariableValue = (variable: any) => {
 /* ===== Responsive Design ===== */
 @media (max-width: 768px) {
   .functional-node-detail {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
   }
   
   .detail-header {

@@ -182,7 +182,8 @@ const onDelete = () => {
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
   border-radius: var(--radius-sm);
-  width: 280px;
+  min-width: 280px;
+  max-width: 400px;
   position: relative;
 }
 

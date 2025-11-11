@@ -23,20 +23,10 @@ export const executeProxyRequest = async (req: Request, res: Response) => {
     res.status(response.status).json(response.data);
 
   } catch (error: any) {
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      return res.status(error.response.status).json(error);
-    } else if (error.request) {
-      // The request was made but no response was received
-      return res.status(500).json(error);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      return res.status(500).json({
-        success: false,
-        message: 'Error in setting up the request',
-        error: error.message
-      });
-    }
+    res.status(200).json({
+      success: false,
+      message: error.message,
+      error: error
+    });
   }
 };

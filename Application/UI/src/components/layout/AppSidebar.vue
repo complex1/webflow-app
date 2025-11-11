@@ -28,14 +28,14 @@
         <i class="fas fa-user-cog"></i>
       </router-link>
       
-      <router-link 
+      <!-- <router-link 
         to="/docs"
         class="sidebar-nav-item" 
         :class="{ active: $route.path.includes('/docs') }"
         v-tooltip="'Documentation'"
       >
         <i class="fas fa-book"></i>
-      </router-link>
+      </router-link> -->
     </nav>
     
     <!-- <div class="sidebar-bottom">

@@ -1,5 +1,5 @@
 <template>
-  <div class="api-node-detail glass-panel">
+  <div class="api-node-detail">
     <!-- Node Header -->
     <div class="detail-header">
       <div class="header-content">
@@ -187,19 +187,19 @@
           </div>
           <div class="stat-item error" v-if="apiNode.hasError">
             <div class="stat-label">Error</div>
-            <div class="stat-value">{{ apiNode.errorMessage }}</div>
+            <div class="stat-value" style="max-height: 400px; overflow: auto;">{{ apiNode.error }}</div>
           </div>
         </div>
 
         <!-- Response Data -->
-        <div v-if="apiNode.nodeData && !apiNode.hasError" class="response-section">
+        <div v-if="!apiNode.hasError" class="response-section">
           <h4 class="response-title">Response Data</h4>
           <div class="response-content">
             <div class="code-container">
-              <pre v-if="responseType !== 'object'" class="code-block">{{ JSON.stringify(apiNode.nodeData, null, 2) }}</pre>
+              <pre v-if="(typeof getVariableData !== 'object')" class="code-block">{{ getVariableData }}</pre>
               <UiJsonEditor
                 v-else
-                :modelValue="apiNode.nodeData"
+                :modelValue="getVariableData"
                 readonly
                 :show-footer="false"
               />
@@ -235,6 +235,7 @@ import { toast } from '@/utils';
 const props = defineProps<{
   apiNode: ApiNode;
   globalStore?: Record<string, any>;
+  envVariableMap?: Record<string, string>;
 }>();
 
 // Computed properties
@@ -366,6 +367,14 @@ const copyUrl = async () => {
     toast.error('Failed to copy URL');
   }
 };
+
+const getVariableData = computed(() => {
+  // Logic to fetch and return the variable data
+  return props.apiNode.nodeData.get(
+    props.globalStore || {},
+    props.envVariableMap || {}
+  );
+});
 </script>
 
 <style scoped>
@@ -373,14 +382,11 @@ const copyUrl = async () => {
 .api-node-detail {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-xl);
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
   background: var(--glass-bg);
-  backdrop-filter: var(--glass-backdrop);
-  -webkit-backdrop-filter: var(--glass-backdrop);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  border-bottom-left-radius: var(--radius-xl);
+  border-bottom-right-radius: var(--radius-xl);
   font-size: var(--font-size-sm);
 }
 
@@ -389,10 +395,10 @@ const copyUrl = async () => {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-xl);
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
   background: linear-gradient(135deg, var(--color-background) 0%, var(--color-background-subtle) 100%);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-subtle);
 }
 
@@ -406,7 +412,7 @@ const copyUrl = async () => {
 .header-icon {
   width: 56px;
   height: 56px;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -467,7 +473,7 @@ const copyUrl = async () => {
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   border: 1px solid;
@@ -508,13 +514,13 @@ const copyUrl = async () => {
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
 .card-header {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   background: var(--color-background-subtle);
   border-bottom: 1px solid var(--color-border-subtle);
 }
@@ -536,12 +542,12 @@ const copyUrl = async () => {
 
 /* ===== Configuration Card ===== */
 .config-content {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
 }
 
 .method-url-section {
   display: flex;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
   align-items: flex-start;
 }
 
@@ -634,10 +640,10 @@ const copyUrl = async () => {
 
 /* ===== Parameters Card ===== */
 .parameters-content {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: var(--spacing-md);
 }
 
 .parameter-group {
@@ -752,7 +758,7 @@ const copyUrl = async () => {
 /* ===== Body and Results Cards ===== */
 .body-content,
 .results-content {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
 }
 
 .code-container {
@@ -764,7 +770,7 @@ const copyUrl = async () => {
 
 .code-block {
   margin: 0;
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   background: var(--color-background-code);
   font-family: var(--font-family-mono);
   font-size: var(--font-size-sm);
@@ -779,7 +785,7 @@ const copyUrl = async () => {
 .execution-stats {
   display: flex;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
 }
 
@@ -829,14 +835,14 @@ const copyUrl = async () => {
 }
 
 .empty-content {
-  padding: var(--spacing-3xl);
+  padding: var(--spacing-md);
 }
 
 .empty-icon {
   font-size: var(--font-size-4xl);
   color: var(--color-text-tertiary);
   opacity: 0.4;
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
 }
 
 .empty-title {
@@ -857,7 +863,7 @@ const copyUrl = async () => {
 /* ===== Responsive Design ===== */
 @media (max-width: 768px) {
   .api-node-detail {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
   }
   
   .detail-header {

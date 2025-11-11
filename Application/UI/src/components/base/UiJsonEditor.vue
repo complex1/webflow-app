@@ -21,7 +21,7 @@
         <slot name="actions" />
       </div>
     </div>
-    
+
     <div class="editor-container" :class="containerClasses">
       <div
         :id="editorId"
@@ -29,20 +29,20 @@
         class="codemirror-wrapper"
         :style="{ height: `${height}px` }"
       ></div>
-      
+
       <!-- Loading overlay -->
       <div v-if="isLoading" class="editor-loading">
         <div class="loading-spinner"></div>
         <span class="loading-text">Loading JSON editor...</span>
       </div>
-      
+
       <!-- Error overlay -->
       <div v-if="error" class="editor-error">
         <i class="fas fa-exclamation-triangle"></i>
         <span>{{ error }}</span>
       </div>
     </div>
-    
+
     <!-- Footer with info and actions -->
     <div v-if="showFooter" class="editor-footer">
       <div class="footer-info">
@@ -53,11 +53,9 @@
           Characters: {{ charCount }}
         </span>
         <span class="language-info">JSON</span>
-        <span v-if="jsonSize" class="json-size">
-          Size: {{ jsonSize }}
-        </span>
+        <span v-if="jsonSize" class="json-size"> Size: {{ jsonSize }} </span>
       </div>
-      
+
       <div class="footer-actions">
         <button
           v-if="showClearButton"
@@ -87,40 +85,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
-import { EditorView } from '@codemirror/view'
-import { EditorState } from '@codemirror/state'
-import { basicSetup } from 'codemirror'
-import { json } from '@codemirror/lang-json'
-import { oneDark } from '@codemirror/theme-one-dark'
-import { linter, lintGutter, type Diagnostic } from '@codemirror/lint'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { EditorView } from "@codemirror/view";
+import { EditorState } from "@codemirror/state";
+import { basicSetup } from "codemirror";
+import { json } from "@codemirror/lang-json";
+import { oneDark } from "@codemirror/theme-one-dark";
+import { linter, lintGutter, type Diagnostic } from "@codemirror/lint";
 
 // Props
 interface Props {
-  modelValue: string | object | any[]
-  label?: string
-  placeholder?: string
-  height?: number
-  theme?: 'light' | 'dark'
-  disabled?: boolean
-  readonly?: boolean
-  required?: boolean
-  error?: string | boolean
-  errorMessage?: string
-  showFooter?: boolean
-  showLineCount?: boolean
-  showCharCount?: boolean
-  showFormatButton?: boolean
-  showClearButton?: boolean
-  showCopyButton?: boolean
-  autoValidate?: boolean
-  formatOnBlur?: boolean
-  strictMode?: boolean
+  modelValue: string | object | any[];
+  label?: string;
+  placeholder?: string;
+  height?: number;
+  theme?: "light" | "dark";
+  disabled?: boolean;
+  readonly?: boolean;
+  required?: boolean;
+  error?: string | boolean;
+  errorMessage?: string;
+  showFooter?: boolean;
+  showLineCount?: boolean;
+  showCharCount?: boolean;
+  showFormatButton?: boolean;
+  showClearButton?: boolean;
+  showCopyButton?: boolean;
+  autoValidate?: boolean;
+  formatOnBlur?: boolean;
+  strictMode?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   height: 200,
-  theme: 'light',
+  theme: "light",
   disabled: false,
   readonly: false,
   required: false,
@@ -132,295 +130,302 @@ const props = withDefaults(defineProps<Props>(), {
   showCopyButton: false,
   autoValidate: true,
   formatOnBlur: false,
-  strictMode: false
-})
+  strictMode: false,
+});
 
 // Emits
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | object | any[]): void
-  (e: 'change', value: string | object | any[]): void
-  (e: 'blur', event: FocusEvent): void
-  (e: 'focus', event: FocusEvent): void
-  (e: 'validation', isValid: boolean, error?: string): void
-  (e: 'format', formatted: string): void
-}>()
+  (e: "update:modelValue", value: string | object | any[]): void;
+  (e: "change", value: string | object | any[]): void;
+  (e: "blur", event: FocusEvent): void;
+  (e: "focus", event: FocusEvent): void;
+  (e: "validation", isValid: boolean, error?: string): void;
+  (e: "format", formatted: string): void;
+}>();
 
 // Template refs
-const editorContainer = ref<HTMLElement>()
+const editorContainer = ref<HTMLElement>();
 
 // State
-const editorView = ref<EditorView>()
-const isLoading = ref(true)
-const error = ref<string>('')
-const validationError = ref<string>('')
-const isValidJson = ref(true)
-const editorId = `json-editor-${Math.random().toString(36).substr(2, 9)}`
+const editorView = ref<EditorView>();
+const isLoading = ref(true);
+const error = ref<string>("");
+const validationError = ref<string>("");
+const isValidJson = ref(true);
+const editorId = `json-editor-${Math.random().toString(36).substr(2, 9)}`;
 
 // Convert between string and object formats
 const stringValue = computed(() => {
-  if (typeof props.modelValue === 'string') {
-    return props.modelValue
+  if (typeof props.modelValue === "string") {
+    return props.modelValue;
   }
   try {
-    return JSON.stringify(props.modelValue, null, 2)
+    return JSON.stringify(props.modelValue, null, 2);
   } catch {
-    return ''
+    return "";
   }
-})
+});
 
 const isInputObject = computed(() => {
-  return typeof props.modelValue !== 'string'
-})
+  return typeof props.modelValue !== "string";
+});
 
 // Computed properties
 const editorClasses = computed(() => ({
-  'disabled': props.disabled,
-  'readonly': props.readonly,
-  'has-error': props.error || validationError.value,
-  'theme-dark': props.theme === 'dark',
-  'theme-light': props.theme === 'light'
-}))
+  disabled: props.disabled,
+  readonly: props.readonly,
+  "has-error": props.error || validationError.value,
+  "theme-dark": props.theme === "dark",
+  "theme-light": props.theme === "light",
+}));
 
 const containerClasses = computed(() => ({
-  'loading': isLoading.value,
-  'has-error': error.value || validationError.value
-}))
+  loading: isLoading.value,
+  "has-error": error.value || validationError.value,
+}));
 
 const lineCount = computed(() => {
-  if (!editorView.value) return 0
-  return editorView.value.state.doc.lines
-})
+  if (!editorView.value) return 0;
+  return editorView.value.state.doc.lines;
+});
 
 const charCount = computed(() => {
-  return stringValue.value.length
-})
+  return stringValue.value.length;
+});
 
 const jsonSize = computed(() => {
-  if (!stringValue.value.trim()) return null
-  const bytes = new Blob([stringValue.value]).size
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-})
+  if (!stringValue.value.trim()) return null;
+  const bytes = new Blob([stringValue.value]).size;
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+});
 
 // JSON validation function
-const validateJsonContent = (content: string): { isValid: boolean; error?: string } => {
+const validateJsonContent = (
+  content: string
+): { isValid: boolean; error?: string } => {
   if (!content.trim()) {
-    return { isValid: true }
+    return { isValid: true };
   }
 
   try {
-    JSON.parse(content)
-    return { isValid: true }
+    JSON.parse(content);
+    return { isValid: true };
   } catch (e) {
-    const error = e as Error
-    let message = error.message
-    
+    const error = e as Error;
+    let message = error.message;
+
     // Try to extract line and column information
-    const match = message.match(/at position (\d+)/)
+    const match = message.match(/at position (\d+)/);
     if (match && match[1]) {
-      const position = parseInt(match[1])
-      const lines = content.substring(0, position).split('\n')
-      const line = lines.length
-      const lastLine = lines[lines.length - 1]
-      const column = lastLine ? lastLine.length + 1 : 1
-      message = `${message} (Line ${line}, Column ${column})`
+      const position = parseInt(match[1]);
+      const lines = content.substring(0, position).split("\n");
+      const line = lines.length;
+      const lastLine = lines[lines.length - 1];
+      const column = lastLine ? lastLine.length + 1 : 1;
+      message = `${message} (Line ${line}, Column ${column})`;
     }
-    
-    return { isValid: false, error: message }
+
+    return { isValid: false, error: message };
   }
-}
+};
 
 // JSON linter for CodeMirror
 const jsonLinter = linter((view) => {
-  const diagnostics: Diagnostic[] = []
-  const content = view.state.doc.toString()
-  
-  if (!content.trim()) return diagnostics
-  
-  const validation = validateJsonContent(content)
+  const diagnostics: Diagnostic[] = [];
+  const content = view.state.doc.toString();
+
+  if (!content.trim()) return diagnostics;
+
+  const validation = validateJsonContent(content);
   if (!validation.isValid && validation.error) {
     // Try to get position information for better error highlighting
     try {
-      JSON.parse(content)
+      JSON.parse(content);
     } catch (e) {
-      const error = e as any
-      const message = error.message || 'Invalid JSON'
-      
+      const error = e as any;
+      const message = error.message || "Invalid JSON";
+
       // Default to highlighting the entire document if we can't get specific position
-      let from = 0
-      let to = content.length
-      
+      let from = 0;
+      let to = content.length;
+
       // Try to extract position from error message
-      const positionMatch = message.match(/at position (\d+)/)
+      const positionMatch = message.match(/at position (\d+)/);
       if (positionMatch) {
-        const position = Math.min(parseInt(positionMatch[1]), content.length)
-        from = Math.max(0, position - 1)
-        to = Math.min(content.length, position + 1)
+        const position = Math.min(parseInt(positionMatch[1]), content.length);
+        from = Math.max(0, position - 1);
+        to = Math.min(content.length, position + 1);
       }
-      
+
       diagnostics.push({
         from,
         to,
-        severity: 'error',
-        message: validation.error || 'Invalid JSON syntax'
-      })
+        severity: "error",
+        message: validation.error || "Invalid JSON syntax",
+      });
     }
   }
-  
-  return diagnostics
-})
+
+  return diagnostics;
+});
 
 // Initialize CodeMirror
 const initializeEditor = async () => {
-  if (!editorContainer.value) return
+  if (!editorContainer.value) return;
 
   try {
-    isLoading.value = true
-    error.value = ''
+    isLoading.value = true;
+    error.value = "";
 
     const extensions = [
       basicSetup,
       json(),
       EditorView.updateListener.of((update) => {
         if (update.docChanged) {
-          const newValue = update.state.doc.toString()
-          
-          // If the original modelValue was an object, try to parse and emit object
-          if (isInputObject.value) {
-            try {
-              const parsed = JSON.parse(newValue)
-              emit('update:modelValue', parsed)
-              emit('change', parsed)
-            } catch {
-              // If parsing fails, emit the string anyway to show the error
-              emit('update:modelValue', newValue)
-              emit('change', newValue)
-            }
-          } else {
-            emit('update:modelValue', newValue)
-            emit('change', newValue)
+          const newValue = update.state.doc.toString();
+
+          try {
+            const parsed = JSON.parse(newValue);
+            emit("update:modelValue", parsed);
+            emit("change", parsed);
+          } catch {
+            // If parsing fails, emit the string anyway to show the error
+            emit("update:modelValue", newValue);
+            emit("change", newValue);
           }
-          
+
           if (props.autoValidate) {
-            validateJson()
+            validateJson();
           }
         }
       }),
       EditorView.domEventHandlers({
         blur: (event) => {
-          emit('blur', event as FocusEvent)
+          emit("blur", event as FocusEvent);
           if (props.formatOnBlur && isValidJson.value) {
-            formatJson()
+            formatJson();
           }
         },
-        focus: (event) => emit('focus', event as FocusEvent)
+        focus: (event) => emit("focus", event as FocusEvent),
       }),
-      EditorState.readOnly.of(props.readonly || props.disabled)
-    ]
+      EditorState.readOnly.of(props.readonly || props.disabled),
+    ];
 
     // Add theme
-    if (props.theme === 'dark') {
-      extensions.push(oneDark)
+    if (props.theme === "dark") {
+      extensions.push(oneDark);
     }
 
     // Add linting
-    extensions.push(lintGutter(), jsonLinter)
+    extensions.push(lintGutter(), jsonLinter);
 
     // Add key bindings
-    extensions.push(EditorView.domEventHandlers({
-      keydown: (event) => {
-        // Format shortcut: Ctrl+Shift+F (Cmd+Shift+F on Mac)
-        if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'F') {
-          event.preventDefault()
-          formatJson()
-          return true
-        }
-        return false
-      }
-    }))
+    extensions.push(
+      EditorView.domEventHandlers({
+        keydown: (event) => {
+          // Format shortcut: Ctrl+Shift+F (Cmd+Shift+F on Mac)
+          if (
+            (event.ctrlKey || event.metaKey) &&
+            event.shiftKey &&
+            event.key === "F"
+          ) {
+            event.preventDefault();
+            formatJson();
+            return true;
+          }
+          return false;
+        },
+      })
+    );
 
     const state = EditorState.create({
       doc: stringValue.value,
-      extensions
-    })
+      extensions,
+    });
 
     editorView.value = new EditorView({
       state,
-      parent: editorContainer.value
-    })
+      parent: editorContainer.value,
+    });
 
     // Initial validation
     if (props.autoValidate) {
-      await nextTick()
-      validateJson()
+      await nextTick();
+      validateJson();
     }
-
   } catch (e) {
-    console.error('Failed to initialize JSON editor:', e)
-    error.value = 'Failed to initialize editor'
+    console.error("Failed to initialize JSON editor:", e);
+    error.value = "Failed to initialize editor";
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 // Update editor content when modelValue changes
-watch(() => stringValue.value, (newValue) => {
-  if (editorView.value && editorView.value.state.doc.toString() !== newValue) {
-    editorView.value.dispatch({
-      changes: {
-        from: 0,
-        to: editorView.value.state.doc.length,
-        insert: newValue
-      }
-    })
+watch(
+  () => stringValue.value,
+  (newValue) => {
+    if (
+      editorView.value &&
+      editorView.value.state.doc.toString() !== newValue
+    ) {
+      editorView.value.dispatch({
+        changes: {
+          from: 0,
+          to: editorView.value.state.doc.length,
+          insert: newValue,
+        },
+      });
+    }
   }
-})
+);
 
 // Watch for readonly/disabled changes
 watch([() => props.readonly, () => props.disabled], () => {
   if (editorView.value) {
     // Recreate the editor with new readonly state
-    const currentValue = editorView.value.state.doc.toString()
-    editorView.value.destroy()
-    
+    const currentValue = editorView.value.state.doc.toString();
+    editorView.value.destroy();
+
     nextTick(() => {
-      initializeEditor()
-    })
+      initializeEditor();
+    });
   }
-})
+});
 
 // Methods
 const validateJson = () => {
-  const validation = validateJsonContent(stringValue.value)
-  isValidJson.value = validation.isValid
-  validationError.value = validation.error || ''
-  
-  emit('validation', validation.isValid, validation.error)
-}
+  const validation = validateJsonContent(stringValue.value);
+  isValidJson.value = validation.isValid;
+  validationError.value = validation.error || "";
+
+  emit("validation", validation.isValid, validation.error);
+};
 
 const formatJson = () => {
-  if (!isValidJson.value || !stringValue.value.trim()) return
+  if (!isValidJson.value || !stringValue.value.trim()) return;
 
   try {
-    const parsed = JSON.parse(stringValue.value)
-    const formatted = JSON.stringify(parsed, null, 2)
-    
+    const parsed = JSON.parse(stringValue.value);
+    const formatted = JSON.stringify(parsed, null, 2);
+
     if (editorView.value) {
       editorView.value.dispatch({
         changes: {
           from: 0,
           to: editorView.value.state.doc.length,
-          insert: formatted
-        }
-      })
+          insert: formatted,
+        },
+      });
     }
-    
-    emit('format', formatted)
+
+    emit("format", formatted);
   } catch (e) {
-    console.error('Failed to format JSON:', e)
+    console.error("Failed to format JSON:", e);
   }
-}
+};
 
 const clearContent = () => {
   if (editorView.value) {
@@ -428,35 +433,35 @@ const clearContent = () => {
       changes: {
         from: 0,
         to: editorView.value.state.doc.length,
-        insert: ''
-      }
-    })
+        insert: "",
+      },
+    });
   }
-}
+};
 
 const copyToClipboard = async () => {
-  if (!stringValue.value.trim()) return
-  
+  if (!stringValue.value.trim()) return;
+
   try {
-    await navigator.clipboard.writeText(stringValue.value)
+    await navigator.clipboard.writeText(stringValue.value);
   } catch (e) {
     // Fallback for older browsers
-    const textArea = document.createElement('textarea')
-    textArea.value = stringValue.value
-    document.body.appendChild(textArea)
-    textArea.select()
-    document.execCommand('copy')
-    document.body.removeChild(textArea)
+    const textArea = document.createElement("textarea");
+    textArea.value = stringValue.value;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
   }
-}
+};
 
 const focus = () => {
-  editorView.value?.focus()
-}
+  editorView.value?.focus();
+};
 
 const blur = () => {
-  editorView.value?.contentDOM.blur()
-}
+  editorView.value?.contentDOM.blur();
+};
 
 // Expose methods
 defineExpose({
@@ -465,17 +470,17 @@ defineExpose({
   validateJson,
   formatJson,
   clearContent,
-  copyToClipboard
-})
+  copyToClipboard,
+});
 
 // Lifecycle
 onMounted(() => {
-  initializeEditor()
-})
+  initializeEditor();
+});
 
 onUnmounted(() => {
-  editorView.value?.destroy()
-})
+  editorView.value?.destroy();
+});
 </script>
 
 <style scoped>

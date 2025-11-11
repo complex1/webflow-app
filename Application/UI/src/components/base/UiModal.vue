@@ -276,7 +276,7 @@ onUnmounted(() => {
 
 /* Modal Header */
 .ui-modal-header {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-md);
   border-bottom: 1px solid var(--color-border-subtle);
   background: var(--color-background-subtle);
   display: flex;
@@ -284,7 +284,7 @@ onUnmounted(() => {
   justify-content: space-between;
   border-top-left-radius: var(--radius-2xl);
   border-top-right-radius: var(--radius-2xl);
-  gap: var(--spacing-lg);
+  gap: var(--spacing-sm);
 }
 
 .modal-header-content {
@@ -292,7 +292,7 @@ onUnmounted(() => {
 }
 
 .ui-modal-title {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   margin: 0;
@@ -304,7 +304,7 @@ onUnmounted(() => {
 }
 
 .ui-modal-subtitle {
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   margin: var(--spacing-sm) 0 0 0;
   line-height: var(--line-height-normal);
@@ -340,7 +340,6 @@ onUnmounted(() => {
 /* Modal Body */
 .ui-modal-body {
   flex: 1;
-  padding: var(--spacing-xl);
   overflow-y: auto;
   color: var(--color-text-primary);
   line-height: var(--line-height-normal);

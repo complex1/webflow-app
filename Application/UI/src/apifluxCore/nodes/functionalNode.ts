@@ -49,6 +49,8 @@ export default class FunctionalNode extends Node {
                 console.error(`Error executing transform for FunctionalNode ${this.name} (${this.id}):`, error);
                 this.hasError = true;
                 dataEmitter(this.id, 'hasError' , true);
+                this.error = error as string;
+                dataEmitter(this.id, 'error' , this.error);
                 this.errorMessage = error instanceof Error ? error.message : String(error);
                 dataEmitter(this.id, 'errorMessage' , this.errorMessage);
                 this.nodeStatus = NodeStatus.FAILURE;

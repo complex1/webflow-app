@@ -63,17 +63,17 @@ export class ApiNode extends Node {
                 ...headers,
                 'Content-Type': 'application/json'
             },
-            body: body ? body : null
+            data: body ? body : null
         };
         if (this.method === 'GET') {
-            options.body = null;
+            options.data = null;
         }
         if (this.method === 'POST') {
             options.headers['Content-Type'] = 'application/json';
         } else if (this.method === 'PUT') {
             options.headers['Content-Type'] = 'application/json';
         } else if (this.method === 'DELETE') {
-            options.body = null;
+            options.data = null;
             options.headers['Content-Type'] = 'application/json';
         }
         const executionStartTime = Date.now();
@@ -85,34 +85,21 @@ export class ApiNode extends Node {
                 if (data.error) {
                     this.hasError = true;
                     dataEmitter(this.id, 'hasError' , true);
-                    this.errorMessage = data.error;
+                    this.errorMessage = data.message;
                     dataEmitter(this.id, 'errorMessage' , this.errorMessage);
+                    this.error = data.error;
                     this.nodeStatus = NodeStatus.FAILURE;
                     dataEmitter(this.id, 'nodeStatus' , this.nodeStatus);
+                    resolve(undefined);
                 } else {
                     this.hasError = false;
                     dataEmitter(this.id, 'hasError' , false);
-                    this.executing = false;
-                    dataEmitter(this.id, 'executing' , false);
                     this.nodeStatus = NodeStatus.SUCCESS;
                     dataEmitter(this.id, 'nodeStatus' , this.nodeStatus);
+                    resolve(data);
                 }
-                resolve(data);
             })
             .catch((error: { message: string | null; }) => {
-                this.executing = false;
-                dataEmitter(this.id, 'executing' , false);
-                this.hasError = true;
-                dataEmitter(this.id, 'hasError' , true);
-                this.errorMessage = error.message;
-                dataEmitter(this.id, 'errorMessage' , this.errorMessage);
-                this.nodeStatus = NodeStatus.FAILURE;
-                dataEmitter(this.id, 'nodeStatus' , this.nodeStatus);
-                resolve(undefined);
-            })
-            .catch((error: { message: string | null; }) => {
-                this.executing = false;
-                dataEmitter(this.id, 'executing' , false);
                 this.hasError = true;
                 dataEmitter(this.id, 'hasError' , true);
                 this.errorMessage = error.message;
@@ -122,6 +109,8 @@ export class ApiNode extends Node {
                 resolve(undefined);
             })
             .finally(() => {
+                this.executing = false;
+                dataEmitter(this.id, 'executing' , false);
                 this.executionTime = Date.now() - executionStartTime;
                 dataEmitter(this.id, 'executionTime' , this.executionTime);
                 this.executionDone = true;

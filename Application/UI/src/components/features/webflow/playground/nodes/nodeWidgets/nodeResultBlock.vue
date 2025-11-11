@@ -31,7 +31,19 @@
       title="Execution Result"
     >
       <div class="result-popover-content">
-        <div class="result-data">
+        <!-- Error Message Display -->
+        <div v-if="props.node.hasError" class="error-section">
+          <div class="error-header">
+            <i class="fas fa-exclamation-triangle error-icon"></i>
+            <span class="error-title">Execution Error</span>
+          </div>
+          <div class="error-message">
+            {{ props.node.errorMessage || 'An unknown error occurred' }}
+          </div>
+        </div>
+        
+        <!-- Result Data -->
+        <div v-else class="result-data">
           <pre v-if="getType !== 'object'" class="data-content-compact">{{
             getVariableData
           }}</pre>
@@ -83,8 +95,8 @@ const getVariableData = computed(() => {
 
 // Get result status based on execution state
 const getResultStatus = computed(() => {
-  // This would be connected to your actual execution state
-  const hasError = false; // Replace with actual error checking
+  // Use actual node error state
+  const hasError = props.node.hasError || false;
   const isExecuting = false; // Replace with actual execution state
   const hasResult =
     getVariableData.value !== undefined && getVariableData.value !== null;
@@ -231,6 +243,48 @@ const getExecutionTime = computed(() => {
   padding: var(--spacing-sm);
   min-width: 300px;
   max-width: 400px;
+}
+
+/* Error Section Styling */
+.error-section {
+  background: var(--color-danger-subtle);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.error-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.error-icon {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+.error-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-danger-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.error-message {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger-dark);
+  background: var(--color-background);
+  border: 1px solid var(--color-danger-light);
+  border-radius: var(--radius-xs);
+  padding: var(--spacing-sm);
+  font-family: var(--font-family-mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.4;
 }
 
 .result-meta {

@@ -7,7 +7,7 @@
         <span>Flow Lab</span>
       </div>
     </div>
-    
+
     <!-- Enhanced Vue Flow with Neo-Systemic styling -->
     <VueFlow
       :nodes="nodes"
@@ -24,14 +24,14 @@
       class="neo-vue-flow"
     >
       <!-- Enhanced Background with Flow Lab pattern -->
-      <Background 
-        :pattern-color="'var(--color-primary-subtle)'" 
-        :bg-color="'var(--color-canvas-bg)'"
-        pattern="dots"
+      <Background
+        variant="dots"
         :gap="20"
-        :size="2"
+        :size="1.5"
+        color="rgba(0, 0, 0, 0.25)"
+        bgColor="var(--color-canvas-bg)"
       />
-      
+
       <!-- Glass MiniMap with Apple styling -->
       <MiniMap
         pannable
@@ -45,13 +45,10 @@
         :node-height="60"
         class="neo-minimap"
       />
-      
+
       <!-- Glass Controls with enhanced styling -->
-      <Controls 
-        position="top-right" 
-        class="neo-controls"
-      />
-      
+      <Controls position="top-right" class="neo-controls" />
+
       <!-- API Node Template -->
       <template #node-API="nodeData">
         <ApiNodeComponent
@@ -64,7 +61,7 @@
           class="flow-node api-flow-node"
         />
       </template>
-      
+
       <!-- Functional Node Template -->
       <template #node-FUNCTIONAL="nodeData">
         <FunctionalNodeComponent
@@ -78,7 +75,7 @@
         />
       </template>
     </VueFlow>
-    
+
     <!-- Flow Lab Enhancement Indicators -->
     <div class="flow-enhancements">
       <!-- Connection Quality Indicator -->
@@ -86,7 +83,7 @@
         <i class="fas fa-wifi"></i>
         <span>{{ connectionCount }} connections</span>
       </div>
-      
+
       <!-- Performance Indicator -->
       <div class="performance-indicator">
         <i class="fas fa-tachometer-alt"></i>
@@ -121,8 +118,8 @@ const props = defineProps<{
   nodes: Node[];
   edges: Edge[];
   nodeMap: Record<string, WebflowNode>;
-  variablePool: VariablePool,
-  envVariableMap: Record<string, string>
+  variablePool: VariablePool;
+  envVariableMap: Record<string, string>;
 }>();
 
 const emit = defineEmits<{
@@ -150,12 +147,12 @@ const getFunctionalNodeById = (id: string): FunctionalNode => {
 };
 
 const onDelete = (node: WebflowNode) => {
-  emit("deleteNode", node)
+  emit("deleteNode", node);
 };
 
 const onEdit = (node: WebflowNode) => {
-  emit("editNode", node)
-}
+  emit("editNode", node);
+};
 
 // Handle node drag event
 const onNodeDrag = (event: NodeDragEvent) => {
@@ -176,7 +173,11 @@ const onEdgeChange = (changes: EdgeChange[]) => {
 };
 
 // Enhanced fit view method with smooth animation
-const fitToView = (options?: { padding?: number; includeHiddenNodes?: boolean; duration?: number }) => {
+const fitToView = (options?: {
+  padding?: number;
+  includeHiddenNodes?: boolean;
+  duration?: number;
+}) => {
   fitView({
     padding: options?.padding || 0.15,
     includeHiddenNodes: options?.includeHiddenNodes || false,
@@ -241,6 +242,14 @@ defineExpose({
 /* Canvas Background Enhancements */
 :deep(.vue-flow__background) {
   background: var(--color-canvas-bg);
+}
+
+:deep(.vue-flow__background-pattern) {
+  opacity: 1 !important;
+}
+
+:deep(.vue-flow__background svg) {
+  opacity: 1 !important;
 }
 
 /* Neo-Systemic MiniMap */
@@ -385,22 +394,22 @@ defineExpose({
     top: var(--spacing-sm);
     left: var(--spacing-sm);
   }
-  
+
   .flow-lab-logo {
     padding: var(--spacing-xs) var(--spacing-sm);
     font-size: var(--font-size-xs);
   }
-  
+
   .flow-enhancements {
     bottom: var(--spacing-sm);
     right: var(--spacing-sm);
   }
-  
+
   :deep(.neo-minimap) {
     transform: scale(0.8);
     transform-origin: bottom left;
   }
-  
+
   :deep(.neo-controls) {
     transform: scale(0.9);
     transform-origin: top right;
@@ -412,7 +421,7 @@ defineExpose({
   .webflow-playground-canvas {
     background: var(--color-canvas-bg-dark);
   }
-  
+
   :deep(.vue-flow__background) {
     background: var(--color-canvas-bg-dark);
   }
@@ -420,16 +429,12 @@ defineExpose({
 
 /* Animation keyframes */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
     opacity: 0.6;
   }
-}
-
-/* Flow Lab Canvas Grid Enhancement */
-:deep(.vue-flow__background .vue-flow__background-pattern) {
-  opacity: 0.6;
 }
 </style>

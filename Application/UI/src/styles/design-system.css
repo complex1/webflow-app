@@ -53,6 +53,7 @@
   --color-background-code: #F8FAFC;
   --color-background-canvas: #FAFBFC;
   --color-canvas-bg: #F6F8FA;
+  --color-canvas-bg-dark: #0E1117;
 
   /* Glass Effects - Light Theme Optimized */
   --glass-bg: rgba(255, 255, 255, 0.85);
@@ -104,7 +105,8 @@
   --color-info-dark: #33B5E5;
 
   /* Canvas & Flow Lines */
-  --color-canvas-grid: rgba(0, 122, 255, 0.05);
+  --color-canvas-grid: rgba(0, 122, 255, 0.15);
+  --color-canvas-grid-dots: rgba(0, 0, 0, 0.2);
   --color-connector: rgba(100, 210, 255, 0.6);
   --color-connector-active: var(--color-accent-cyan);
 

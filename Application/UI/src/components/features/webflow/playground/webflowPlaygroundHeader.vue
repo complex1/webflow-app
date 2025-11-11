@@ -267,7 +267,6 @@ onMounted(() => {
   border-bottom: 1px solid var(--glass-border);
   padding: var(--spacing-md) var(--spacing-xl);
   position: relative;
-  box-shadow: var(--shadow-md);
   font-family: var(--font-family-base);
 }
 
