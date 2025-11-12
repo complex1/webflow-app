@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   createWebFlow,
+  createWebFlowFromImport,
   getWebFlows,
   getWebFlowById,
   getWebFlowHierarchy,
@@ -21,6 +22,7 @@ const router = Router();
 router.use(authenticateToken);
 
 router.post('/', createWebFlow);
+router.post('/import', createWebFlowFromImport);
 router.get('/', getWebFlows);
 router.get('/:id/hierarchy', getWebFlowHierarchy);
 router.get('/:id/env-files', getWebFlowEnvFiles);

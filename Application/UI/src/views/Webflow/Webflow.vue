@@ -6,6 +6,7 @@
         @search="handleSearch"
         @search-clear="handleSearchClear"
         @add="handleAdd"
+        @import="handleImport"
       />
 
       <!-- Content -->
@@ -153,6 +154,34 @@ const handleSearchClear = () => {
 // CRUD operations
 const handleAdd = () => {
   openAddWebFlowDrawer.value = true;
+};
+
+const handleImport = async (importData: any) => {
+  try {
+    console.log('Importing webflow data:', importData);
+    
+    // Validate the import data structure
+    if (!importData.name || !importData.playgroundConfig) {
+      toast.error('Invalid import file: missing required fields (name, playgroundConfig)');
+      return;
+    }
+
+    if (!Array.isArray(importData.playgroundConfig.nodes) || !Array.isArray(importData.playgroundConfig.edges)) {
+      toast.error('Invalid import file: playgroundConfig must contain nodes and edges arrays');
+      return;
+    }
+
+    // Call the import API
+    const result = await webFlowService.createFromImport(importData);
+    
+    toast.success(result.message || 'Web flow imported successfully');
+    
+    // Refresh the list to show the new imported webflow
+    getWebFlows();
+  } catch (error: any) {
+    console.error('Import error:', error);
+    toast.error(error.response?.data?.error || 'Failed to import web flow');
+  }
 };
 
 const handleSubmit = () => {

@@ -85,6 +85,12 @@ export const webFlowService = {
     return response.data
   },
 
+  // Create web flow from imported data
+  async createFromImport(importData: any): Promise<{ message: string; webFlow: WebFlow }> {
+    const response = await http.post<{ message: string; webFlow: WebFlow }>('/web-flows/import', importData)
+    return response.data
+  },
+
   // Update web flow
   async update(id: number, webFlowData: UpdateWebFlowRequest): Promise<{ message: string; webFlow: WebFlow }> {
     const response = await http.put<{ message: string; webFlow: WebFlow }>(`/web-flows/${id}`, webFlowData)

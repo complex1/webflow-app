@@ -209,8 +209,25 @@ const saveWebflow = () => {
   });
 };
 const handleExport = () => {
-  console.log("Exporting webflow...");
-  // Implement export functionality
+  const data = apiFluxCore.getSerializedData();
+  const exportJson = {
+    name: playgroundStore.webflowDetails?.name,
+    description: playgroundStore.webflowDetails?.description,
+    tags: playgroundStore.webflowDetails?.tags,
+    isFolder: playgroundStore.webflowDetails?.isFolder,
+    basePath: playgroundStore.webflowDetails?.basePath,
+    playgroundConfig: {
+      nodes: data.nodes,
+      edges: data.edges,
+    },
+  }
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportJson, null, 2));
+  const downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", `${playgroundStore.webflowDetails?.name ||'webflow_export'}.json`);
+  document.body.appendChild(downloadAnchorNode);
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
 };
 
 // Load webflow when component mounts

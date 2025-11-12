@@ -24,6 +24,23 @@
         </div>
 
         <!-- Add Button -->
+        <!-- Hidden file input -->
+        <input
+          ref="fileInputRef"
+          type="file"
+          accept=".json"
+          style="display: none"
+          @change="handleFileImport"
+        />
+         <UiButton
+          variant="secondary"
+          size="sm"
+          icon="plus"
+          @click="handleImport"
+          class="add-button"
+        >
+          Import Web Flow
+        </UiButton>
         <UiButton
           variant="primary"
           size="sm"
@@ -40,7 +57,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { UiInput, UiButton, UiWebflowBreadcrumb } from '@/components/base'
+import { UiInput, UiButton, UiWebflowBreadcrumb } from '../../base'
+import { toast } from '../../../utils';
 
 interface Props {
   initialSearch?: string
@@ -54,9 +72,11 @@ const emit = defineEmits<{
   search: [query: string]
   searchClear: []
   add: []
+  import: [data: any]
 }>()
 
 const searchQuery = ref(props.initialSearch)
+const fileInputRef = ref<HTMLInputElement | null>(null)
 
 const handleSearch = (event: Event) => {
   const target = event.target as HTMLInputElement
@@ -71,6 +91,45 @@ const handleSearchClear = () => {
 
 const handleAdd = () => {
   emit('add')
+}
+
+const handleImport = () => {
+  // Trigger the file input click
+  if (fileInputRef.value) {
+    fileInputRef.value.click()
+  }
+}
+
+const handleFileImport = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  
+  if (file && file.type === 'application/json') {
+    const reader = new FileReader()
+    
+    reader.onload = (e) => {
+      try {
+        const result = e.target?.result as string
+        const jsonData = JSON.parse(result)
+        console.log('Imported JSON file:', jsonData)
+        
+        // Reset file input
+        if (fileInputRef.value) {
+          fileInputRef.value.value = ''
+        }
+        
+        // Emit import event with the file data
+        emit('import', jsonData)
+      } catch (error) {
+        console.error('Error parsing JSON file:', error)
+        toast.error('Invalid JSON file. Please select a valid JSON file.')
+      }
+    }
+    
+    reader.readAsText(file)
+  } else {
+    toast.error('Please select a JSON file.')
+  }
 }
 
 // Expose methods for parent component
