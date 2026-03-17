@@ -52,7 +52,6 @@
 
 .header-brand:hover {
   color: var(--color-primary-hover);
-  transform: translateY(-1px);
 }
 
 .header-brand::before {
@@ -92,7 +91,6 @@
 }
 
 .user-avatar:hover {
-  transform: scale(1.05);
   box-shadow: var(--shadow-lg);
 }
 
@@ -141,7 +139,6 @@
 .sidebar-nav-item:hover {
   background: var(--color-background-hover);
   color: var(--color-text-primary);
-  transform: scale(1.05);
   border-color: var(--color-border-hover);
 }
 
@@ -149,7 +146,6 @@
   background: var(--gradient-flow-blue);
   color: white;
   box-shadow: var(--shadow-md);
-  transform: scale(1.05);
 }
 
 .sidebar-nav-item i {
@@ -249,7 +245,6 @@
 }
 
 .card:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-xl);
   border-color: var(--color-border-hover);
 }
@@ -349,7 +344,6 @@
 }
 
 .btn:hover:not(:disabled) {
-  transform: translateY(-1px);
   box-shadow: var(--shadow-lg);
   border-color: var(--color-border-hover);
 }

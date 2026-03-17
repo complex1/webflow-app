@@ -164,7 +164,6 @@ const handleClick = (event: MouseEvent) => {
 
 /* Interactive States */
 .ui-card--hoverable:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-2xl);
   border-color: var(--color-border-hover);
 }
@@ -174,13 +173,8 @@ const handleClick = (event: MouseEvent) => {
 }
 
 .ui-card--clickable:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-2xl);
   border-color: var(--color-border-hover);
-}
-
-.ui-card--clickable:active {
-  transform: translateY(-1px);
 }
 
 .ui-card--glow {

@@ -363,9 +363,6 @@ const onSave = (node: ApiNode) => {
   transform: none !important;
 }
 
-.btn:not(:disabled):active {
-  transform: scale(0.98);
-}
 
 /* Button Variants */
 .btn-primary {
@@ -377,7 +374,6 @@ const onSave = (node: ApiNode) => {
 .btn-primary:hover:not(:disabled) {
   background: var(--color-primary-hover);
   border-color: var(--color-primary-hover);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
@@ -390,7 +386,6 @@ const onSave = (node: ApiNode) => {
 .btn-secondary:hover:not(:disabled) {
   background: var(--color-background-hover);
   border-color: var(--color-border-hover);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
 }
 

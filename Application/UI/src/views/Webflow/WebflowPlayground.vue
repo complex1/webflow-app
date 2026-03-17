@@ -403,7 +403,6 @@ watch(
 }
 
 .retry-btn:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-xl);
 }
 

@@ -592,7 +592,6 @@ onMounted(() => {
 }
 
 .envfile-item:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   border-color: var(--color-border-hover);
 }
@@ -711,7 +710,6 @@ onMounted(() => {
 .expand-btn:hover {
   color: var(--color-primary);
   border-color: var(--color-primary);
-  transform: scale(1.05);
 }
 
 .expand-btn.expanded {
@@ -728,7 +726,6 @@ onMounted(() => {
   color: white;
   background: var(--color-danger);
   border-color: var(--color-danger);
-  transform: scale(1.05);
 }
 
 /* ===== Environment File Content (Expanded) ===== */
@@ -792,7 +789,6 @@ onMounted(() => {
 
 .variable-item:hover {
   border-color: var(--color-border-hover);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
 }
 
@@ -962,7 +958,6 @@ onMounted(() => {
 
 .available-file-item:hover {
   border-color: var(--color-primary);
-  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 

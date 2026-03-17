@@ -283,7 +283,6 @@ defineExpose({
 .ui-input-container--focused {
   border-color: var(--color-border-focus);
   box-shadow: 0 0 0 3px var(--color-primary-light);
-  transform: translateY(-1px);
 }
 
 .ui-input-container--error {
@@ -459,7 +458,6 @@ defineExpose({
 /* Label Focus Animation */
 .ui-input-wrapper--focused .ui-input-label {
   color: var(--color-primary);
-  transform: translateY(-1px);
 }
 
 .ui-input-wrapper--error .ui-input-label {

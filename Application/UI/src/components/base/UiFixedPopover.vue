@@ -425,18 +425,14 @@ onUnmounted(() => {
   background: var(--color-danger);
   border-color: var(--color-danger);
   color: white;
-  transform: scale(1.05);
 }
 
-.popover-close:active {
-  transform: scale(0.95);
-}
 
 /* Content Styles */
 .popover-content {
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-md) var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-sm);
   color: var(--color-text-primary);
   line-height: var(--line-height-normal);
 }

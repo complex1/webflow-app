@@ -175,7 +175,6 @@ const formatDate = (dateString: string): string => {
 }
 
 .webflow-card:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   border-color: var(--color-border-hover);
 }
@@ -270,7 +269,6 @@ const formatDate = (dateString: string): string => {
   background: var(--color-background-hover);
   color: var(--color-text-primary);
   border-color: var(--color-border-hover);
-  transform: scale(1.05);
 }
 
 .menu-trigger.active {
@@ -309,7 +307,6 @@ const formatDate = (dateString: string): string => {
 .tag:hover {
   background: var(--color-primary);
   color: var(--color-text-inverse);
-  transform: scale(1.05);
 }
 
 .tag-more {
@@ -370,7 +367,6 @@ const formatDate = (dateString: string): string => {
 .actions-menu .menu-item:hover {
   background: var(--color-background-hover);
   color: var(--color-text-primary);
-  transform: translateX(2px);
 }
 
 .actions-menu .menu-item i {

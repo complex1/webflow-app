@@ -176,7 +176,6 @@ onMounted(() => {
 .remove-button:hover {
   background: var(--color-danger);
   color: white;
-  transform: scale(1.05);
 }
 
 /* Content Section */

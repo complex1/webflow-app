@@ -338,7 +338,6 @@ const navigateToLogin = () => {
 
 .info-button:hover {
   background: var(--color-background-secondary) !important;
-  /* transform: translateY(-1px); */
 }
 
 /* Right Form Section */

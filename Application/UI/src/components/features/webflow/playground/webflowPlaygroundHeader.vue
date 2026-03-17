@@ -402,7 +402,6 @@ onMounted(() => {
   border-color: var(--color-border-hover);
   background: var(--color-background-hover);
   box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
 }
 
 .env-icon {
@@ -462,7 +461,6 @@ onMounted(() => {
 }
 
 .btn:not(:disabled):hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
 
@@ -596,7 +594,6 @@ onMounted(() => {
 .dropdown-item:hover {
   background: var(--color-background-hover);
   border-color: var(--color-border-subtle);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
 }
 

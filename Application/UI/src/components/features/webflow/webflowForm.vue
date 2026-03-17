@@ -650,7 +650,6 @@ watch(
 
 .icon-trigger:hover {
   border-color: var(--color-border-hover);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
@@ -734,7 +733,6 @@ watch(
 .icon-option:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
-  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
@@ -788,7 +786,6 @@ watch(
 }
 
 .tag:hover {
-  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
@@ -809,7 +806,6 @@ watch(
 
 .tag-remove:hover {
   background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
 }
 
 .tag-input {
@@ -853,7 +849,6 @@ watch(
 
 .radio-label:hover {
   border-color: var(--color-border-hover);
-  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
@@ -900,7 +895,6 @@ watch(
 
 .checkbox-label:hover .checkmark {
   border-color: var(--color-border-hover);
-  transform: scale(1.05);
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark {

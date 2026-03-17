@@ -96,7 +96,6 @@ const handleClick = (event: MouseEvent) => {
 }
 
 .ui-button:hover:not(.ui-button--disabled):not(.ui-button--loading) {
-  transform: translateY(-1px);
   box-shadow: var(--shadow-lg);
   border-color: var(--color-border-hover);
 }

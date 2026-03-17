@@ -139,8 +139,8 @@
   --font-family-base: "Inter", "SF Pro Text", "Segoe UI", sans-serif;
   --font-family-mono: "JetBrains Mono", "Fira Code", "SF Mono", monospace;
   
-  --font-size-xs: 11px;
-  --font-size-sm: 13px;
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
   --font-size-md: 14px;
   --font-size-lg: 16px;
   --font-size-xl: 20px;
@@ -169,19 +169,19 @@
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --spacing-2xl: 48px;
-  --spacing-3xl: 64px;
+  --spacing-lg: 18px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 48px;
   --spacing-4xl: 96px;
 
   /* Border Radius - Rounded Geometry */
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 12px;
   --radius-full: 9999px;
 
   /* Shadows - Light Theme Optimized */
@@ -295,11 +295,11 @@ p {
 /* ===== Glass Panel Components ===== */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: var(--glass-backdrop);
-  -webkit-backdrop-filter: var(--glass-backdrop);
+  /* backdrop-filter: var(--glass-backdrop); */
+  /* -webkit-backdrop-filter: var(--glass-backdrop); */
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  /* box-shadow: var(--shadow-card); */
 }
 
 .glass-button {

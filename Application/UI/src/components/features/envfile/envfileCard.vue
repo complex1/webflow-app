@@ -246,7 +246,6 @@ const copyToClipboard = async (text: string) => {
 
 
 .envfile-card:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   border-color: var(--color-border-hover);
 }
@@ -312,7 +311,6 @@ const copyToClipboard = async (text: string) => {
   background: var(--color-background-hover);
   color: var(--color-text-primary);
   border-color: var(--color-border-hover);
-  transform: scale(1.05);
 }
 
 .menu-trigger.active {
@@ -395,7 +393,6 @@ const copyToClipboard = async (text: string) => {
 .actions-menu .menu-item:hover {
   background: var(--color-background-hover);
   color: var(--color-text-primary);
-  transform: translateX(2px);
 }
 
 .actions-menu .menu-item i {
@@ -528,7 +525,6 @@ const copyToClipboard = async (text: string) => {
 .copy-value-btn:hover {
   background: var(--color-background-hover);
   color: var(--color-text-primary);
-  transform: scale(1.05);
 }
 
 .config-value {

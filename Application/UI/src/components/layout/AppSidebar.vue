@@ -82,6 +82,5 @@ const router = useRouter()
   background: var(--gradient-flow-blue);
   color: white;
   box-shadow: var(--shadow-md);
-  transform: scale(1.05);
 }
 </style>

@@ -304,7 +304,6 @@ defineExpose({
   background: var(--color-primary-light) !important;
   border-color: var(--color-primary) !important;
   color: var(--color-primary) !important;
-  transform: scale(1.05);
 }
 
 :deep(.neo-controls .vue-flow__controls-button:active) {
