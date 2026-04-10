@@ -1,0 +1,205 @@
+.docs-page a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.docs-page a:hover {
+  text-decoration: underline;
+}
+
+.docs-page.container {
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.docs-page.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+  padding: 28px 0 64px;
+}
+
+.docs-page main {
+  display: grid;
+  gap: 28px;
+  min-width: 0;
+}
+
+.docs-page section[id] {
+  scroll-margin-top: 88px;
+}
+
+.docs-page h1,
+.docs-page h2,
+.docs-page h3 {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.docs-page h1 {
+  font-size: 26px;
+}
+
+.docs-page h2 {
+  font-size: 18px;
+}
+
+.docs-page h3 {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.docs-page .hero {
+  display: grid;
+  gap: 12px;
+}
+
+.docs-page .hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.docs-page .hero p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.docs-page .section-lead {
+  color: var(--text-secondary);
+  margin: 0 0 12px;
+}
+
+.docs-page .quick-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.docs-page .pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-elevated);
+  font-size: var(--label);
+  color: var(--text-secondary);
+}
+
+.docs-page .grid {
+  display: grid;
+  gap: 14px;
+}
+
+.docs-page .two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.docs-page ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-secondary);
+}
+
+.docs-page li {
+  margin: 6px 0;
+}
+
+.docs-page .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: var(--meta);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+}
+
+.docs-page .state {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.docs-page .state span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: var(--meta);
+  border: 1px solid var(--border-default);
+  background: var(--bg-elevated);
+}
+
+.docs-page .code-block {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.docs-page .image-placeholder {
+  border: 1px dashed var(--border-default);
+  background: #0f1520;
+  border-radius: var(--radius-md);
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--label);
+  padding: 16px;
+}
+
+.docs-page .image-caption {
+  font-size: var(--meta);
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.docs-page .callout {
+  border: 1px solid var(--border-default);
+  background: rgba(31, 41, 55, 0.5);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: var(--label);
+}
+
+.docs-page pre {
+  margin: 0;
+  font-size: var(--label);
+  color: var(--text-primary);
+  white-space: pre-wrap;
+}
+
+.docs-page .copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: var(--meta);
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .docs-page.layout {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-page aside {
+    position: static;
+  }
+
+  .docs-page .hero-grid {
+    grid-template-columns: 1fr;
+  }
+}

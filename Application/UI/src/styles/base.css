@@ -1,0 +1,64 @@
+@import "@vue-flow/core/dist/style.css";
+@import "@vue-flow/core/dist/theme-default.css";
+@import '@vue-flow/controls/dist/style.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-body);
+  line-height: 1.5;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+
+.card-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-menu button {
+  width: 100%;
+  padding: 6px 8px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.card-menu button:hover {
+  background: color-mix(in srgb, var(--accent-blue) 20%, transparent);
+}
+
+.card-menu button.danger {
+  color: var(--accent-red);
+}
+
+.card-menu__icon {
+  color: inherit;
+}

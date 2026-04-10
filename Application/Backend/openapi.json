@@ -1,0 +1,2389 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Flux Backend",
+    "version": "1.0.0",
+    "description": "A comprehensive API management system for environment files, web flows, and file uploads",
+    "contact": {
+      "name": "API Flux Team",
+      "email": "support@apiflux.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Development server"
+    },
+    {
+      "url": "https://api.apiflux.com/api",
+      "description": "Production server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter JWT token"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "User ID",
+            "example": 1
+          },
+          "username": {
+            "type": "string",
+            "description": "Username",
+            "example": "john_doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User email address",
+            "example": "john@example.com"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "uri",
+            "description": "User avatar URL",
+            "example": "https://example.com/avatar.jpg"
+          },
+          "userType": {
+            "type": "string",
+            "enum": [
+              "individual",
+              "organization",
+              "enterprise"
+            ],
+            "description": "User type",
+            "example": "individual"
+          },
+          "userRole": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "user",
+              "moderator"
+            ],
+            "description": "User role",
+            "example": "user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "User creation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "User last update timestamp"
+          }
+        }
+      },
+      "EnvFile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Environment file ID",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Environment file name",
+            "example": "Production Environment"
+          },
+          "description": {
+            "type": "string",
+            "description": "Environment file description",
+            "example": "Production environment configuration"
+          },
+          "userId": {
+            "type": "integer",
+            "description": "Owner user ID",
+            "example": 1
+          },
+          "configs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnvConfig"
+            },
+            "description": "Environment configurations"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp"
+          }
+        }
+      },
+      "EnvConfig": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Configuration ID",
+            "example": 1
+          },
+          "key": {
+            "type": "string",
+            "description": "Configuration key",
+            "example": "API_URL"
+          },
+          "description": {
+            "type": "string",
+            "description": "Configuration description",
+            "example": "Base API URL for the service"
+          },
+          "value": {
+            "type": "string",
+            "description": "Configuration value",
+            "example": "https://api.example.com"
+          },
+          "envFileId": {
+            "type": "integer",
+            "description": "Parent environment file ID",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp"
+          }
+        }
+      },
+      "WebFlow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Web flow ID",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Web flow name",
+            "example": "E-commerce API"
+          },
+          "description": {
+            "type": "string",
+            "description": "Web flow description",
+            "example": "Complete e-commerce API flow"
+          },
+          "icon": {
+            "type": "string",
+            "description": "FontAwesome icon class",
+            "example": "fas fa-shopping-cart"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Web flow tags",
+            "example": [
+              "ecommerce",
+              "api",
+              "rest"
+            ]
+          },
+          "isFolder": {
+            "type": "boolean",
+            "description": "Whether this is a folder",
+            "example": false
+          },
+          "hasOpenApiConfig": {
+            "type": "boolean",
+            "description": "Whether OpenAPI config is enabled",
+            "example": true
+          },
+          "openApiConfigType": {
+            "type": "string",
+            "enum": [
+              "SERVER",
+              "FILE"
+            ],
+            "description": "OpenAPI configuration type",
+            "example": "SERVER"
+          },
+          "openApiServerUrl": {
+            "type": "string",
+            "description": "OpenAPI server URL",
+            "example": "https://api.example.com"
+          },
+          "openApiFileId": {
+            "type": "integer",
+            "description": "OpenAPI file ID",
+            "example": 1
+          },
+          "hasPostmanCollection": {
+            "type": "boolean",
+            "description": "Whether Postman collection is enabled",
+            "example": true
+          },
+          "postmanFileId": {
+            "type": "integer",
+            "description": "Postman file ID",
+            "example": 1
+          },
+          "basePath": {
+            "type": "string",
+            "description": "Base path for the API",
+            "example": "/api/v1"
+          },
+          "userId": {
+            "type": "integer",
+            "description": "Owner user ID",
+            "example": 1
+          },
+          "envFiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnvFile"
+            },
+            "description": "Linked environment files"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp"
+          }
+        }
+      },
+      "File": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "File ID",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "File name",
+            "example": "api-spec.json"
+          },
+          "originalName": {
+            "type": "string",
+            "description": "Original file name",
+            "example": "api-specification.json"
+          },
+          "extension": {
+            "type": "string",
+            "description": "File extension",
+            "example": ".json"
+          },
+          "size": {
+            "type": "integer",
+            "description": "File size in bytes",
+            "example": 1024
+          },
+          "url": {
+            "type": "string",
+            "description": "File URL",
+            "example": "/uploads/api-spec.json"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "Stored file name",
+            "example": "uuid-filename.json"
+          },
+          "mimetype": {
+            "type": "string",
+            "description": "File MIME type",
+            "example": "application/json"
+          },
+          "webFlowId": {
+            "type": "integer",
+            "description": "Associated web flow ID",
+            "example": 1
+          },
+          "userId": {
+            "type": "integer",
+            "description": "Owner user ID",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Internal server error"
+          },
+          "message": {
+            "type": "string",
+            "description": "Detailed error message (development only)",
+            "example": "Database connection failed"
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of validation errors",
+            "example": [
+              "Username must be at least 3 characters long",
+              "Valid email is required"
+            ]
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "description": "Current page number",
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Items per page",
+            "example": 10
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of items",
+            "example": 100
+          },
+          "pages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "example": 10
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "User authentication and authorization"
+    },
+    {
+      "name": "Environment Files",
+      "description": "Environment file management"
+    },
+    {
+      "name": "Web Flows",
+      "description": "Web flow and API collection management"
+    },
+    {
+      "name": "Files",
+      "description": "File upload and management"
+    },
+    {
+      "name": "Health",
+      "description": "System health and status"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 50,
+                    "description": "Username for the new user",
+                    "example": "john_doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Email address for the new user",
+                    "example": "john@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 6,
+                    "description": "Password for the new user",
+                    "example": "password123"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "User avatar URL (optional)",
+                    "example": "https://example.com/avatar.jpg"
+                  },
+                  "userType": {
+                    "type": "string",
+                    "enum": [
+                      "individual",
+                      "organization",
+                      "enterprise"
+                    ],
+                    "description": "User type (optional, defaults to individual)",
+                    "example": "individual"
+                  },
+                  "userRole": {
+                    "type": "string",
+                    "enum": [
+                      "admin",
+                      "user",
+                      "moderator"
+                    ],
+                    "description": "User role (optional, defaults to user)",
+                    "example": "user"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User registered successfully"
+                    },
+                    "token": {
+                      "type": "string",
+                      "description": "JWT authentication token",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or user already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ValidationError"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Email already exists"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login user",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User email address",
+                    "example": "john@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "User password",
+                    "example": "password123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Login successful"
+                    },
+                    "token": {
+                      "type": "string",
+                      "description": "JWT authentication token",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid credentials"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/profile": {
+      "get": {
+        "summary": "Get user profile",
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Access token required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Invalid or expired token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid or expired token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user profile",
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 50,
+                    "description": "New username",
+                    "example": "new_username"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "New email address",
+                    "example": "newemail@example.com"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "User avatar URL",
+                    "example": "https://example.com/avatar.jpg"
+                  },
+                  "userType": {
+                    "type": "string",
+                    "enum": [
+                      "individual",
+                      "organization",
+                      "enterprise"
+                    ],
+                    "description": "User type",
+                    "example": "individual"
+                  },
+                  "userRole": {
+                    "type": "string",
+                    "enum": [
+                      "admin",
+                      "user",
+                      "moderator"
+                    ],
+                    "description": "User role",
+                    "example": "user"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Profile updated successfully"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or username/email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Email already exists"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Access token required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/env-files": {
+      "post": {
+        "summary": "Create a new environment file",
+        "tags": [
+          "Environment Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100,
+                    "description": "Environment file name",
+                    "example": "Production Environment"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Environment file description",
+                    "example": "Production environment configuration"
+                  },
+                  "configs": {
+                    "type": "array",
+                    "description": "Environment configurations",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "description": "Configuration key",
+                          "example": "API_URL"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Configuration description",
+                          "example": "Base API URL"
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "Configuration value",
+                          "example": "https://api.example.com"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Environment file created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Environment file created successfully"
+                    },
+                    "envFile": {
+                      "$ref": "#/components/schemas/EnvFile"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all environment files for the authenticated user",
+        "tags": [
+          "Environment Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Page number for pagination"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Number of items per page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Environment files retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "envFiles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EnvFile"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/env-files/{id}": {
+      "get": {
+        "summary": "Get a specific environment file by ID",
+        "tags": [
+          "Environment Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Environment file ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Environment file retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "envFile": {
+                      "$ref": "#/components/schemas/EnvFile"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Environment file not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Environment file not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an environment file",
+        "tags": [
+          "Environment Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Environment file ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100,
+                    "description": "Environment file name",
+                    "example": "Updated Production Environment"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Environment file description",
+                    "example": "Updated production environment configuration"
+                  },
+                  "configs": {
+                    "type": "array",
+                    "description": "Environment configurations",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "description": "Configuration key",
+                          "example": "API_URL"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Configuration description",
+                          "example": "Base API URL"
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "Configuration value",
+                          "example": "https://api.example.com"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Environment file updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Environment file updated successfully"
+                    },
+                    "envFile": {
+                      "$ref": "#/components/schemas/EnvFile"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Environment file not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Environment file not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an environment file",
+        "tags": [
+          "Environment Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Environment file ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Environment file deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Environment file deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Environment file not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Environment file not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/upload": {
+      "post": {
+        "summary": "Upload a file",
+        "tags": [
+          "Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "webFlowId": {
+                    "type": "integer",
+                    "description": "Optional web flow identifier to associate with the file"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "file": {
+                      "$ref": "#/components/schemas/File"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/files": {
+      "get": {
+        "summary": "Get paginated files",
+        "tags": [
+          "Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Files retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/File"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/files/{id}": {
+      "get": {
+        "summary": "Get file details by ID",
+        "tags": [
+          "Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "$ref": "#/components/schemas/File"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "File not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a file",
+        "tags": [
+          "Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
+    "/files/{id}/download": {
+      "get": {
+        "summary": "Download a file",
+        "tags": [
+          "Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File streaming response",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
+    "/proxy": {
+      "post": {
+        "summary": "Execute a proxy request using axios configuration",
+        "tags": [
+          "Proxy"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "The target URL for the request",
+                    "example": "https://api.example.com/data"
+                  },
+                  "method": {
+                    "type": "string",
+                    "description": "HTTP method",
+                    "example": "GET",
+                    "default": "GET"
+                  },
+                  "headers": {
+                    "type": "object",
+                    "description": "Request headers",
+                    "example": {
+                      "Content-Type": "application/json",
+                      "Authorization": "Bearer token"
+                    }
+                  },
+                  "data": {
+                    "type": "object",
+                    "description": "Request body data"
+                  },
+                  "params": {
+                    "type": "object",
+                    "description": "URL parameters"
+                  },
+                  "timeout": {
+                    "type": "number",
+                    "description": "Request timeout in milliseconds",
+                    "example": 5000
+                  },
+                  "responseType": {
+                    "type": "string",
+                    "description": "Response data type",
+                    "example": "json"
+                  }
+                }
+              },
+              "example": {
+                "url": "https://jsonplaceholder.typicode.com/posts/1",
+                "method": "GET",
+                "headers": {
+                  "Content-Type": "application/json"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful proxy request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "statusText": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "headers": {
+                      "type": "object"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - missing URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "URL is required in the axios config"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/web-flows/import": {
+      "post": {
+        "summary": "Create a web flow from imported file data",
+        "tags": [
+          "WebFlows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the web flow",
+                    "example": "My Imported Web Flow"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the web flow",
+                    "example": "A web flow imported from a JSON file"
+                  },
+                  "basePath": {
+                    "type": "string",
+                    "description": "Base path for the web flow",
+                    "example": "/api/v1"
+                  },
+                  "isFolder": {
+                    "type": "boolean",
+                    "description": "Whether this is a folder",
+                    "default": false
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Array of tags",
+                    "example": [
+                      "api",
+                      "imported"
+                    ]
+                  },
+                  "playgroundConfig": {
+                    "type": "object",
+                    "properties": {
+                      "nodes": {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        },
+                        "description": "Array of flow nodes"
+                      },
+                      "edges": {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        },
+                        "description": "Array of flow edges"
+                      }
+                    },
+                    "required": [
+                      "nodes",
+                      "edges"
+                    ]
+                  },
+                  "parentId": {
+                    "type": "integer",
+                    "nullable": true,
+                    "description": "Parent folder ID"
+                  }
+                },
+                "required": [
+                  "name",
+                  "playgroundConfig"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Web flow created from import successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Web flow created from import successfully"
+                    },
+                    "webFlow": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "basePath": {
+                          "type": "string"
+                        },
+                        "isFolder": {
+                          "type": "boolean"
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "nodes": {
+                              "type": "array"
+                            },
+                            "edges": {
+                              "type": "array"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid playground configuration. Must contain nodes and edges arrays"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/web-flows/{id}/hierarchy": {
+      "get": {
+        "summary": "Get web flow hierarchy from root to specified folder",
+        "tags": [
+          "WebFlows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The web flow ID to get hierarchy for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hierarchy data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hierarchy": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "Web flow ID"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Web flow name"
+                          },
+                          "icon": {
+                            "type": "string",
+                            "description": "Web flow icon"
+                          },
+                          "isFolder": {
+                            "type": "boolean",
+                            "description": "Whether this is a folder"
+                          },
+                          "parentId": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "Parent web flow ID"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Creation timestamp"
+                          }
+                        }
+                      }
+                    },
+                    "targetId": {
+                      "type": "string",
+                      "description": "The target web flow ID"
+                    },
+                    "totalLevels": {
+                      "type": "integer",
+                      "description": "Total number of levels in hierarchy"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Web flow not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Web flow not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/web-flows/{id}/env-files": {
+      "get": {
+        "summary": "Get all environment files linked to a web flow",
+        "tags": [
+          "WebFlows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The web flow ID to get linked environment files for"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number for pagination"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "description": "Number of items per page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Linked environment files retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "envFiles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "Environment file ID"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Environment file name"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "Environment file description"
+                          },
+                          "configs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "integer"
+                                },
+                                "key": {
+                                  "type": "string"
+                                },
+                                "value": {
+                                  "type": "string"
+                                },
+                                "description": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "userId": {
+                            "type": "integer"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "linkId": {
+                            "type": "integer",
+                            "description": "The WebFlowEnvFile link ID"
+                          },
+                          "linkedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "When the file was linked to this webflow"
+                          }
+                        }
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "integer"
+                        },
+                        "limit": {
+                          "type": "integer"
+                        },
+                        "total": {
+                          "type": "integer"
+                        },
+                        "pages": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Web flow not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Web flow not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/web-flows/{id}/config": {
+      "get": {
+        "summary": "Get web flow configuration",
+        "tags": [
+          "WebFlows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The web flow ID to get configuration for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Configuration retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "config": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "webFlowId": {
+                          "type": "integer"
+                        },
+                        "nodes": {
+                          "type": "array"
+                        },
+                        "edges": {
+                          "type": "array"
+                        },
+                        "userId": {
+                          "type": "integer"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Web flow or configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Web flow configuration not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update web flow configuration",
+        "tags": [
+          "WebFlows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The web flow ID to update configuration for"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nodes": {
+                    "type": "array",
+                    "description": "Array of flow nodes",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "edges": {
+                    "type": "array",
+                    "description": "Array of flow edges",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": [
+                  "nodes",
+                  "edges"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Configuration updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Web flow configuration updated successfully"
+                    },
+                    "config": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "webFlowId": {
+                          "type": "integer"
+                        },
+                        "nodes": {
+                          "type": "array"
+                        },
+                        "edges": {
+                          "type": "array"
+                        },
+                        "userId": {
+                          "type": "integer"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Web flow not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Web flow not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/web-flows/{id}/openapi-docs": {
+      "get": {
+        "summary": "Get OpenAPI documentation for a web flow",
+        "tags": [
+          "WebFlows"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The web flow ID to get OpenAPI docs for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OpenAPI documentation retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "openApiDocs": {
+                      "type": "object",
+                      "description": "The OpenAPI specification document"
+                    },
+                    "source": {
+                      "type": "string",
+                      "enum": [
+                        "server",
+                        "file"
+                      ],
+                      "description": "The source of the OpenAPI documentation"
+                    },
+                    "sourceDetails": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "Server URL (if source is server)"
+                        },
+                        "fileName": {
+                          "type": "string",
+                          "description": "File name (if source is file)"
+                        },
+                        "fileId": {
+                          "type": "integer",
+                          "description": "File ID (if source is file)"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "OpenAPI configuration not enabled or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "OpenAPI configuration is not enabled for this web flow"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Web flow not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Web flow not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  }
+}

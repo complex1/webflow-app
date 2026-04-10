@@ -1,0 +1,6 @@
+export { default as Text } from './Text.vue'
+export { default as Heading } from './Heading.vue'
+export { default as Label } from './Label.vue'
+export { default as CodeText } from './CodeText.vue'
+export { default as TruncateText } from './TruncateText.vue'
+export { default as EmptyStateText } from './EmptyStateText.vue'
