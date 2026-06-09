@@ -1,0 +1,23 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "build": "bash build.sh",
+      "start": "cd Application/Backend && npm run start"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "engines": {
+      "node": ">=24.0.0",
+      "npm": ">=11.0.0"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+    }
+  }
+  
