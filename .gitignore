@@ -325,3 +325,5 @@ Application/Backend/dist/
 Application/UI/dist/
 Application/UI/node_modules/
 Application/UI/.vite/
+
+.devflow/

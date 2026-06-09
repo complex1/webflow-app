@@ -63,6 +63,9 @@ build_ui() {
         exit 1
     fi
 
+    print_status "Installing UI dependencies..."
+    npm install
+
     npm run build
     if [ ! -d "dist" ]; then
         print_error "UI dist folder not found after build"
@@ -98,6 +101,9 @@ build_backend() {
         print_error "Backend package.json not found"
         exit 1
     fi
+
+    print_status "Installing Backend dependencies..."
+    npm install
 
     npm run build
     if [ ! -d "dist" ]; then
